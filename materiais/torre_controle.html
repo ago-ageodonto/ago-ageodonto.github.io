@@ -1,0 +1,463 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Torre de Controle</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Spectral:wght@400;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap">
+<style>
+:root{--pg:#0B0906;--pn:#141009;--pn2:#1A150C;--ln:#2A2213;--ln2:#3A3018;--ink:#F3ECDA;--ink2:#B6A883;--ink3:#7C7256;--ous:#F1CE68;--vd:#5CC98A;--am:#E8B54D;--vm:#E0796B;--cy:#46C6D6;--grad:linear-gradient(100deg,#FBEDB4,#F1CE68 40%,#CFA23B 70%,#F7DE8C);--serif:'Spectral',Georgia,serif;--sans:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--pg);color:var(--ink);font-family:var(--sans);line-height:1.5;-webkit-font-smoothing:antialiased;padding:clamp(14px,2.5vw,30px)}
+.wrap{max-width:1200px;margin:0 auto}
+.eyebrow{font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink3)}
+h1{font-family:var(--serif);font-size:clamp(28px,5vw,44px);font-weight:800;letter-spacing:-.01em;margin:5px 0 10px;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.meta{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px}
+.mchip{background:var(--pn);border:1px solid var(--ln);border-radius:999px;padding:6px 13px;font-size:12px;color:var(--ink2)}
+.mchip b{color:var(--ous)}
+.mchip.live{border-color:color-mix(in srgb,var(--vd) 45%,var(--ln));color:var(--vd)}
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--ln);margin:18px 0 20px;flex-wrap:wrap}
+.tab{background:none;border:none;color:var(--ink3);font-family:var(--sans);font-size:13.5px;font-weight:600;padding:10px 16px;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px}
+.tab.on{color:var(--ous);border-bottom-color:var(--ous)}
+.tab:hover{color:var(--ink)}
+.pane{display:none}.pane.on{display:block}
+.placar{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:22px}
+@media(max-width:900px){.placar{grid-template-columns:repeat(2,1fr)}}
+.pc{background:var(--pn);border:1px solid var(--ln);border-radius:13px;padding:13px 14px}
+.pc .pl{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;color:var(--ink3);margin-bottom:9px}
+.pc .big{font-family:var(--serif);font-size:20px;font-weight:800;line-height:1}
+.pc .big .u{font-size:12px;color:var(--ink3);font-weight:600}
+.pbar{display:flex;height:7px;border-radius:5px;overflow:hidden;margin-top:10px;background:var(--pn2)}
+.pbar i{height:100%}
+.pc .leg{display:flex;gap:9px;margin-top:8px;font-size:10.5px;color:var(--ink2)}
+.pc .leg b{font-variant-numeric:tabular-nums}
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:3px}
+.g{background:var(--vd)}.a{background:var(--am)}.r{background:var(--vm)}
+.hm-wrap{overflow:auto;max-height:78vh;border:1px solid var(--ln);border-radius:13px;background:var(--pn)}
+table.hm{width:100%;border-collapse:collapse;min-width:960px;font-size:12px}
+table.hm th,table.hm td{padding:8px 8px;border-bottom:1px solid var(--ln);text-align:center}
+table.hm th{font-size:10px;text-transform:uppercase;letter-spacing:.02em;color:var(--ink3);background:var(--pn2);cursor:pointer;white-space:nowrap;position:sticky;top:0;z-index:2}
+table.hm th:first-child,table.hm td:first-child{text-align:left;position:sticky;left:0;background:var(--pn);font-weight:600;white-space:nowrap;z-index:1}
+table.hm th:first-child{z-index:3;background:var(--pn2)}
+table.hm tr:last-child td{border-bottom:none}
+table.hm tbody tr{cursor:pointer}
+table.hm tbody tr:hover td{background:color-mix(in srgb,var(--ous) 7%,transparent)}
+table.hm tbody tr:hover td:first-child{background:color-mix(in srgb,var(--ous) 10%,var(--pn))}
+.udot{display:inline-block;width:6px;height:6px;border-radius:50%;margin-right:6px;vertical-align:1px}
+.udot.live{background:var(--vd)}.udot.man{background:var(--ink3)}
+.cell{border-radius:7px;padding:6px 3px;font-weight:700;font-variant-numeric:tabular-nums;position:relative}
+.cell.bateu{box-shadow:inset 0 0 0 1.5px color-mix(in srgb,var(--vd) 65%,transparent)}
+.cell .chk{position:absolute;top:1px;right:3px;font-size:9px;line-height:1;color:var(--vd);font-weight:800}
+.cell .nm{display:block;font-size:8.5px;font-weight:600;letter-spacing:.03em;opacity:.7;text-transform:uppercase}
+.udot.sheet{background:#4aa3c7}
+.pcx{cursor:pointer;transition:transform .08s,box-shadow .12s}.pcx:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(0,0,0,.25)}.seep{font-size:9.5px;color:var(--ouro,#F1CE68);font-weight:700;opacity:0;transition:opacity .12s}.pcx:hover .seep{opacity:1}
+.cell.g{background:color-mix(in srgb,var(--vd) 20%,transparent);color:var(--vd)}
+.cell.a{background:color-mix(in srgb,var(--am) 20%,transparent);color:var(--am)}
+.cell.r{background:color-mix(in srgb,var(--vm) 22%,transparent);color:var(--vm)}
+.cell.na{color:var(--ink3)}
+.cell.man{opacity:.6}
+.hint{font-size:11.5px;color:var(--ink3);margin:12px 2px 0;line-height:1.6}
+.hint b{color:var(--ink2)}
+.selrow{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px}
+.selb{font:600 12.5px/1 var(--sans);padding:9px 13px;border-radius:9px;border:1px solid var(--ln);background:transparent;color:var(--ink2);cursor:pointer}
+.selb.on{background:var(--grad);color:#1a1206;border-color:transparent}
+.rk{display:flex;flex-direction:column;gap:6px}
+.rkrow{display:grid;grid-template-columns:160px 1fr 190px;gap:12px;align-items:center;padding:7px 6px;border-radius:8px}
+.rkrow:hover{background:color-mix(in srgb,var(--ous) 6%,transparent)}
+.rku{font-size:13px;font-weight:500}
+.rktrack{background:var(--pn2);border-radius:6px;height:20px;position:relative;overflow:hidden}
+.rkfill{height:100%;border-radius:6px}
+.rkfill.g{background:var(--vd)}.rkfill.a{background:var(--am)}.rkfill.r{background:var(--vm)}
+.rkideal{position:absolute;top:-2px;bottom:-2px;width:2px;background:var(--ink);opacity:.55}
+.rkv{font-size:11.5px;text-align:right;color:var(--ink2);font-variant-numeric:tabular-nums}
+.rkv b{color:var(--ink)}
+.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px;margin-bottom:18px}
+.pbtn{background:var(--pn);border:1px solid var(--ln);border-radius:10px;padding:9px 11px;cursor:pointer;text-align:left;font-size:12.5px;color:var(--ink);display:flex;justify-content:space-between;align-items:center;gap:6px}
+.pbtn:hover{border-color:color-mix(in srgb,var(--ous) 40%,var(--ln))}
+.pbtn .mini{display:flex;gap:2px}
+.pbtn .mini i{width:6px;height:6px;border-radius:2px}
+.det{background:var(--pn);border:1px solid var(--ln);border-radius:14px;padding:18px 20px}
+.det h3{font-family:var(--serif);font-size:22px;color:var(--ous);margin-bottom:4px}
+.det .dsub{font-size:12.5px;color:var(--ink3);margin-bottom:16px}
+.dmeta{display:grid;grid-template-columns:1fr;gap:9px}
+.di{display:grid;grid-template-columns:130px 1fr 210px 62px;gap:12px;align-items:center;padding:11px 12px;background:var(--pn2);border-radius:10px;border-left:3px solid var(--ln)}
+.di.g{border-left-color:var(--vd)}.di.a{border-left-color:var(--am)}.di.r{border-left-color:var(--vm)}
+@media(max-width:640px){.di{grid-template-columns:1fr 1fr}}
+.dilbl{font-size:13px;font-weight:600}
+.dibar{background:var(--pg);border-radius:6px;height:18px;position:relative;overflow:hidden}
+.dibar i{position:absolute;left:0;top:0;bottom:0;border-radius:6px}
+.dibar .ide{position:absolute;top:-2px;bottom:-2px;width:2px;background:var(--ink);opacity:.5}
+.dinum{font-size:11.5px;color:var(--ink2);text-align:right;font-variant-numeric:tabular-nums}
+.dinum b{color:var(--ink)}
+.dipct{font-family:var(--serif);font-size:17px;font-weight:800;text-align:right;font-variant-numeric:tabular-nums}
+.dipct.g{color:var(--vd)}.dipct.a{color:var(--am)}.dipct.r{color:var(--vm)}.dipct.na{color:var(--ink3)}
+.note{background:var(--pn);border-left:3px solid var(--ous);border-radius:9px;padding:13px 16px;margin-top:18px;font-size:12.5px;color:var(--ink2);line-height:1.6}
+.note b{color:var(--ous)}
+.foot{margin:22px 2px 0;color:var(--ink3);font-size:11px;line-height:1.6}
+
+.ticker{overflow:hidden;border:1px solid var(--ln);border-radius:10px;background:linear-gradient(180deg,#0f0b06,#141009);margin:14px 0 4px;position:relative}
+.ticker::before,.ticker::after{content:"";position:absolute;top:0;bottom:0;width:36px;z-index:2;pointer-events:none}
+.ticker::before{left:0;background:linear-gradient(90deg,#0f0b06,transparent)}
+.ticker::after{right:0;background:linear-gradient(270deg,#0f0b06,transparent)}
+.tick-track{display:inline-flex;white-space:nowrap;padding:9px 0;animation:tick 150s linear infinite;will-change:transform}
+.ticker:hover .tick-track{animation-play-state:paused}
+@keyframes tick{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.ti{display:inline-flex;align-items:center;gap:7px;padding:0 20px;font-size:12.5px;font-variant-numeric:tabular-nums;border-right:1px solid var(--ln)}
+.ti .tu{font-weight:700;color:var(--ink);letter-spacing:.02em}
+.ti .tv{color:var(--ink2)}
+.ti .tp{font-weight:800;font-family:var(--serif)}
+.ti .tp.g{color:var(--vd)}.ti .tp.a{color:var(--am)}.ti .tp.r{color:var(--vm)}.ti .tp.na{color:var(--ink3)}
+.ti .arw.g{color:var(--vd)}.ti .arw.a{color:var(--am)}.ti .arw.r{color:var(--vm)}
+@media(prefers-reduced-motion:reduce){.tick-track{animation:none}}
+</style>
+<div class="wrap">
+  <div class="eyebrow">Ageodonto · Direção Comercial</div>
+  <h1>Torre de Controle</h1>
+  <div class="meta">
+    <span class="mchip live">● <b id="nlive"></b> ao vivo · Set/26 · dia <b id="cdia"></b></span>
+    <span class="mchip"><b id="nman"></b> manuais · <b>1</b> 🇺🇾 Montevidéu</span>
+    <span class="mchip">metas: Sugestão</span>
+    <span class="mchip">projeção <b id="cpace"></b></span>
+    <button class="mchip" id="fsBtn" style="cursor:pointer;border-color:color-mix(in srgb,var(--ous) 45%,var(--ln));color:var(--ous);font-weight:600">⛶ Tela cheia</button>
+  </div>
+  <div class="ticker" id="tickerbox"><div class="tick-track" id="tick"></div></div>
+  <div class="tabs">
+    <button class="tab on" data-p="mapa">Mapa da rede</button>
+    <button class="tab" data-p="rmr">RMR</button>
+    <button class="tab" data-p="estado">Por estado</button>
+    <button class="tab" data-p="meta">Por meta</button>
+    <button class="tab" data-p="praca">Por praça</button>
+    <button class="tab" data-p="comp">Comparativo</button>
+  </div>
+  <div class="pane on" id="p-mapa">
+    <div class="selrow" id="ufsel" style="margin:0 0 14px"></div>
+    <div id="destaques"></div>
+    <div class="placar" id="placar"></div>
+    <div class="hm-wrap"><table class="hm" id="hm"><thead></thead><tbody></tbody></table></div>
+    <div class="hint">Cor = <b>projeção de fechamento</b> (ritmo de hoje projetado ao fim do mês) vs meta. <span class="dot g"></span>no ritmo (≥100%) · <span class="dot a"></span>atenção (85–99%) · <span class="dot r"></span>fora (&lt;85%) · <span style="color:var(--ink3)">—</span> sem dado. <span class="udot live"></span>ao vivo (Giga) · <span class="udot man"></span>manual. <b>Parcelamento</b> é ao vivo com <b>farol de teto</b> (verde = dentro da meta). <b>30+</b> vem ao vivo das <b>planilhas de resgate da Marilda</b> (coluna Vlr 30+) em 35 praças (reconciliado com as planilhas de resgate, Set/26); onde aparece "—" a planilha não tem Setembro ou roda em outro sistema (Flores da Cunha, Nova Andradina). <b style="color:var(--vd)">✓</b> na célula = a praça <b>já bateu a meta</b> (realizado ≥ meta, não só projeção) — vale nos cumulativos (Faturamento, Recompra, Entrada, Avaliações, 30+). Clique numa praça pra abrir; clique no cabeçalho pra ordenar.</div>
+  </div>
+  <div class="pane" id="p-rmr">
+    <div class="hint" style="margin:0 0 14px">As <b>6 praças debatidas na RMR</b>: Teutônia, Viamão, Campo Grande II, Capão da Canoa, Passos e Três Lagoas. Mesma leitura do mapa — cor = projeção de fechamento vs meta. Clique numa praça pra abrir o detalhe.</div>
+    <div class="placar" id="placarRMR"></div>
+    <div class="hm-wrap"><table class="hm" id="hmRMR"><thead></thead><tbody></tbody></table></div>
+  </div>
+  <div class="pane" id="p-meta">
+    <div class="selrow" id="msel"></div>
+    <div class="rk" id="rk"></div>
+    <div class="hint">Barra = projeção vs meta · traço branco = meta (100%). Ordenado do pior pro melhor.</div>
+  </div>
+  <div class="pane" id="p-praca">
+    <div class="pgrid" id="pgrid"></div>
+    <div id="det"></div>
+  </div>
+  <div class="pane" id="p-estado">
+    <div class="hint" style="margin:0 0 14px">Cada estado em <b>média por clínica</b> (só praças ao vivo) · conversão e ticket <b>ponderados</b> · alterne <b>Realizado até hoje</b> × <b>Projeção fim do mês</b> · 🏆 = líder na métrica · a linha <b>REDE</b> é a média de toda a rede.</div>
+    <div class="selrow" id="estmode" style="margin:0 0 12px"></div>
+    <div class="hm-wrap"><table class="hm" id="esttab" style="min-width:840px"><thead></thead><tbody></tbody></table></div>
+  </div>
+  <style>
+#p-comp .cmp-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px}
+#p-comp .cmp-kpi{background:var(--pn);border:1px solid var(--ln);border-radius:12px;padding:12px 14px}
+#p-comp .cmp-kpi .ck{font-size:10px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--ink3)}
+#p-comp .cmp-kpi .cv{font-weight:800;font-size:23px;margin-top:5px;color:var(--ink);font-variant-numeric:tabular-nums}
+#p-comp .cmp-kpi .cs{font-size:11px;color:var(--ink2);margin-top:4px}
+#p-comp #cmpsel{margin-bottom:12px}
+#p-comp .mut{color:var(--ink2)}
+#p-comp #cmp td,#p-comp #cmpamp td,#p-comp #cmp th,#p-comp #cmpamp th{font-variant-numeric:tabular-nums}
+#p-comp .tot td{border-top:2px solid #F1CE68;font-weight:800;background:color-mix(in srgb,#F1CE68 9%,transparent)}
+</style>
+<div class="pane" id="p-comp">
+    <div class="hint" style="margin:0 0 12px"><b>Projeção de fechamento de Set/26</b> (ritmo do mês projetado pela curva de cada praça) × <b>Agosto fechado</b> × <b>Set/25 fechado</b> — mês cheio contra mês cheio. Fonte: Giga · Caixa Mensal. <span style="color:var(--vd)">▲ acima</span> / <span style="color:var(--vm)">▼ abaixo</span> / <span style="color:var(--cy)">novo</span> = sem base no período.</div>
+    <div class="selrow" id="cmpsel"><button class="selb on" data-m="fat">Faturamento</button><button class="selb" data-m="entrada">Entrada</button><button class="selb" data-m="aval">Avaliações</button></div>
+    <div class="cmp-kpis" id="cmpkpis"></div>
+    <div class="hm-wrap" style="margin:14px 0 16px"><table class="hm" id="cmpamp"><thead></thead><tbody></tbody></table></div>
+    <div class="hm-wrap"><table class="hm" id="cmp"><thead></thead><tbody></tbody></table></div>
+  </div>
+  <div class="note"><b>Ao vivo, com pacing.</b> Faturamento, Recompra, Entrada, Avaliações, Conversão e Ticket vêm do <b>Giga em tempo real</b> (mês corrente, MTD). Os cumulativos são projetados pelo ritmo: <b>realizado até hoje ÷ fração do mês decorrida</b> = projeção de fechamento. Conversão e Ticket (taxa/média) comparam direto com a meta. <b>Parcelamento</b> = média de boleto + cartão (ao vivo do Giga), com farol de <b>teto</b> — verde quando está dentro da meta ("até X×"), vermelho se passou. <b>30+</b> vem ao vivo das planilhas de resgate da Marilda no Drive (somo a coluna "Vlr 30+" da aba do mês corrente) — reconciliado com as planilhas de resgate da Marilda (célula "Resgate 30D+" da aba de Setembro/2026) em 35 praças, atualizado dia 25/09. Onde aparece "—", a planilha não tem Setembro (Flores da Cunha, Nova Andradina) ou a praça roda em outro sistema. Tapejara e Serafina aparecem R$0 = sem resgate 30+ lançado no mês. <b>Caçador SM, Campos Novos e União Indaial</b> rodam em outro sistema → manuais (último mês da planilha). <b>Projeção ponderada por praça:</b> em vez de assumir o mês linear, cada praça usa sua <b>curva histórica de faturamento por bloco</b> (1–10 / 11–20 / 21–fim, base abr–ago 2026 (Giga)). Assim uma praça que tração no fim do mês não é punida no começo, e uma que fatura no início não é superestimada. <b>Atenção ao dia:</b> hoje é dia 26/30 — atualização da <b>manhã de sábado</b> (~7h10): o dia 26 mal começou, então o pacing usa dia efetivo ≈ 25,3 (as praças ainda vão produzir o dia inteiro).</div>
+  <div class="foot">Torre de Controle · Direção Comercial Ageodonto. Metas = linha Sugestão da planilha de apontamento. Realizado ao vivo = Giga (Caixa Mensal). Peça pra ajustar faróis, ligar 30+/parcelamento ou atualizar o dia.</div>
+</div>
+<script>
+var D={"ind": [{"k": "fat", "lbl": "Faturamento", "fmt": "rs", "type": "cum"}, {"k": "recompra", "lbl": "Recompra", "fmt": "rs", "type": "cum"}, {"k": "entrada", "lbl": "Entrada", "fmt": "rs", "type": "cum"}, {"k": "aval", "lbl": "Avaliações", "fmt": "num", "type": "cum"}, {"k": "conv", "lbl": "Conversão", "fmt": "pct", "type": "rate"}, {"k": "tk", "lbl": "Ticket médio", "fmt": "rs", "type": "rate"}, {"k": "d30", "lbl": "30+", "fmt": "rs", "type": "cum"}, {"k": "parc", "lbl": "Parcelamento", "fmt": "x", "type": "ceiling"}], "pracas": [{"u": "Alvorada", "src": "live", "ref": "Set/26 · 01–26 (MTD)", "m": {"fat": {"meta": 428125.0, "real": 428439, "proj": 521596.0555149744, "pct": 1.2183265530276775, "farol": "g", "ago": 456883.37, "ano": 489938.07}, "recompra": {"meta": 100000.0, "real": 79309, "proj": 96553.44533722912, "pct": 0.9655344533722912, "farol": "a", "ago": 117355.9, "ano": 130002.15}, "entrada": {"meta": 100000.0, "real": 68177, "proj": 83000.9739469199, "pct": 0.830009739469199, "farol": "r", "ago": 105870.55, "ano": 83407.44}, "aval": {"meta": 125.0, "real": 124, "proj": 150.9617725833942, "pct": 1.2076941806671537, "farol": "g", "ago": 122.0, "ano": 138.0}, "conv": {"meta": 0.35000000000000003, "real": 0.2823, "proj": null, "pct": 0.8065714285714285, "farol": "r", "ago": 0.3361, "ano": 0.4275}, "tk": {"meta": 7500.0, "real": 7935, "proj": null, "pct": 1.058, "farol": "g", "ago": 7664.27, "ano": 7594.56}, "d30": {"meta": 40000, "real": 7300, "proj": 8887.2656440224, "pct": 0.22218164110056, "farol": "r", "ago": null}, "parc": {"meta": 20.0, "real": 15.21, "proj": null, "pct": 0.7605000000000001, "farol": "g", "ago": null}}, "blk": [27.9, 34.1, 38.0], "fexp": 0.8214, "blkSrc": "hist"}, {"u": "Bento Gonçalves", "src": "live", "ref": "Set/26 · 01–26 (MTD)", "m": {"fat": {"meta": 850000.0, "real": 701160, "proj": 877766.6499749625, "pct": 1.0326666470293675, "farol": "g", "ago": 797900.21, "ano": 806283.31}, "recompra": {"meta": 250000.0, "real": 167970, "proj": 210277.91687531298, "pct": 0.8411116675012519, "farol": "r", "ago": 223270.07, "ano": 210183.23}, "entrada": {"meta": 170000.0, "real": 146280, "proj": 183124.68703054584, "pct": 1.077204041356152, "farol": "g", "ago": 205828.02, "ano": 169844.98}, "aval": {"meta": 100.0, "real": 79, "proj": 98.89834752128193, "pct": 0.9889834752128194, "farol": "a", "ago": 110.0, "ano": 107.0}, "conv": {"meta": 0.5, "real": 0.481, "proj": null, "pct": 0.962, "farol": "a", "ago": 0.4727, "ano": 0.514}, "tk": {"meta": 10000.0, "real": 10222, "proj": null, "pct": 1.0222, "farol": "g", "ago": 9445.94, "ano": 13252.77}, "d30": {"meta": 100000, "real": 133250, "proj": 166812.71907861793, "pct": 1.6681271907861792, "farol": "g", "ago": null}, "parc": {"meta": 15.0, "real": 11.09, "proj": null, "pct": 0.7393333333333333, "farol": "g", "ago": null}}, "blk": [23.4, 33.9, 42.6], "fexp": 0.7988, "blkSrc": "hist"}, {"u": "Campo Grande", "src": "live", "ref": "Set/26 · 01–26 (MTD)", "m": {"fat": {"meta": 820000.0, "real": 785583, "proj": 937673.6691334448, "pct": 1.1435044745529814, "farol": "g", "ago": 773670.44, "ano": 680698.95}, "recompra": {"meta": 150000.0, "real": 196033, "proj": 233985.43805204105, "pct": 1.5599029203469403, "farol": "g", "ago": 149630.34, "ano": 203188.35}, "entrada": {"meta": 123000.00000000001, "real": 89082, "proj": 106328.47935068035, "pct": 0.8644591817128483, "farol": "a", "ago": 121769.15, "ano": 105421.11}, "aval": {"meta": 150.0, "real": 105, "proj": 125.32824063022201, "pct": 0.83552160420148, "farol": "r", "ago": 135.0, "ano": 187.0}, "conv": {"meta": 0.4, "real": 0.5048, "proj": null, "pct": 1.262, "farol": "g", "ago": 0.4593, "ano": 0.3422}, "tk": {"meta": 9500.0, "real": 8829, "proj": null, "pct": 0.9293684210526316, "farol": "a", "ago": 9831.42, "ano": 9772.66}, "d30": {"meta": 100000, "real": 31940, "proj": 38123.65719742182, "pct": 0.3812365719742182, "farol": "r", "ago": null}, "parc": {"meta": 20.0, "real": 14.38, "proj": null, "pct": 0.7190000000000001, "farol": "g", "ago": null}}, "blk": [33.4, 32.1, 34.5], "fexp": 0.8378, "blkSrc": "hist"}, {"u": "Campo Grande II", "src": "live", "ref": "Set/26 · 01–26 (MTD)", "m": {"fat": {"meta": 426000.0, "real": 388740, "proj": 499280.76033907017, "pct": 1.1720205641762211, "farol": "g", "ago": 407484.11, "ano": 376276.04}, "recompra": {"meta": 30000.0, "real": 33120, "proj": 42537.88851785256, "pct": 1.417929617261752, "farol": "g", "ago": 15407.11, "ano": 28819.93}, "entrada": {"meta": 85200.0, "real": 79750, "proj": 102427.43385563833, "pct": 1.202199927883079, "farol": "g", "ago": 61267.99, "ano": 76174.13}, "aval": {"meta": 120.0, "real": 73, "proj": 93.7580272283586, "pct": 0.781316893569655, "farol": "r", "ago": 119.0, "ano": 95.0}, "conv": {"meta": 0.35000000000000003, "real": 0.2877, "proj": null, "pct": 0.822, "farol": "r", "ago": 0.3697, "ano": 0.4105}, "tk": {"meta": 8000.0, "real": 9811, "proj": null, "pct": 1.226375, "farol": "g", "ago": 7450.14, "ano": 11346.18}, "d30": {"meta": 90000, "real": 153679.99, "proj": 197379.8998201901, "pct": 2.1931099980021123, "farol": "g", "ago": null}, "parc": {"meta": 20.0, "real": 15.08, "proj": null, "pct": 0.754, "farol": "g", "ago": null}}, "blk": [21.6, 31.3, 47.1], "fexp": 0.7786, "blkSrc": "hist"}, {"u": "Capão da Canoa", "src": "live", "ref": "Set/26 · 01–26 (MTD)", "m": {"fat": {"meta": 650450.0, "real": 458773, "proj": 542092.6385442514, "pct": 0.833411697354526, "farol": "r", "ago": 485324.63, "ano": 696280.01}, "recompra": {"meta": 90000.0, "real": 103295, "proj": 122054.82689353656, "pct": 1.3561647432615174, "farol": "g", "ago": 121154.99, "ano": 116150.89}, "entrada": {"meta": 97500.0, "real": 105892, "proj": 125123.47867186576, "pct": 1.283317729967854, "farol": "g", "ago": 117252.51, "ano": 93594.99}, "aval": {"meta": 110.0, "real": 88, "proj": 103.98203946591043, "pct": 0.945291267871913, "farol": "a", "ago": 100.0, "ano": 137.0}, "conv": {"meta": 0.39, "real": 0.3523, "proj": null, "pct": 0.9033333333333333, "farol": "a", "ago": 0.31, "ano": 0.3212}, "tk": {"meta": 10500.0, "real": 9251, "proj": null, "pct": 0.8810476190476191, "farol": "a", "ago": 9692.23, "ano": 13259.02}, "d30": {"meta": 110000, "real": 98000, "proj": 115798.18031430934, "pct": 1.0527107301300849, "farol": "g", "ago": null}, "parc": {"meta": 20.0, "real": 10.15, "proj": null, "pct": 0.5075000000000001, "farol": "g", "ago": null}}, "blk": [30.3, 37.0, 32.7], "fexp": 0.8463, "blkSrc": "hist"}, {"u": "Carlos Barbosa", "src": "live", "ref": "Set/26 · 01–26 (MTD)", "m": {"fat": {"meta": 610000.0, "real": 466297, "proj": 577243.1294874969, "pct": 0.9463002122745852, "farol": "a", "ago": 720015.74, "ano": 605516.75}, "recompra": {"meta": 130000.0, "real": 125547, "proj": 155418.4204010894, "pct": 1.1955263107776106, "farol": "g", "ago": 155678.37, "ano": 63556.15}, "entrada": {"meta": 122000.00000000001, "real": 108048, "proj": 133755.8801683585, "pct": 1.0963596735111352, "farol": "g", "ago": 235472.85, "ano": 151917.1}, "aval": {"meta": 75.0, "real": 40, "proj": 49.51720722951226, "pct": 0.6602294297268301, "farol": "r", "ago": 75.0, "ano": 75.0}, "conv": {"meta": 0.7000000000000001, "real": 0.85, "proj": null, "pct": 1.2142857142857142, "farol": "g", "ago": 0.6667000000000001, "ano": 0.7867000000000001}, "tk": {"meta": 8000.0, "real": 8893, "proj": null, "pct": 1.111625, "farol": "g", "ago": 9131.28, "ano": 9416.91}, "d30": {"meta": 60000, "real": 81100, "proj": 100396.13765783611, "pct": 1.673268960963935, "farol": "g", "ago": null}, "parc": {"meta": 18.0, "real": 10.71, "proj": null, "pct": 0.5950000000000001, "farol": "g", "ago": null}}, "blk": [24.5, 34.5, 41.1], "fexp": 0.8078, "blkSrc": "hist"}, {"u": "Caçador OU", "src": "live", "ref": "Set/26 · 01–26 (MTD)", "m": {"fat": {"meta": 771400.0, "real": 703763, "proj": 862137.6944750705, "pct": 1.1176272938489376, "farol": "g", "ago": 912799.42, "ano": 459036.92}, "recompra": {"meta": 85000.0, "real": 74071, "proj": 90739.92404753155, "pct": 1.0675285182062535, "farol": "g", "ago": 146015.9, "ano": 49101.37}, "entrada": {"meta": 69426.0, "real": 95096, "proj": 116496.3861325493, "pct": 1.6779936354182772, "farol": "g", "ago": 94211.03, "ano": 71160.5}, "aval": {"meta": 120.0, "real": 97, "proj": 118.82886193801298, "pct": 0.9902405161501081, "farol": "a", "ago": 136.0, "ano": 116.0}, "conv": {"meta": 0.6000000000000001, "real": 0.6804, "proj": null, "pct": 1.134, "farol": "g", "ago": 0.6396999999999999, "ano": 0.5085999999999999}, "tk": {"meta": 8700.0, "real": 8251, "proj": null, "pct": 0.9483908045977012, "farol": "a", "ago": 8508.67, "ano": 9508.89}, "d30": {"meta": 60000, "real": 27200, "proj": 33321.082935195394, "pct": 0.5553513822532565, "farol": "r", "ago": null}, "parc": {"meta": 22.0, "real": 12.92, "proj": null, "pct": 0.5872727272727273, "farol": "g", "ago": null}}, "blk": [22.8, 38.0, 39.3], "fexp": 0.8163, "blkSrc": "hist"}, {"u": "Dourados", "src": "live", "ref": "Set/26 · 01–26 (MTD)", "m": {"fat": {"meta": 856500.0, "real": 1046944, "proj": 1226791.6569018045, "pct": 1.4323311814381838, "farol": "g", "ago": 954407.65, "ano": 591823.33}, "recompra": {"meta": 105000.0, "real": 149514, "proj": 175198.03140379657, "pct": 1.6685526800361579, "farol": "g", "ago": 140112.59, "ano": 31498.89}, "entrada": {"meta": 149887.5, "real": 228969, "proj": 268302.0857745489, "pct": 1.7900230891471862, "farol": "g", "ago": 162114.7, "ano": 100419.27}, "aval": {"meta": 140.0, "real": 142, "proj": 166.39325052730254, "pct": 1.188523218052161, "farol": "g", "ago": 140.0, "ano": 133.0}, "conv": {"meta": 0.45, "real": 0.5423, "proj": null, "pct": 1.205111111111111, "farol": "g", "ago": 0.5714, "ano": 0.4586}, "tk": {"meta": 10500.0, "real": 10402, "proj": null, "pct": 0.9906666666666667, "farol": "a", "ago": 8522.96, "ano": 10827.92}, "d30": {"meta": 90000, "real": 106610, "proj": 124923.83407546284, "pct": 1.388042600838476, "farol": "g", "ago": null}, "parc": {"meta": 18.0, "real": 12.3, "proj": null, "pct": 0.6833333333333333, "farol": "g", "ago": null}}, "blk": [35.1, 33.7, 31.2], "fexp": 0.8534, "blkSrc": "hist"}, {"u": "Encantado", "src": "live", "ref": "Set/26 · 01–26 (MTD)", "m": {"fat": {"meta": 440000.0, "real": 433600, "proj": 497932.93523197056, "pct": 1.1316657618908421, "farol": "g", "ago": 436300.02, "ano": 475814.56}, "recompra": {"meta": 60000.0, "real": 52700, "proj": 60519.062930638494, "pct": 1.0086510488439748, "farol": "g", "ago": 56600.0, "ano": 81749.97}, "entrada": {"meta": 66000.0, "real": 55200, "proj": 63389.986219568214, "pct": 0.9604543366601245, "farol": "a", "ago": 84835.02, "ano": 119970.0}, "aval": {"meta": 80.0, "real": 52, "proj": 59.71520440973817, "pct": 0.7464400551217272, "farol": "r", "ago": 69.0, "ano": 83.0}, "conv": {"meta": 0.55, "real": 0.4615, "proj": null, "pct": 0.8390909090909091, "farol": "r", "ago": 0.5942000000000001, "ano": 0.5422}, "tk": {"meta": 7500.0, "real": 11909, "proj": null, "pct": 1.5878666666666668, "farol": "g", "ago": 8652.27, "ano": 9518.09}, "d30": {"meta": 60000, "real": 90000, "proj": 103353.2384014699, "pct": 1.7225539733578317, "farol": "g", "ago": null}, "parc": {"meta": 20.0, "real": 18.62, "proj": null, "pct": 0.931, "farol": "g", "ago": null}}, "blk": [23.2, 49.3, 27.5], "fexp": 0.8708, "blkSrc": "hist"}, {"u": "Flores da Cunha", "src": "live", "ref": "Set/26 · 01–26 (MTD)", "m": {"fat": {"meta": 855400.0, "real": 863025, "proj": 1003167.4997094037, "pct": 1.172746667885672, "farol": "g", "ago": 726789.97, "ano": 935346.42}, "recompra": {"meta": 125000.0, "real": 122300, "proj": 142159.71172846682, "pct": 1.1372776938277345, "farol": "g", "ago": 96829.98, "ano": 103514.99}, "entrada": {"meta": 68500.0, "real": 106864, "proj": 124217.13355806115, "pct": 1.8133888110665861, "farol": "g", "ago": 57355.0, "ano": 47226.65}, "aval": {"meta": 90.0, "real": 87, "proj": 101.12751365802627, "pct": 1.1236390406447363, "farol": "g", "ago": 87.0, "ano": 129.0}, "conv": {"meta": 0.63, "real": 0.6552, "proj": null, "pct": 1.04, "farol": "g", "ago": 0.5977, "ano": 0.6512}, "tk": {"meta": 12000.0, "real": 12695, "proj": null, "pct": 1.0579166666666666, "farol": "g", "ago": 13517.84, "ano": 12029.97}, "d30": {"meta": 50000.0, "real": null, "proj": null, "pct": null, "farol": "na", "ago": null}, "parc": {"meta": 20.0, "real": 10.1, "proj": null, "pct": 0.505, "farol": "g", "ago": null}}, "blk": [32.0, 38.4, 29.5], "fexp": 0.8603, "blkSrc": "hist"}, {"u": "Garibaldi", "src": "live", "ref": "Set/26 · 01–26 (MTD)", "m": {"fat": {"meta": 698750.0, "real": 1000244, "proj": 1197897.005988024, "pct": 1.714342763489122, "farol": "g", "ago": 986394.05, "ano": 542723.49}, "recompra": {"meta": 150000.0, "real": 269232, "proj": 322433.53293413174, "pct": 2.149556886227545, "farol": "g", "ago": 227430.49, "ano": 121910.54}, "entrada": {"meta": 174687.5, "real": 278149, "proj": 333112.5748502994, "pct": 1.9069056163165619, "farol": "g", "ago": 227815.0, "ano": 111200.0}, "aval": {"meta": 75.0, "real": 76, "proj": 91.0179640718563, "pct": 1.2135728542914173, "farol": "g", "ago": 77.0, "ano": 84.0}, "conv": {"meta": 0.7000000000000001, "real": 0.7368, "proj": null, "pct": 1.0525714285714285, "farol": "g", "ago": 0.6623, "ano": 0.6429}, "tk": {"meta": 9500.0, "real": 10173, "proj": null, "pct": 1.0708421052631578, "farol": "g", "ago": 12969.83, "ano": 8739.36}, "d30": {"meta": 50000, "real": 75080, "proj": 89916.16766467066, "pct": 1.7983233532934133, "farol": "g", "ago": null}, "parc": {"meta": 19.0, "real": 9.16, "proj": null, "pct": 0.48210526315789476, "farol": "g", "ago": null}}, "blk": [31.6, 33.4, 34.9], "fexp": 0.835, "blkSrc": "hist"}, {"u": "Guaporé", "src": "live", "ref": "Set/26 · 01–26 (MTD)", "m": {"fat": {"meta": 403000.0, "real": 335354, "proj": 400279.30293626164, "pct": 0.9932488906606989, "farol": "a", "ago": 391810.38, "ano": 256778.98}, "recompra": {"meta": 45000.0, "real": 50070, "proj": 59763.66674624015, "pct": 1.3280814832497811, "farol": "g", "ago": 36415.02, "ano": 28178.17}, "entrada": {"meta": 60450.0, "real": 85100, "proj": 101575.55502506565, "pct": 1.6803234909026576, "farol": "g", "ago": 74514.15, "ano": 56800.03}, "aval": {"meta": 55.0, "real": 33, "proj": 39.3888756266412, "pct": 0.71616137502984, "farol": "r", "ago": 72.0, "ano": 71.0}, "conv": {"meta": 0.7000000000000001, "real": 0.7273, "proj": null, "pct": 1.039, "farol": "g", "ago": 0.6528, "ano": 0.5915}, "tk": {"meta": 8000.0, "real": 8463, "proj": null, "pct": 1.057875, "farol": "g", "ago": 7390.01, "ano": 7299.41}, "d30": {"meta": 50000, "real": 49570, "proj": 59166.865600381956, "pct": 1.1833373120076391, "farol": "g", "ago": null}, "parc": {"meta": 22.0, "real": 14.3, "proj": null, "pct": 0.65, "farol": "g", "ago": null}}, "blk": [26.1, 39.4, 34.5], "fexp": 0.8378, "blkSrc": "hist"}, {"u": "Guaíba", "src": "live", "ref": "Set/26 · 01–26 (MTD)", "m": {"fat": {"meta": 207250.0, "real": 271335, "proj": 368011.66418011667, "pct": 1.7756895738485725, "farol": "g", "ago": 216721.98, "ano": 236375.3}, "recompra": {"meta": 50000.0, "real": 79610, "proj": 107975.04407975044, "pct": 2.159500881595009, "farol": "g", "ago": 72898.98, "ano": 48739.71}, "entrada": {"meta": 51812.5, "real": 100755, "proj": 136654.00786654008, "pct": 2.6374718044205565, "farol": "g", "ago": 39873.0, "ano": 47359.99}, "aval": {"meta": 65.0, "real": 49, "proj": 66.45870066458701, "pct": 1.0224415486859542, "farol": "g", "ago": 57.0, "ano": 80.0}, "conv": {"meta": 0.30000000000000004, "real": 0.449, "proj": null, "pct": 1.4966666666666666, "farol": "g", "ago": 0.36840000000000006, "ano": 0.375}, "tk": {"meta": 5500.0, "real": 6185, "proj": null, "pct": 1.1245454545454545, "farol": "g", "ago": 5714.92, "ano": 6308.11}, "d30": {"meta": 60000, "real": 63740, "proj": 86450.56286450563, "pct": 1.440842714408427, "farol": "g", "ago": null}, "parc": {"meta": null, "real": 11.09, "proj": null, "pct": null, "farol": "na", "ago": null}}, "blk": [14.5, 29.5, 56.1], "fexp": 0.7373, "blkSrc": "hist"}, {"u": "Indaial", "src": "live", "ref": "Set/26 · 01–26 (MTD)", "m": {"fat": {"meta": 916250.0, "real": 921279, "proj": 1199113.627489262, "pct": 1.3087188294562204, "farol": "g", "ago": 760474.52, "ano": 835219.0}, "recompra": {"meta": 165000.0, "real": 84829, "proj": 110411.29767018092, "pct": 0.6691593798192783, "farol": "r", "ago": 95006.73, "ano": 252552.62}, "entrada": {"meta": 201575.0, "real": 184647, "proj": 240331.90160093713, "pct": 1.1922703787718572, "farol": "g", "ago": 204440.0, "ano": 243598.89}, "aval": {"meta": 95.0, "real": 79, "proj": 102.82441754522974, "pct": 1.0823622899497867, "farol": "g", "ago": 82.0, "ano": 112.0}, "conv": {"meta": 0.45, "real": 0.519, "proj": null, "pct": 1.1533333333333333, "farol": "g", "ago": 0.4878, "ano": 0.41960000000000003}, "tk": {"meta": 15000.0, "real": 16086, "proj": null, "pct": 1.0724, "farol": "g", "ago": 14259.02, "ano": 13021.85}, "d30": {"meta": 130000, "real": 167900, "proj": 218534.42665625407, "pct": 1.6810340512019544, "farol": "g", "ago": null}, "parc": {"meta": null, "real": 20.34, "proj": null, "pct": null, "farol": "na", "ago": null}}, "blk": [22.5, 28.2, 49.3], "fexp": 0.7683, "blkSrc": "hist"}, {"u": "Lajeado", "src": "live", "ref": "Set/26 · 01–26 (MTD)", "m": {"fat": {"meta": 812125.0, "real": 557165, "proj": 662739.3838467944, "pct": 0.8160558828342859, "farol": "r", "ago": 804744.72, "ano": 775870.05}, "recompra": {"meta": 125000.0, "real": 164605, "proj": 195795.17069109075, "pct": 1.566361365528726, "farol": "g", "ago": 95074.71, "ano": 96562.62}, "entrada": {"meta": 123000.0, "real": 65838, "proj": 78313.31033662424, "pct": 0.6366935799725548, "farol": "r", "ago": 113265.01, "ano": 114673.35}, "aval": {"meta": 95.0, "real": 60, "proj": 71.36909718092066, "pct": 0.751253654536007, "farol": "r", "ago": 82.0, "ano": 115.0}, "conv": {"meta": 0.45, "real": 0.2667, "proj": null, "pct": 0.5926666666666667, "farol": "r", "ago": 0.46340000000000003, "ano": 0.5217}, "tk": {"meta": 13500.0, "real": 14299, "proj": null, "pct": 1.0591851851851852, "farol": "g", "ago": 16028.09, "ano": 12170.47}, "d30": {"meta": 120000, "real": 92900, "proj": 110503.15213512549, "pct": 0.9208596011260458, "farol": "a", "ago": null}, "parc": {"meta": 22.0, "real": 14.55, "proj": null, "pct": 0.6613636363636364, "farol": "g", "ago": null}}, "blk": [27.5, 38.6, 33.9], "fexp": 0.8407, "blkSrc": "hist"}, {"u": "Montenegro", "src": "live", "ref": "Set/26 · 01–26 (MTD)", "m": {"fat": {"meta": 585000.0, "real": 486940, "proj": 534452.8591812095, "pct": 0.9135946310789905, "farol": "a", "ago": 703120.07, "ano": 635370.94}, "recompra": {"meta": 135000.0, "real": 119350, "proj": 130995.49994512128, "pct": 0.970337036630528, "farol": "a", "ago": 158350.06, "ano": 218524.69}, "entrada": {"meta": 58500.0, "real": 34400, "proj": 37756.55800680496, "pct": 0.645411247979572, "farol": "r", "ago": 133050.01, "ano": 43679.99}, "aval": {"meta": 105.0, "real": 83, "proj": 91.09867193502359, "pct": 0.867606399381177, "farol": "a", "ago": 113.0, "ano": 125.0}, "conv": {"meta": 0.5, "real": 0.4337, "proj": null, "pct": 0.8674, "farol": "a", "ago": 0.4071, "ano": 0.608}, "tk": {"meta": 8000.0, "real": 8771, "proj": null, "pct": 1.096375, "farol": "g", "ago": 10610.96, "ano": 7227.55}, "d30": {"meta": 40000, "real": 2250, "proj": 2469.5423114916034, "pct": 0.06173855778729009, "farol": "r", "ago": null}, "parc": {"meta": 10.0, "real": 9.85, "proj": null, "pct": 0.985, "farol": "g", "ago": null}}, "blk": [31.9, 49.3, 18.7], "fexp": 0.9111, "blkSrc": "hist"}, {"u": "Naviraí", "src": "live", "ref": "Set/26 · 01–26 (MTD)", "m": {"fat": {"meta": 514250.00000000006, "real": 381455, "proj": 438051.2172714745, "pct": 0.85182541034803, "farol": "a", "ago": 359771.98, "ano": 473896.73}, "recompra": {"meta": 70000.0, "real": 56980, "proj": 65434.08360128617, "pct": 0.9347726228755167, "farol": "a", "ago": 92178.75, "ano": 46743.28}, "entrada": {"meta": 90000.0, "real": 59205, "proj": 67989.20532843363, "pct": 0.7554356147603737, "farol": "r", "ago": 83622.98, "ano": 59605.0}, "aval": {"meta": 85.0, "real": 90, "proj": 103.35323840146991, "pct": 1.215920451781999, "farol": "g", "ago": 94.0, "ano": 106.0}, "conv": {"meta": 0.45, "real": 0.4222, "proj": null, "pct": 0.9382222222222223, "farol": "a", "ago": 0.35109999999999997, "ano": 0.5377000000000001}, "tk": {"meta": 9000.0, "real": 6236, "proj": null, "pct": 0.6928888888888889, "farol": "r", "ago": 6839.51, "ano": 7885.76}, "d30": {"meta": 100000, "real": 71120, "proj": 81672.02572347267, "pct": 0.8167202572347267, "farol": "r", "ago": null}, "parc": {"meta": 15.0, "real": 16.73, "proj": null, "pct": 1.1153333333333333, "farol": "r", "ago": null}}, "blk": [37.8, 34.6, 27.7], "fexp": 0.8708, "blkSrc": "hist"}, {"u": "Nova Andradina", "src": "live", "ref": "Set/26 · 01–26 (MTD)", "m": {"fat": {"meta": 545400.0, "real": 424826, "proj": 482647.1256532606, "pct": 0.8849415578534298, "farol": "a", "ago": 420635.24, "ano": 472290.07}, "recompra": {"meta": 35000.0, "real": 106224, "proj": 120681.66325835038, "pct": 3.448047521667154, "farol": "g", "ago": 43074.9, "ano": 48070.82}, "entrada": {"meta": 66000.0, "real": 68613, "proj": 77951.60190865712, "pct": 1.1810848774038958, "farol": "g", "ago": 61754.11, "ano": 138039.4}, "aval": {"meta": 90.0, "real": 48, "proj": 54.53306066803, "pct": 0.6059228963114444, "farol": "r", "ago": 70.0, "ano": 125.0}, "conv": {"meta": 0.48000000000000004, "real": 0.625, "proj": null, "pct": 1.3020833333333333, "farol": "g", "ago": 0.5857, "ano": 0.44}, "tk": {"meta": 9500.0, "real": 7786, "proj": null, "pct": 0.8195789473684211, "farol": "r", "ago": 7438.44, "ano": 8004.52}, "d30": {"meta": 100000.0, "real": 34400.0, "proj": 39082.02681208816, "pct": 0.3908202681208816, "farol": "r", "ago": null}, "parc": {"meta": 24.0, "real": 13.9, "proj": null, "pct": 0.5791666666666667, "farol": "g", "ago": null}}, "blk": [34.0, 40.5, 25.5], "fexp": 0.8802, "blkSrc": "hist"}, {"u": "Nova Prata", "src": "live", "ref": "Set/26 · 01–26 (MTD)", "m": {"fat": {"meta": 423200.0, "real": 290420, "proj": 334238.6925998389, "pct": 0.789788971171642, "farol": "r", "ago": 381453.68, "ano": 268902.33}, "recompra": {"meta": 50000.0, "real": 113290, "proj": 130383.2431810335, "pct": 2.60766486362067, "farol": "g", "ago": 78830.03, "ano": 43129.98}, "entrada": {"meta": 84640.0, "real": 41640, "proj": 47922.66083553919, "pct": 0.5661940079813231, "farol": "r", "ago": 67777.02, "ano": 62769.51}, "aval": {"meta": 70.0, "real": 39, "proj": 44.88433651743584, "pct": 0.6412048073919406, "farol": "r", "ago": 55.0, "ano": 62.0}, "conv": {"meta": 0.7000000000000001, "real": 0.7949, "proj": null, "pct": 1.1355714285714285, "farol": "g", "ago": 0.6364, "ano": 0.7742}, "tk": {"meta": 6800.0, "real": 4872, "proj": null, "pct": 0.7164705882352941, "farol": "r", "ago": 7256.05, "ano": 5292.18}, "d30": {"meta": 40000, "real": 12650, "proj": 14558.637357578547, "pct": 0.3639659339394637, "farol": "r", "ago": null}, "parc": {"meta": 15.0, "real": 12.3, "proj": null, "pct": 0.8200000000000001, "farol": "g", "ago": null}}, "blk": [38.1, 33.9, 28.1], "fexp": 0.8689, "blkSrc": "hist"}, {"u": "Osório", "src": "live", "ref": "Set/26 · 01–26 (MTD)", "m": {"fat": {"meta": 726875.0, "real": 518791, "proj": 606560.2712498539, "pct": 0.8344767274288618, "farol": "r", "ago": 681460.07, "ano": 509294.96}, "recompra": {"meta": 180000.0, "real": 158234, "proj": 185004.09213141588, "pct": 1.0278005118411992, "farol": "g", "ago": 249312.03, "ano": 132102.34}, "entrada": {"meta": 116300.0, "real": 108399, "proj": 126737.9866713434, "pct": 1.0897505302781032, "farol": "g", "ago": 122026.23, "ano": 93223.83}, "aval": {"meta": 95.0, "real": 87, "proj": 101.71869519466854, "pct": 1.0707231073123005, "farol": "g", "ago": 104.0, "ano": 109.0}, "conv": {"meta": 0.55, "real": 0.4253, "proj": null, "pct": 0.7732727272727272, "farol": "r", "ago": 0.5865, "ano": 0.6239}, "tk": {"meta": 7500.0, "real": 7149, "proj": null, "pct": 0.9532, "farol": "a", "ago": 7377.31, "ano": 7613.4}, "d30": {"meta": 155000, "real": 209643.5, "proj": 245111.072138431, "pct": 1.581361755731813, "farol": "g", "ago": null}, "parc": {"meta": 18.0, "real": 11.37, "proj": null, "pct": 0.6316666666666666, "farol": "g", "ago": null}}, "blk": [34.5, 34.6, 31.0], "fexp": 0.8553, "blkSrc": "hist"}, {"u": "Passos", "src": "live", "ref": "Set/26 · 01–26 (MTD)", "m": {"fat": {"meta": 536800.0, "real": 482967, "proj": 594420.9230769231, "pct": 1.1073415109480684, "farol": "g", "ago": 650600.69, "ano": 530682.17}, "recompra": {"meta": 110000.0, "real": 104447, "proj": 128550.15384615384, "pct": 1.1686377622377622, "farol": "g", "ago": 101900.17, "ano": 112422.71}, "entrada": {"meta": 75152.0, "real": 79070, "proj": 97316.92307692308, "pct": 1.2949345736230982, "farol": "g", "ago": 93780.01, "ano": 86794.05}, "aval": {"meta": 80.0, "real": 75, "proj": 92.3076923076923, "pct": 1.1538461538461537, "farol": "g", "ago": 90.0, "ano": 99.0}, "conv": {"meta": 0.62, "real": 0.64, "proj": null, "pct": 1.032258064516129, "farol": "g", "ago": 0.6889, "ano": 0.6162}, "tk": {"meta": 8000.0, "real": 6755, "proj": null, "pct": 0.844375, "farol": "r", "ago": 8156.07, "ano": 7650.39}, "d30": {"meta": 50000, "real": 30050, "proj": 36984.61538461538, "pct": 0.7396923076923076, "farol": "r", "ago": null}, "parc": {"meta": 20.0, "real": 14.13, "proj": null, "pct": 0.7065, "farol": "g", "ago": null}}, "blk": [32.1, 28.0, 39.9], "fexp": 0.8125, "blkSrc": "hist"}, {"u": "Petrolina", "src": "live", "ref": "Set/26 · 01–26 (MTD)", "m": {"fat": {"meta": 553400.0, "real": 529675, "proj": 634645.3390845914, "pct": 1.146811237955532, "farol": "g", "ago": 413465.07, "ano": 237994.96}, "recompra": {"meta": 90000.0, "real": 144500, "proj": 173136.8320153367, "pct": 1.9237425779481856, "farol": "g", "ago": 134775.12, "ano": 40104.71}, "entrada": {"meta": 110680.0, "real": 129715, "proj": 155421.75892643182, "pct": 1.4042442982149606, "farol": "g", "ago": 52049.75, "ano": 71360.06}, "aval": {"meta": 60.0, "real": 41, "proj": 49.125329499161275, "pct": 0.8187554916526879, "farol": "r", "ago": 51.0, "ano": 111.0}, "conv": {"meta": 0.38, "real": 0.3171, "proj": null, "pct": 0.8344736842105263, "farol": "r", "ago": 0.3529, "ano": 0.2162}, "tk": {"meta": 15500.0, "real": 21310, "proj": null, "pct": 1.3748387096774193, "farol": "g", "ago": 14990.57, "ano": 14386.65}, "d30": {"meta": 110000, "real": 124879.1, "proj": 149627.48622094418, "pct": 1.3602498747358562, "farol": "g", "ago": null}, "parc": {"meta": 25.0, "real": 15.85, "proj": null, "pct": 0.634, "farol": "g", "ago": null}}, "blk": [40.3, 24.5, 35.2], "fexp": 0.8346, "blkSrc": "hist"}, {"u": "Serafina Corrêa", "src": "live", "ref": "Set/26 · 01–26 (MTD)", "m": {"fat": {"meta": 467000.0, "real": 319940, "proj": 389079.411407029, "pct": 0.8331464912356081, "farol": "r", "ago": 413967.22, "ano": 342519.09}, "recompra": {"meta": 28000.0, "real": 35305, "proj": 42934.45214641858, "pct": 1.5333732909435207, "farol": "g", "ago": 78257.67, "ano": 7640.48}, "entrada": {"meta": 79390.0, "real": 45736, "proj": 55619.60355101544, "pct": 0.7005870204183832, "farol": "r", "ago": 79337.0, "ano": 99733.35}, "aval": {"meta": 45.0, "real": 40, "proj": 48.644047184725764, "pct": 1.0809788263272393, "farol": "g", "ago": 38.0, "ano": 55.0}, "conv": {"meta": 0.8, "real": 0.75, "proj": null, "pct": 0.9375, "farol": "a", "ago": 0.7631999999999999, "ano": 0.6182}, "tk": {"meta": 11500.0, "real": 9185, "proj": null, "pct": 0.798695652173913, "farol": "r", "ago": 9229.79, "ano": 9389.39}, "d30": {"meta": 25000, "real": 0, "proj": 0.0, "pct": 0.0, "farol": "r", "ago": null}, "parc": {"meta": 28.0, "real": 14.9, "proj": null, "pct": 0.5321428571428571, "farol": "g", "ago": null}}, "blk": [26.0, 36.2, 37.8], "fexp": 0.8223, "blkSrc": "hist"}, {"u": "São Bernardo do Campo", "src": "live", "ref": "Set/26 · 01–26 (MTD)", "m": {"fat": {"meta": 361190.0, "real": 259726, "proj": 324373.6730360934, "pct": 0.8980693624853773, "farol": "a", "ago": 230349.99, "ano": 333339.8}, "recompra": {"meta": 66190.0, "real": 56226, "proj": 70221.05657549645, "pct": 1.0609012928765138, "farol": "g", "ago": 107550.0, "ano": 49098.49}, "entrada": {"meta": 61402.3, "real": 110208, "proj": 137639.56538029225, "pct": 2.24160276374488, "farol": "g", "ago": 87399.99, "ano": 61620.85}, "aval": {"meta": 50.0, "real": 22, "proj": 27.475958536280757, "pct": 0.5495191707256152, "farol": "r", "ago": 33.0, "ano": 68.0}, "conv": {"meta": 0.4, "real": 0.5, "proj": null, "pct": 1.25, "farol": "g", "ago": 0.39390000000000003, "ano": 0.3529}, "tk": {"meta": 11000.0, "real": 13543, "proj": null, "pct": 1.2311818181818182, "farol": "g", "ago": 8476.67, "ano": 14765.39}, "d30": {"meta": 75000, "real": 47625.7, "proj": 59480.0799300612, "pct": 0.793067732400816, "farol": "r", "ago": null}, "parc": {"meta": 17.0, "real": 9.43, "proj": null, "pct": 0.5547058823529412, "farol": "g", "ago": null}}, "blk": [33.2, 24.4, 42.4], "fexp": 0.8007, "blkSrc": "hist"}, {"u": "São Francisco do Sul", "src": "live", "ref": "Set/26 · 01–26 (MTD)", "m": {"fat": {"meta": 412250.0, "real": 251900, "proj": 298955.6135770235, "pct": 0.7251803846622765, "farol": "r", "ago": 306755.0, "ano": 296512.45}, "recompra": {"meta": 35000.0, "real": 23550, "proj": 27949.20484215523, "pct": 0.7985487097758638, "farol": "r", "ago": 16505.0, "ano": 13035.8}, "entrada": {"meta": 61837.5, "real": 18580, "proj": 22050.795157844765, "pct": 0.35659260412928667, "farol": "r", "ago": 32555.0, "ano": 39159.94}, "aval": {"meta": 70.0, "real": 35, "proj": 41.53809636838358, "pct": 0.593401376691194, "farol": "r", "ago": 60.0, "ano": 73.0}, "conv": {"meta": 0.55, "real": 0.5143, "proj": null, "pct": 0.935090909090909, "farol": "a", "ago": 0.4667, "ano": 0.5205}, "tk": {"meta": 8500.0, "real": 9134, "proj": null, "pct": 1.0745882352941176, "farol": "g", "ago": 8278.57, "ano": 9472.32}, "d30": {"meta": 50000, "real": 53000, "proj": 62900.545929266555, "pct": 1.258010918585331, "farol": "g", "ago": null}, "parc": {"meta": 16.0, "real": 13.37, "proj": null, "pct": 0.835625, "farol": "g", "ago": null}}, "blk": [32.4, 34.1, 33.5], "fexp": 0.8426, "blkSrc": "hist"}, {"u": "São Joaquim", "src": "live", "ref": "Set/26 · 01–26 (MTD)", "m": {"fat": {"meta": 710000.0, "real": 480870, "proj": 579710.6690777576, "pct": 0.8164939001095178, "farol": "r", "ago": 571640.05, "ano": null}, "recompra": {"meta": 10000.0, "real": 10020, "proj": 12079.566003616635, "pct": 1.2079566003616635, "farol": "g", "ago": 28430.02, "ano": null}, "entrada": {"meta": 106500.0, "real": 115425, "proj": 139150.0904159132, "pct": 1.3065736189287624, "farol": "g", "ago": 104740.99, "ano": null}, "aval": {"meta": 110.0, "real": 86, "proj": 103.67691380349608, "pct": 0.9425173982136007, "farol": "a", "ago": 111.0, "ano": null}, "conv": {"meta": 0.6000000000000001, "real": 0.4884, "proj": null, "pct": 0.8139999999999998, "farol": "r", "ago": 0.5225, "ano": null}, "tk": {"meta": 10000.0, "real": 10578, "proj": null, "pct": 1.0578, "farol": "g", "ago": 9137.58, "ano": null}, "d30": {"meta": 40000, "real": 28700, "proj": 34599.15611814346, "pct": 0.8649789029535865, "farol": "a", "ago": null}, "parc": {"meta": 17.0, "real": 14.62, "proj": null, "pct": 0.86, "farol": "g", "ago": null}}, "blk": [31.6, 32.0, 36.5], "fexp": 0.8295, "blkSrc": "hist"}, {"u": "Tapejara", "src": "live", "ref": "Set/26 · 01–26 (MTD)", "m": {"fat": {"meta": 872100.0, "real": 597280, "proj": 739390.938351077, "pct": 0.8478281600172882, "farol": "r", "ago": 1109539.99, "ano": 629566.52}, "recompra": {"meta": 75000.0, "real": 77590, "proj": 96051.0027234464, "pct": 1.2806800363126187, "farol": "g", "ago": 86266.05, "ano": 61502.77}, "entrada": {"meta": 130815.00000000001, "real": 107155, "proj": 132650.40851695964, "pct": 1.0140305661962283, "farol": "g", "ago": 210305.62, "ano": 134969.61}, "aval": {"meta": 90.0, "real": 61, "proj": 75.5137410250062, "pct": 0.8390415669445133, "farol": "r", "ago": 113.0, "ano": 100.0}, "conv": {"meta": 0.78, "real": 0.8525, "proj": null, "pct": 1.092948717948718, "farol": "g", "ago": 0.7522, "ano": 0.7}, "tk": {"meta": 10500.0, "real": 9103, "proj": null, "pct": 0.8669523809523809, "farol": "a", "ago": 10968.04, "ano": 9774.03}, "d30": {"meta": 60000, "real": 0, "proj": 0.0, "pct": 0.0, "farol": "r", "ago": null}, "parc": {"meta": 22.0, "real": 12.44, "proj": null, "pct": 0.5654545454545454, "farol": "g", "ago": null}}, "blk": [31.2, 27.9, 40.9], "fexp": 0.8078, "blkSrc": "hist"}, {"u": "Teutônia", "src": "live", "ref": "Set/26 · 01–26 (MTD)", "m": {"fat": {"meta": 318000.0, "real": 161700, "proj": 201119.40298507462, "pct": 0.6324509527832535, "farol": "r", "ago": 243500.01, "ano": null}, "recompra": {"meta": 10000.0, "real": 7350, "proj": 9141.791044776119, "pct": 0.9141791044776119, "farol": "a", "ago": 37650.01, "ano": null}, "entrada": {"meta": 95400.0, "real": 58370, "proj": 72599.50248756219, "pct": 0.7610010742931047, "farol": "r", "ago": 57759.08, "ano": null}, "aval": {"meta": 67.0, "real": 30, "proj": 37.31343283582089, "pct": 0.5569169079973267, "farol": "r", "ago": 47.0, "ano": null}, "conv": {"meta": 0.4, "real": 0.3333, "proj": null, "pct": 0.8332499999999999, "farol": "r", "ago": 0.5318999999999999, "ano": null}, "tk": {"meta": 10000.0, "real": 10863, "proj": null, "pct": 1.0863, "farol": "g", "ago": 7267.24, "ano": null}, "d30": {"meta": 40000, "real": 48000, "proj": 59701.49253731343, "pct": 1.4925373134328357, "farol": "g", "ago": null}, "parc": {"meta": 20.0, "real": 15.82, "proj": null, "pct": 0.791, "farol": "g", "ago": null}}, "blk": [22.3, 36.0, 41.7], "fexp": 0.804, "blkSrc": "hist"}, {"u": "Timbó", "src": "live", "ref": "Set/26 · 01–26 (MTD)", "m": {"fat": {"meta": 753000.0, "real": 986621, "proj": 1258766.2669048226, "pct": 1.6716683491431907, "farol": "g", "ago": 931581.82, "ano": 548997.59}, "recompra": {"meta": 115000.0, "real": 167070, "proj": 213153.86578208726, "pct": 1.8535118763659761, "farol": "g", "ago": 236721.54, "ano": 126620.0}, "entrada": {"meta": 192760.47, "real": 301930, "proj": 385213.064557285, "pct": 1.9984028081965404, "farol": "g", "ago": 261169.17, "ano": 230988.68}, "aval": {"meta": 90.0, "real": 105, "proj": 133.96274559836692, "pct": 1.4884749510929658, "farol": "g", "ago": 105.0, "ano": 88.0}, "conv": {"meta": 0.65, "real": 0.6762, "proj": null, "pct": 1.0403076923076924, "farol": "g", "ago": 0.6857, "ano": 0.6818000000000001}, "tk": {"meta": 8000.0, "real": 9051, "proj": null, "pct": 1.131375, "farol": "g", "ago": 7960.97, "ano": 8163.92}, "d30": {"meta": 170000, "real": 148350, "proj": 189270.221995407, "pct": 1.1133542470318059, "farol": "g", "ago": null}, "parc": {"meta": 30.0, "real": 19.38, "proj": null, "pct": 0.646, "farol": "g", "ago": null}}, "blk": [23.6, 30.4, 46.0], "fexp": 0.7838, "blkSrc": "hist"}, {"u": "Tramandaí", "src": "live", "ref": "Set/26 · 01–26 (MTD)", "m": {"fat": {"meta": 615000.0, "real": 297520, "proj": 354485.8810913857, "pct": 0.5763998066526597, "farol": "r", "ago": 560161.01, "ano": 552280.64}, "recompra": {"meta": 75000.0, "real": 43870, "proj": 52269.74860002383, "pct": 0.696929981333651, "farol": "r", "ago": 100136.95, "ano": 55995.47}, "entrada": {"meta": 92250.0, "real": 34035, "proj": 40551.6501846777, "pct": 0.43958428384474474, "farol": "r", "ago": 68631.02, "ano": 130120.11}, "aval": {"meta": 120.0, "real": 86, "proj": 102.46634099845109, "pct": 0.8538861749870924, "farol": "a", "ago": 127.0, "ano": 143.0}, "conv": {"meta": 0.35000000000000003, "real": 0.2558, "proj": null, "pct": 0.7308571428571429, "farol": "r", "ago": 0.3071, "ano": 0.3776}, "tk": {"meta": 10000.0, "real": 10046, "proj": null, "pct": 1.0046, "farol": "g", "ago": 8770.58, "ano": 11609.24}, "d30": {"meta": 120000, "real": 42600, "proj": 50756.58286667461, "pct": 0.4229715238889551, "farol": "r", "ago": null}, "parc": {"meta": 21.0, "real": 14.85, "proj": null, "pct": 0.7071428571428571, "farol": "g", "ago": null}}, "blk": [25.4, 40.4, 34.2], "fexp": 0.8393, "blkSrc": "hist"}, {"u": "Três Lagoas", "src": "live", "ref": "Set/26 · 01–26 (MTD)", "m": {"fat": {"meta": 660000.0, "real": 603103, "proj": 734237.8865351838, "pct": 1.11248164626543, "farol": "g", "ago": 630741.63, "ano": 612403.43}, "recompra": {"meta": 150000.0, "real": 131174, "proj": 159695.64158753346, "pct": 1.0646376105835564, "farol": "g", "ago": 139534.62, "ano": 99372.88}, "entrada": {"meta": 118800.00000000001, "real": 92434, "proj": 112532.26199172145, "pct": 0.9472412625565777, "farol": "a", "ago": 82788.85, "ano": 158267.64}, "aval": {"meta": 130.0, "real": 88, "proj": 107.13416118821524, "pct": 0.8241089322170403, "farol": "r", "ago": 112.0, "ano": 172.0}, "conv": {"meta": 0.4, "real": 0.375, "proj": null, "pct": 0.9375, "farol": "a", "ago": 0.3839, "ano": 0.436}, "tk": {"meta": 7500.0, "real": 9725, "proj": null, "pct": 1.2966666666666666, "farol": "g", "ago": 9340.14, "ano": 7223.0}, "d30": {"meta": 120000, "real": 132271.69, "proj": 161032.006330655, "pct": 1.3419333860887916, "farol": "g", "ago": null}, "parc": {"meta": 20.0, "real": 15.56, "proj": null, "pct": 0.778, "farol": "g", "ago": null}}, "blk": [26.0, 36.0, 38.0], "fexp": 0.8214, "blkSrc": "hist"}, {"u": "Tubarão", "src": "live", "ref": "Set/26 · 01–26 (MTD)", "m": {"fat": {"meta": 554250.0, "real": 428882, "proj": 508756.82087781734, "pct": 0.9179193881422054, "farol": "a", "ago": 695206.52, "ano": 401597.41}, "recompra": {"meta": 175000.0, "real": 87347, "proj": 103614.47212336892, "pct": 0.5920826978478224, "farol": "r", "ago": 189306.51, "ano": 164569.19}, "entrada": {"meta": 110850.0, "real": 57820, "proj": 68588.37485172004, "pct": 0.6187494348373481, "farol": "r", "ago": 143086.66, "ano": 112740.83}, "aval": {"meta": 70.0, "real": 60, "proj": 71.17437722419929, "pct": 1.0167768174885612, "farol": "g", "ago": 77.0, "ano": 88.0}, "conv": {"meta": 0.45, "real": 0.4167, "proj": null, "pct": 0.926, "farol": "a", "ago": 0.4935, "ano": 0.375}, "tk": {"meta": 9500.0, "real": 10045, "proj": null, "pct": 1.0573684210526315, "farol": "g", "ago": 11294.29, "ano": 8346.83}, "d30": {"meta": 80000, "real": 100702, "proj": 119456.70225385528, "pct": 1.493208778173191, "farol": "g", "ago": null}, "parc": {"meta": 18.0, "real": 19.86, "proj": null, "pct": 1.1033333333333333, "farol": "r", "ago": null}}, "blk": [27.3, 39.3, 33.4], "fexp": 0.843, "blkSrc": "hist"}, {"u": "Vacaria", "src": "live", "ref": "Set/26 · 01–26 (MTD)", "m": {"fat": {"meta": 908880.0, "real": 781922, "proj": 973144.990665837, "pct": 1.0707078939638202, "farol": "g", "ago": 1076003.77, "ano": 723343.53}, "recompra": {"meta": 65000.0, "real": 34012, "proj": 42329.80709396391, "pct": 0.6512278014455986, "farol": "r", "ago": 137646.68, "ano": 37405.43}, "entrada": {"meta": 90888.0, "real": 103135, "proj": 128357.18730553827, "pct": 1.4122567039162295, "farol": "g", "ago": 75845.0, "ano": 92583.01}, "aval": {"meta": 136.0, "real": 103, "proj": 128.1891723708774, "pct": 0.9425674439035103, "farol": "a", "ago": 127.0, "ano": 139.0}, "conv": {"meta": 0.7300000000000001, "real": 0.6214, "proj": null, "pct": 0.8512328767123286, "farol": "a", "ago": 0.7087, "ano": 0.6835}, "tk": {"meta": 8500.0, "real": 10120, "proj": null, "pct": 1.1905882352941177, "farol": "g", "ago": 9627.33, "ano": 8315.01}, "d30": {"meta": 50000, "real": 81600, "proj": 101555.69383945239, "pct": 2.031113876789048, "farol": "g", "ago": null}, "parc": {"meta": 24.0, "real": 17.35, "proj": null, "pct": 0.7229166666666668, "farol": "g", "ago": null}}, "blk": [29.2, 29.1, 41.6], "fexp": 0.8035, "blkSrc": "hist"}, {"u": "Veranópolis", "src": "live", "ref": "Set/26 · 01–26 (MTD)", "m": {"fat": {"meta": 451750.0, "real": 493521, "proj": 663067.3115679162, "pct": 1.467774901091126, "farol": "g", "ago": 408217.85, "ano": 341242.18}, "recompra": {"meta": 70000.0, "real": 72200, "proj": 97003.89627838238, "pct": 1.385769946834034, "farol": "g", "ago": 153838.16, "ano": 81959.09}, "entrada": {"meta": 36140.0, "real": 40055, "proj": 53815.66572618568, "pct": 1.4890887029935165, "farol": "g", "ago": 41017.5, "ano": 51120.01}, "aval": {"meta": 55.0, "real": 65, "proj": 87.33037753593982, "pct": 1.5878250461079966, "farol": "g", "ago": 44.0, "ano": 56.0}, "conv": {"meta": 0.65, "real": 0.6615, "proj": null, "pct": 1.0176923076923077, "farol": "g", "ago": 0.7273000000000001, "ano": 0.5893}, "tk": {"meta": 9000.0, "real": 8735, "proj": null, "pct": 0.9705555555555555, "farol": "a", "ago": 6994.0, "ano": 8812.86}, "d30": {"meta": 60000, "real": 53800, "proj": 72282.6817143625, "pct": 1.2047113619060417, "farol": "g", "ago": null}, "parc": {"meta": 22.0, "real": 8.28, "proj": null, "pct": 0.37636363636363634, "farol": "g", "ago": null}}, "blk": [16.1, 29.5, 54.4], "fexp": 0.7443, "blkSrc": "hist"}, {"u": "Viamão", "src": "live", "ref": "Set/26 · 01–26 (MTD)", "m": {"fat": {"meta": 369000.0, "real": 303410, "proj": 379167.70807298174, "pct": 1.0275547644254248, "farol": "g", "ago": 315970.0, "ano": 272658.25}, "recompra": {"meta": 35000.0, "real": 8070, "proj": 10084.978755311173, "pct": 0.28814225015174777, "farol": "r", "ago": 32175.0, "ano": 4360.0}, "entrada": {"meta": 73800.0, "real": 88520, "proj": 110622.34441389653, "pct": 1.4989477562858609, "farol": "g", "ago": 155735.0, "ano": 63879.99}, "aval": {"meta": 105.0, "real": 87, "proj": 108.72281929517621, "pct": 1.035455421858821, "farol": "g", "ago": 93.0, "ano": 118.0}, "conv": {"meta": 0.4, "real": 0.4138, "proj": null, "pct": 1.0345, "farol": "g", "ago": 0.35479999999999995, "ano": 0.44920000000000004}, "tk": {"meta": 7000.0, "real": 6418, "proj": null, "pct": 0.9168571428571428, "farol": "a", "ago": 9506.67, "ano": 6535.55}, "d30": {"meta": 40000, "real": 41870, "proj": 52324.418895276176, "pct": 1.3081104723819044, "farol": "g", "ago": null}, "parc": {"meta": 12.0, "real": 11.83, "proj": null, "pct": 0.9858333333333333, "farol": "g", "ago": null}}, "blk": [28.4, 29.1, 42.5], "fexp": 0.8002, "blkSrc": "hist"}, {"u": "Videira", "src": "live", "ref": "Set/26 · 01–26 (MTD)", "m": {"fat": {"meta": 1240500.0, "real": 888074, "proj": 1056350.660164149, "pct": 0.8515523258074559, "farol": "a", "ago": 1112399.37, "ano": 912591.15}, "recompra": {"meta": 200000.0, "real": 205288, "proj": 244186.98703461402, "pct": 1.22093493517307, "farol": "g", "ago": 229424.25, "ano": 195817.76}, "entrada": {"meta": 148860.0, "real": 164499, "proj": 195669.08528607112, "pct": 1.3144503915495842, "farol": "g", "ago": 169707.98, "ano": 90413.23}, "aval": {"meta": 130.0, "real": 76, "proj": 90.40085642916617, "pct": 0.6953912033012782, "farol": "r", "ago": 117.0, "ano": 161.0}, "conv": {"meta": 0.7000000000000001, "real": 0.7763, "proj": null, "pct": 1.109, "farol": "g", "ago": 0.8034, "ano": 0.677}, "tk": {"meta": 10500.0, "real": 9743, "proj": null, "pct": 0.9279047619047619, "farol": "a", "ago": 9322.82, "ano": 8897.65}, "d30": {"meta": 85000, "real": 83828, "proj": 99712.14464137028, "pct": 1.1730840546043562, "farol": "g", "ago": null}, "parc": {"meta": 15.0, "real": 12.29, "proj": null, "pct": 0.8193333333333332, "farol": "g", "ago": null}}, "blk": [28.3, 37.8, 33.9], "fexp": 0.8407, "blkSrc": "hist"}, {"u": "Campos Novos", "src": "manual", "ref": "05/2026 (planilha)", "m": {"fat": {"meta": 281250.0, "real": 196872.63, "proj": 469863.0787589498, "pct": 1.6706242800318216, "farol": "g", "ago": null, "ano": null}, "recompra": {"meta": 110000.0, "real": null, "proj": null, "pct": null, "farol": "na", "ago": null, "ano": null}, "entrada": {"meta": 47812.5, "real": 49120.96, "proj": 117233.79474940333, "pct": 2.4519486483535338, "farol": "g", "ago": null, "ano": null}, "aval": {"meta": 35.0, "real": 25.0, "proj": 59.665871121718375, "pct": 1.7047391749062393, "farol": "g", "ago": null, "ano": null}, "conv": {"meta": 0.5, "real": 0.38, "proj": null, "pct": 0.76, "farol": "r", "ago": null, "ano": null}, "tk": {"meta": 7500.0, "real": 7462.23, "proj": null, "pct": 0.994964, "farol": "a", "ago": null, "ano": null}, "d30": {"meta": 40000, "real": 6200, "proj": 14797.14, "pct": 0.36992840095465396, "farol": "r", "ago": null}, "parc": {"meta": 14.0, "real": 14.71, "proj": null, "pct": 1.0507142857142857, "farol": "a", "ago": null}}, "blk": [28.3, 34.0, 37.7], "fexp": 0.419, "blkSrc": "rede"}, {"u": "Caçador SM", "src": "manual", "ref": "05/2026 (planilha)", "m": {"fat": {"meta": 1347000.0, "real": 1319094.21, "proj": 3148196.205250596, "pct": 2.3371909467339242, "farol": "g", "ago": null, "ano": null}, "recompra": {"meta": 400000.0, "real": null, "proj": null, "pct": null, "farol": "na", "ago": null, "ano": null}, "entrada": {"meta": 161640.0, "real": 142243.16, "proj": 339482.4821002386, "pct": 2.1002380728794767, "farol": "g", "ago": null, "ano": null}, "aval": {"meta": 110.0, "real": 115.0, "proj": 274.4630071599045, "pct": 2.495118246908223, "farol": "g", "ago": null, "ano": null}, "conv": {"meta": 0.7000000000000001, "real": 0.7200000000000001, "proj": null, "pct": 1.0285714285714287, "farol": "g", "ago": null, "ano": null}, "tk": {"meta": 11000.0, "real": 9915.9, "proj": null, "pct": 0.9014454545454545, "farol": "a", "ago": null, "ano": null}, "d30": {"meta": 100000.0, "real": 65430.0, "proj": 65430.0, "pct": 0.6543, "farol": "r", "ago": null}, "parc": {"meta": 15.0, "real": 16.400000000000002, "proj": null, "pct": 1.0933333333333335, "farol": "a", "ago": null}}, "blk": [28.3, 34.0, 37.7], "fexp": 0.419, "blkSrc": "rede"}, {"u": "União Indaial", "src": "manual", "ref": "05/2026 (planilha)", "m": {"fat": {"meta": 454812.5, "real": null, "proj": null, "pct": null, "farol": "na", "ago": null, "ano": null}, "recompra": {"meta": 220000.0, "real": null, "proj": null, "pct": null, "farol": "na", "ago": null, "ano": null}, "entrada": {"meta": 45481.25, "real": null, "proj": null, "pct": null, "farol": "na", "ago": null, "ano": null}, "aval": {"meta": 85.0, "real": null, "proj": null, "pct": null, "farol": "na", "ago": null, "ano": null}, "conv": {"meta": 0.65, "real": null, "proj": null, "pct": null, "farol": "na", "ago": null, "ano": null}, "tk": {"meta": 4250.0, "real": null, "proj": null, "pct": null, "farol": "na", "ago": null, "ano": null}, "d30": {"meta": null, "real": null, "proj": null, "pct": null, "farol": "na", "ago": null}, "parc": {"meta": 15.0, "real": null, "proj": null, "pct": null, "farol": "na", "ago": null}}, "blk": [28.3, 34.0, 37.7], "fexp": 0.419, "blkSrc": "rede"}, {"u": "Montevidéu", "src": "sheet", "ref": "Set/26 · Comercial 2026 (caixa, $U)", "moe": "$U", "blk": [35.2, 33.4, 31.3], "fexp": 0.4856, "blkSrc": "hist", "m": {"fat": {"meta": 6000000.0, "real": 1767713.0, "proj": 3640265.650741351, "pct": 0.6067109417902251, "farol": "r", "ago": null, "ano": null}, "recompra": {"meta": null, "real": null, "proj": null, "pct": null, "farol": "na", "ago": null, "ano": null}, "entrada": {"meta": null, "real": 936374.0, "proj": null, "pct": null, "farol": "na", "ago": null, "ano": null}, "aval": {"meta": null, "real": null, "proj": null, "pct": null, "farol": "na", "ago": null, "ano": null}, "conv": {"meta": null, "real": null, "proj": null, "pct": null, "farol": "na", "ago": null, "ano": null}, "tk": {"meta": null, "real": null, "proj": null, "pct": null, "farol": "na", "ago": null, "ano": null}, "d30": {"meta": null, "real": null, "proj": null, "pct": null, "farol": "na", "ago": null, "ano": null}, "parc": {"meta": null, "real": null, "proj": null, "pct": null, "farol": "na", "ago": null, "ano": null}}}], "dia": 26, "dias": 30, "ideal": 0.8667, "nLive": 36, "nMan": 3, "mesAtual": "Set/26", "mesAnt": "Ago/26", "expModel": "curva", "idealLin": 0.4667, "redeFexp": 0.8274, "mesAno": "Set/25", "nMonte": 1};
+document.getElementById('nlive').textContent=D.nLive;
+document.getElementById('nman').textContent=D.nMan;
+document.getElementById('cdia').textContent=D.dia+'/'+D.dias;
+document.getElementById('cpace').textContent='curva por praça · rede '+Math.round(D.redeFexp*100)+'% do mês hoje';
+function brl(n){return 'R$ '+Math.round(n).toLocaleString('pt-BR');}
+function fmt(v,f,moe){if(v==null)return '—';if(f=='rs')return (moe||'R$')+' '+Math.round(v).toLocaleString('pt-BR');if(f=='pct')return (Math.round(v*1000)/10).toLocaleString('pt-BR')+'%';if(f=='x')return (Math.round(v*10)/10).toLocaleString('pt-BR')+'x';return Math.round(v).toLocaleString('pt-BR');}
+function udc(s){return s=='live'?'live':(s=='sheet'?'sheet':'man');}
+function farol(p){if(p==null)return 'na';return p>=1?'g':(p>=0.85?'a':'r');}
+var CLR={g:'vd',a:'am',r:'vm',na:'ink3'};
+function indByK(k){return D.ind.find(function(i){return i.k==k});}
+var STATE={"Alvorada":"RS","Bento Gonçalves":"RS","Capão da Canoa":"RS","Carlos Barbosa":"RS","Encantado":"RS","Flores da Cunha":"RS","Garibaldi":"RS","Guaporé":"RS","Guaíba":"RS","Lajeado":"RS","Montenegro":"RS","Nova Prata":"RS","Osório":"RS","Serafina Corrêa":"RS","Tapejara":"RS","Teutônia":"RS","Tramandaí":"RS","Vacaria":"RS","Veranópolis":"RS","Viamão":"RS","Campo Grande":"MS","Campo Grande II":"MS","Dourados":"MS","Naviraí":"MS","Nova Andradina":"MS","Três Lagoas":"MS","Caçador OU":"SC","Indaial":"SC","São Francisco do Sul":"SC","São Joaquim":"SC","Timbó":"SC","Tubarão":"SC","Videira":"SC","Campos Novos":"SC","Caçador SM":"SC","União Indaial":"SC","Passos":"MG","Petrolina":"PE","São Bernardo do Campo":"SP","Montevidéu":"UY"};
+var curUF=null;
+var CUM=['fat','recompra','entrada','aval','d30']; // indicadores cumulativos: "já bateu" = realizado >= meta
+function jaBateu(c,k){return CUM.indexOf(k)>=0&&c&&c.real!=null&&c.meta&&c.real>=c.meta;}
+function pracasF(){return curUF?D.pracas.filter(function(p){return STATE[p.u]===curUF;}):D.pracas;}
+// placar
+function drawPlacar(){document.getElementById('placar').innerHTML=D.ind.map(function(ind){
+  var g=0,a=0,r=0,na=0;
+  var bat=0;
+  pracasF().forEach(function(pr){var f=pr.m[ind.k].farol;if(f=='g')g++;else if(f=='a')a++;else if(f=='r')r++;else na++;if(jaBateu(pr.m[ind.k],ind.k))bat++;});
+  var tot=g+a+r||1;
+  var lead=ind.type=='manual'?'<span style="font-size:10px;color:var(--ink3)">(manual)</span> ':'';
+  return '<div class="pc pcx" data-k="'+ind.k+'"><div class="pl">'+ind.lbl+' '+lead+' <span class="seep">ver praças ›</span></div>'+
+   '<div class="big">'+g+' <span class="u">no ritmo</span></div>'+
+   '<div class="pbar"><i class="g" style="width:'+(g/tot*100)+'%"></i><i class="a" style="width:'+(a/tot*100)+'%"></i><i class="r" style="width:'+(r/tot*100)+'%"></i></div>'+
+   '<div class="leg"><span><span class="dot a"></span><b>'+a+'</b> atenção</span><span><span class="dot r"></span><b>'+r+'</b> fora</span>'+(CUM.indexOf(ind.k)>=0?'<span style="color:var(--vd)">✓ <b>'+bat+'</b> bateram</span>':'')+(na?'<span style="color:var(--ink3)">'+na+' s/d</span>':'')+'</div></div>';
+}).join('');}
+drawPlacar();
+// heatmap
+var sortKey=null,sortAsc=true;
+function drawHM(){
+  document.querySelector('#hm thead').innerHTML='<tr><th onclick="setSort(\'u\')">Praça</th>'+D.ind.map(function(ind){return '<th onclick="setSort(\''+ind.k+'\')">'+ind.lbl+'</th>';}).join('')+'</tr>';
+  var rows=pracasF().slice();
+  if(sortKey){rows.sort(function(a,b){if(sortKey=='u')return sortAsc?a.u.localeCompare(b.u):b.u.localeCompare(a.u);var va=a.m[sortKey].pct,vb=b.m[sortKey].pct;if(va==null)return 1;if(vb==null)return -1;return sortAsc?va-vb:vb-va;});}
+  document.querySelector('#hm tbody').innerHTML=rows.map(function(pr){
+    return '<tr onclick="openPraca(\''+pr.u.replace(/'/g,"\\'")+'\')"><td><span class="udot '+udc(pr.src)+'"></span>'+pr.u+'</td>'+D.ind.map(function(ind){
+      var c=pr.m[ind.k];var p=c.pct;var f=c.farol;var mc=(ind.type=='manual')?' man':'';
+      var txt=(p!=null)?Math.round(p*100)+'%':((c.real!=null)?fmt(c.real,ind.fmt,pr.moe)+'<span class="nm">s/meta</span>':'—');
+      var bt=jaBateu(c,ind.k);
+      return '<td><div class="cell '+f+mc+(bt?' bateu':'')+'">'+(bt?'<span class="chk">✓</span>':'')+txt+'</div></td>';
+    }).join('')+'</tr>';
+  }).join('');
+}
+function setSort(k){if(sortKey==k){sortAsc=!sortAsc;}else{sortKey=k;sortAsc=(k!='u');}drawHM();}
+drawHM();
+// aba RMR — 6 praças debatidas na RMR
+var RMR=['Teutônia','Viamão','Campo Grande II','Capão da Canoa','Passos','Três Lagoas'];
+function pracasRMR(){return D.pracas.filter(function(p){return RMR.indexOf(p.u)>=0;});}
+function drawRMR(){
+  document.getElementById('placarRMR').innerHTML=D.ind.map(function(ind){
+    var g=0,a=0,r=0,na=0;
+    var bat=0;
+    pracasRMR().forEach(function(pr){var f=pr.m[ind.k].farol;if(f=='g')g++;else if(f=='a')a++;else if(f=='r')r++;else na++;if(jaBateu(pr.m[ind.k],ind.k))bat++;});
+    var tot=g+a+r||1;
+    var lead=ind.type=='manual'?'<span style="font-size:10px;color:var(--ink3)">(manual)</span> ':'';
+    return '<div class="pc"><div class="pl">'+ind.lbl+' '+lead+'</div>'+
+     '<div class="big">'+g+' <span class="u">no ritmo</span></div>'+
+     '<div class="pbar"><i class="g" style="width:'+(g/tot*100)+'%"></i><i class="a" style="width:'+(a/tot*100)+'%"></i><i class="r" style="width:'+(r/tot*100)+'%"></i></div>'+
+     '<div class="leg"><span><span class="dot a"></span><b>'+a+'</b> atenção</span><span><span class="dot r"></span><b>'+r+'</b> fora</span>'+(CUM.indexOf(ind.k)>=0?'<span style="color:var(--vd)">✓ <b>'+bat+'</b> bateram</span>':'')+(na?'<span style="color:var(--ink3)">'+na+' s/d</span>':'')+'</div></div>';
+  }).join('');
+  document.querySelector('#hmRMR thead').innerHTML='<tr><th>Praça</th>'+D.ind.map(function(ind){return '<th>'+ind.lbl+'</th>';}).join('')+'</tr>';
+  document.querySelector('#hmRMR tbody').innerHTML=pracasRMR().map(function(pr){
+    return '<tr onclick="openPraca(\''+pr.u.replace(/'/g,"\\'")+'\')"><td><span class="udot '+udc(pr.src)+'"></span>'+pr.u+'</td>'+D.ind.map(function(ind){
+      var c=pr.m[ind.k];var p=c.pct;var f=c.farol;var mc=(ind.type=='manual')?' man':'';
+      var txt=(p!=null)?Math.round(p*100)+'%':((c.real!=null)?fmt(c.real,ind.fmt,pr.moe)+'<span class="nm">s/meta</span>':'—');
+      var bt=jaBateu(c,ind.k);
+      return '<td><div class="cell '+f+mc+(bt?' bateu':'')+'">'+(bt?'<span class="chk">✓</span>':'')+txt+'</div></td>';
+    }).join('')+'</tr>';
+  }).join('');
+}
+drawRMR();
+(function(){var el=document.getElementById('ufsel');if(!el)return;
+  var seen=[];D.pracas.forEach(function(p){var u=STATE[p.u]||'ZZ';if(seen.indexOf(u)<0)seen.push(u);});seen.sort();
+  el.innerHTML='<button class="selb on" data-uf="">Todos <span style="opacity:.55">'+D.pracas.length+'</span></button>'+seen.map(function(u){var n=D.pracas.filter(function(p){return (STATE[p.u]||'ZZ')===u;}).length;return '<button class="selb" data-uf="'+u+'">'+u+' <span style="opacity:.55">'+n+'</span></button>';}).join('');
+  el.addEventListener('click',function(e){var b=e.target.closest('.selb');if(!b)return;curUF=b.dataset.uf||null;[].forEach.call(el.querySelectorAll('.selb'),function(x){x.classList.remove('on');});b.classList.add('on');drawPlacar();drawHM();});
+})();
+// por meta
+var curInd=D.ind[0].k;
+var msel=document.getElementById('msel');
+msel.innerHTML=D.ind.map(function(ind){return '<button class="selb'+(ind.k==curInd?' on':'')+'" data-k="'+ind.k+'">'+ind.lbl+'</button>';}).join('');
+function drawRk(){
+  var ind=indByK(curInd);
+  var rows=D.pracas.map(function(pr){return {u:pr.u,src:pr.src,moe:pr.moe,c:pr.m[ind.k],p:pr.m[ind.k].pct};});
+  rows.sort(function(a,b){if(a.p==null)return 1;if(b.p==null)return -1;return a.p-b.p;});
+  var maxp=Math.max.apply(null,rows.map(function(x){return x.p||0}).concat([1.2]));
+  document.getElementById('rk').innerHTML=rows.map(function(x){
+    var f=x.c.farol;var w=x.p==null?0:Math.min(x.p,maxp)/maxp*100;var idl=1/maxp*100;
+    var valTxt=ind.type=='cum'?('proj '+fmt(x.c.proj,ind.fmt,x.moe)):fmt(x.c.real,ind.fmt,x.moe);
+    return '<div class="rkrow"><div class="rku"><span class="udot '+udc(x.src)+'"></span>'+x.u+'</div>'+
+     '<div class="rktrack"><div class="rkfill '+f+'" style="width:'+w+'%"></div><div class="rkideal" style="left:'+idl+'%"></div></div>'+
+     '<div class="rkv"><b>'+(x.p==null?'—':Math.round(x.p*100)+'%')+'</b> · '+valTxt+'<br><span style="color:var(--ink3)">meta '+fmt(x.c.meta,ind.fmt,x.moe)+'</span></div></div>';
+  }).join('');
+}
+drawRk();
+msel.addEventListener('click',function(e){var b=e.target.closest('.selb');if(!b)return;curInd=b.dataset.k;msel.querySelectorAll('.selb').forEach(function(x){x.classList.remove('on')});b.classList.add('on');drawRk();});
+function selMeta(k){document.querySelectorAll('.tab').forEach(function(x){x.classList.remove('on')});document.querySelector('.tab[data-p="meta"]').classList.add('on');['mapa','rmr','estado','meta','praca','comp'].forEach(function(z){document.getElementById('p-'+z).classList.toggle('on',z=='meta');});curInd=k;msel.querySelectorAll('.selb').forEach(function(x){x.classList.toggle('on',x.dataset.k==k)});drawRk();window.scrollTo({top:0,behavior:'smooth'});}
+var _pl=document.getElementById('placar');if(_pl){_pl.addEventListener('click',function(e){var c=e.target.closest('.pc');if(c&&c.dataset.k)selMeta(c.dataset.k);});}
+// por praça
+var pgrid=document.getElementById('pgrid');
+function miniDots(pr){return D.ind.map(function(ind){var f=pr.m[ind.k].farol;return '<i style="background:var(--'+CLR[f]+')"></i>';}).join('');}
+pgrid.innerHTML=D.pracas.map(function(pr){return '<button class="pbtn" data-u="'+pr.u+'"><span><span class="udot '+udc(pr.src)+'"></span>'+pr.u+'</span><span class="mini">'+miniDots(pr)+'</span></button>';}).join('');
+function openPraca(u){
+  document.querySelectorAll('.tab').forEach(function(x){x.classList.remove('on')});
+  document.querySelector('.tab[data-p="praca"]').classList.add('on');
+  ['mapa','rmr','estado','meta','praca','comp'].forEach(function(k){document.getElementById('p-'+k).classList.toggle('on',k=='praca');});
+  var pr=D.pracas.find(function(p){return p.u==u});if(!pr)return;
+  var nB=0,den=0;D.ind.forEach(function(ind){var p=pr.m[ind.k].pct;if(p!=null){den++;if(p>=1)nB++;}});
+  var curveTxt=(pr.blk&&pr.src=='live')?(' · curva '+pr.blk[0]+'/'+pr.blk[1]+'/'+pr.blk[2]+'% (1–10/11–20/21–fim), esperado '+Math.round(pr.fexp*100)+'% até hoje'):'';var html='<div class="det"><h3>'+pr.u+'</h3><div class="dsub">'+(pr.src=='live'?'🟢 ao vivo · ':(pr.src=='sheet'?'🔵 planilha · ':'⚪ manual · '))+pr.ref+' · '+nB+' de '+den+' metas no ritmo'+curveTxt+'</div><div class="dmeta">';
+  D.ind.forEach(function(ind){
+    var c=pr.m[ind.k];var p=c.pct;var f=c.farol;
+    var w=p==null?0:Math.min(p,1.3)/1.3*100;var idl=1/1.3*100;
+    var main,gap;
+    if(ind.type=='cum'){main='hoje '+fmt(c.real,ind.fmt,pr.moe)+' · proj '+fmt(c.proj,ind.fmt,pr.moe);gap=(c.meta!=null&&c.proj!=null)?c.meta-c.proj:null;}
+    else{main=fmt(c.real,ind.fmt,pr.moe);gap=(c.meta!=null&&c.real!=null)?c.meta-c.real:null;}
+    var gapTxt=gap==null?'':(gap>0?'faltam '+fmt(gap,ind.fmt,pr.moe):'+'+fmt(-gap,ind.fmt,pr.moe)+' acima');
+    html+='<div class="di '+f+'"><div class="dilbl">'+ind.lbl+'</div>'+
+     '<div class="dibar"><i style="width:'+w+'%;background:var(--'+CLR[f]+')"></i><span class="ide" style="left:'+idl+'%"></span></div>'+
+     '<div class="dinum">'+main+'<br><span style="color:var(--ink3)">meta '+fmt(c.meta,ind.fmt,pr.moe)+(gapTxt?' · '+gapTxt:'')+'</span></div>'+
+     '<div class="dipct '+f+'">'+(p==null?'—':Math.round(p*100)+'%')+'</div></div>';
+  });
+  html+='</div></div>';
+  document.getElementById('det').innerHTML=html;window.scrollTo({top:0,behavior:'smooth'});
+}
+pgrid.addEventListener('click',function(e){var b=e.target.closest('.pbtn');if(b)openPraca(b.dataset.u);});
+openPraca(D.pracas[0].u);document.querySelector('.tab[data-p="praca"]').classList.remove('on');document.querySelector('.tab[data-p="mapa"]').classList.add('on');['mapa','rmr','estado','meta','praca','comp'].forEach(function(k){document.getElementById('p-'+k).classList.toggle('on',k=='mapa');});
+document.querySelectorAll('.tab').forEach(function(b){b.onclick=function(){document.querySelectorAll('.tab').forEach(function(x){x.classList.remove('on')});b.classList.add('on');['mapa','rmr','estado','meta','praca','comp'].forEach(function(k){document.getElementById('p-'+k).classList.toggle('on',k==b.dataset.p);});};});
+
+// ===== Mês anterior (Set proj x Ago fechado) =====
+(function(){
+  var CIND={fat:{lbl:'Faturamento',fmt:'rs'},entrada:{lbl:'Entrada',fmt:'rs'},aval:{lbl:'Avaliações',fmt:'num'}};
+  var LIVE=D.pracas.filter(function(p){return p.src==='live';});
+  var cmpMet='fat', cmpSort={k:'cur',dir:-1};
+  function brl(n){return 'R$ '+Math.round(n).toLocaleString('pt-BR');}
+  function fmtv(v,fmt){return v==null?'—':(fmt==='rs'?brl(v):Math.round(v));}
+  function cv(m){return m.proj;}            // projeção de fechamento
+  function pill(cur,base){
+    if(base==null||cur==null) return '<span style="color:var(--cy);font-weight:700">novo</span>';
+    if(base===0) return cur>0?'<span style="color:var(--cy);font-weight:700">novo</span>':'<span style="color:var(--ink2)">0%</span>';
+    var d=Math.round(100*(cur-base)/base);
+    var c=d>0?'var(--vd)':(d<0?'var(--vm)':'var(--ink2)');
+    return '<span style="color:'+c+';font-weight:700">'+(d>0?'+':'')+d+'%</span>';
+  }
+  function mov(base){var c=0,q=0,e=0;LIVE.forEach(function(p){var m=p.m[cmpMet],cur=cv(m),bs=m[base];
+    if(cur==null){e++;return;} if(bs==null){c++;return;} if(cur>bs)c++;else if(cur<bs)q++;else e++;});return {c:c,q:q,e:e};}
+  window.drawComp=function(){
+    var met=CIND[cmpMet];
+    var Tc=0,Ta=0,Ty=0,nY=0;
+    LIVE.forEach(function(p){var m=p.m[cmpMet];var c=cv(m);if(c!=null)Tc+=c;if(m.ago!=null)Ta+=m.ago;if(m.ano!=null){Ty+=m.ano;nY++;}});
+    var dM=Ta?Math.round(100*(Tc-Ta)/Ta):null, dY=nY?Math.round(100*(Tc-Ty)/Ty):null;
+    function dpill(d){if(d==null)return '<span style="color:var(--cy)">—</span>';var c=d>0?'var(--vd)':(d<0?'var(--vm)':'var(--ink2)');return '<span style="color:'+c+';font-weight:700">'+(d>0?'+':'')+d+'%</span>';}
+    function card(k,v,s){return '<div class="cmp-kpi"><div class="ck">'+k+'</div><div class="cv">'+v+'</div><div class="cs">'+s+'</div></div>';}
+    document.getElementById('cmpkpis').innerHTML=
+      card('Projeção Set/26 · fechamento', fmtv(Tc,met.fmt), 'rede · '+LIVE.length+' praças · ritmo projetado')
+     +card('vs Agosto fechado', dpill(dM), fmtv(Ta,met.fmt)+' em Ago/26')
+     +card('vs Set/25 fechado', dpill(dY), (nY?fmtv(Ty,met.fmt)+' em Set/25':'sem base 2025'));
+    var mm=mov('ago'), my=mov('ano'), amp=document.getElementById('cmpamp');
+    amp.querySelector('thead').innerHTML='<tr><th style="text-align:left">Amplitude do movimento</th><th>Praças crescendo</th><th>Em queda</th><th>Estáveis</th></tr>';
+    function arw(lbl,o){return '<tr><td style="text-align:left" class="mut">'+lbl+'</td><td><b style="color:var(--vd)">'+o.c+'</b></td><td><b style="color:var(--vm)">'+o.q+'</b></td><td class="mut">'+o.e+'</td></tr>';}
+    amp.querySelector('tbody').innerHTML=arw('vs Agosto fechado',mm)+arw('vs Set/25 fechado',my);
+    var aq=function(k){return cmpSort.k===k?(cmpSort.dir<0?' ▾':' ▴'):'';};
+    var rows=LIVE.slice().sort(function(a,b){
+      if(cmpSort.k==='nome')return cmpSort.dir*a.u.localeCompare(b.u);
+      var x,y; if(cmpSort.k==='cur'){x=cv(a.m[cmpMet]);y=cv(b.m[cmpMet]);}else{x=a.m[cmpMet][cmpSort.k];y=b.m[cmpMet][cmpSort.k];}
+      if(x==null)x=-1e15; if(y==null)y=-1e15; return cmpSort.dir*(x-y);
+    });
+    var cmp=document.getElementById('cmp');
+    cmp.querySelector('thead').innerHTML='<tr><th style="text-align:left" onclick="cmpSortBy(\'nome\')">Praça'+aq('nome')+'</th><th onclick="cmpSortBy(\'cur\')">Proj. Set/26'+aq('cur')+'</th><th onclick="cmpSortBy(\'ago\')">Ago fechado'+aq('ago')+'</th><th>Δ mês</th><th onclick="cmpSortBy(\'ano\')">Set/25 fechado'+aq('ano')+'</th><th>Δ ano</th></tr>';
+    var body=rows.map(function(p){var m=p.m[cmpMet];var c=cv(m);
+      return '<tr><td style="text-align:left"><span class="udot '+udc(p.src)+'"></span>'+p.u+'</td>'
+        +'<td style="font-weight:700">'+fmtv(c,met.fmt)+'</td>'
+        +'<td class="mut">'+fmtv(m.ago,met.fmt)+'</td>'
+        +'<td>'+pill(c,m.ago)+'</td>'
+        +'<td class="mut">'+fmtv(m.ano,met.fmt)+'</td>'
+        +'<td>'+pill(c,m.ano)+'</td></tr>';}).join('');
+    body+='<tr class="tot"><td style="text-align:left">REDE ('+LIVE.length+')</td><td>'+fmtv(Tc,met.fmt)+'</td><td>'+fmtv(Ta,met.fmt)+'</td><td>'+dpill(dM)+'</td><td>'+(nY?fmtv(Ty,met.fmt):'—')+'</td><td>'+dpill(dY)+'</td></tr>';
+    cmp.querySelector('tbody').innerHTML=body;
+  };
+  window.cmpSortBy=function(k){if(cmpSort.k===k)cmpSort.dir*=-1;else{cmpSort.k=k;cmpSort.dir=(k==='nome')?1:-1;}drawComp();};
+  var cs=document.getElementById('cmpsel');
+  if(cs)cs.addEventListener('click',function(e){var b=e.target.closest('.selb');if(!b)return;cmpMet=b.dataset.m;cs.querySelectorAll('.selb').forEach(function(x){x.classList.remove('on')});b.classList.add('on');drawComp();});
+  drawComp();
+})();
+
+// ===== Ticker estilo bolsa (faturamento projeção vs meta) =====
+(function(){
+  var el=document.getElementById('tick'); if(!el) return;
+  var items=D.pracas.map(function(pr){
+    var c=pr.m.fat; var p=c.pct; var f=c.farol;
+    var ag=c.ago; var dd=(c.proj!=null&&ag!=null&&ag!=0)?(c.proj-ag)/ag:null; var arw=(dd==null?'▬':(dd>=0?'▲':'▼')); var af=(dd==null?'a':(dd>=0?'g':'r'));
+    var mo=pr.moe||'R$';var val=(c.proj!=null?(mo+' '+Math.round(c.proj/1000)+'k'):(c.real!=null?fmt(c.real,'rs',mo):'—'));
+    return '<span class="ti"><span class="tu">'+pr.u.toUpperCase()+'</span>'+
+      '<span class="tv">'+val+'</span>'+
+      '<span class="tp '+f+'">'+(p==null?'—':Math.round(p*100)+'%')+'</span>'+
+      '<span class="arw '+af+'">'+arw+'</span></span>';
+  }).join('');
+  el.innerHTML=items+items; // duplica p/ loop contínuo
+})();
+</script>
+<script>
+(function(){var b=document.getElementById("fsBtn");if(!b)return;
+ function fs(){return document.fullscreenElement||document.webkitFullscreenElement;}
+ b.addEventListener("click",function(){try{
+   if(!fs()){var el=document.documentElement;(el.requestFullscreen||el.webkitRequestFullscreen).call(el);}
+   else{(document.exitFullscreen||document.webkitExitFullscreen).call(document);}
+ }catch(e){b.textContent="⛶ pressione F11";}});
+ document.addEventListener("fullscreenchange",function(){b.textContent=fs()?"⛶ Sair da tela cheia":"⛶ Tela cheia";});
+ document.addEventListener("webkitfullscreenchange",function(){b.textContent=fs()?"⛶ Sair da tela cheia":"⛶ Tela cheia";});
+})();
+</script>
+<style>
+#destaques{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:10px;margin-bottom:20px}
+#destaques .dt{background:linear-gradient(180deg,var(--pn),var(--pn2));border:1px solid var(--ln);border-radius:12px;padding:11px 14px;border-top:2px solid var(--ous)}
+#destaques .dl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--ink3)}
+#destaques .dv{font-family:var(--serif);font-size:15px;font-weight:800;color:var(--ous);margin-top:5px;line-height:1.1}
+#destaques .ds{font-size:12px;color:var(--ink2);margin-top:4px;font-variant-numeric:tabular-nums}
+#esttab td,#esttab th{text-align:right}
+#esttab td:first-child,#esttab th:first-child{text-align:left}
+#esttab tr.rede td{border-top:2px solid var(--ous);background:color-mix(in srgb,var(--ous) 8%,transparent);font-weight:700}
+</style><script>
+(function(){
+ function num(v){return (v==null||isNaN(v))?0:v;}
+ var CC={g:'vd',a:'am',r:'vm',na:'ink3'};
+ function fr(p){return p==null?'na':farol(p);}
+ // ===== destaques por CLÍNICA (realizado) =====
+ var live=D.pracas.filter(function(p){return p.src==='live';});
+ function best(get){var b=null,bv=-Infinity;live.forEach(function(p){var v=get(p);if(v!=null&&!isNaN(v)&&v>bv){bv=v;b=p;}});return b;}
+ function tile(lbl,name,val){if(!name)return '';return '<div class="dt"><div class="dl">'+lbl+'</div><div class="dv">🏆 '+name+'</div><div class="ds">'+val+'</div></div>';}
+ var dq=document.getElementById('destaques');
+ if(dq){
+   var bF=best(function(p){return p.m.fat.real;}),bA=best(function(p){return p.m.aval.real;}),bC=best(function(p){return p.m.conv.real;}),bT=best(function(p){return p.m.tk.real;}),bD=best(function(p){return p.m.d30.real;}),bE=best(function(p){return p.m.entrada.real;});
+   dq.innerHTML=
+     tile('Faturamento',bF&&bF.u,bF?fmt(bF.m.fat.real,'rs'):'')
+    +tile('Avaliações',bA&&bA.u,bA?fmt(bA.m.aval.real,'num')+' aval':'')
+    +tile('Conversão',bC&&bC.u,bC?fmt(bC.m.conv.real,'pct'):'')
+    +tile('Ticket',bT&&bT.u,bT?fmt(bT.m.tk.real,'rs'):'')
+    +tile('30+',bD&&bD.u,bD&&bD.m.d30.real!=null?fmt(bD.m.d30.real,'rs'):'')
+    +tile('Entrada',bE&&bE.u,bE?fmt(bE.m.entrada.real,'rs'):'');
+ }
+ // ===== por estado =====
+ var groups={};
+ D.pracas.forEach(function(p){if(p.src!=='live'&&p.src!=='sheet')return;var uf=STATE[p.u];if(!uf)return;(groups[uf]=groups[uf]||[]).push(p);});
+ var ord=['RS','SC','MS','SP','MG','PE','UY'];
+ function agg(ps){var n=ps.length;
+   function sum(f){var s=0;ps.forEach(function(p){s+=num(f(p));});return s;}
+   function blk(k){var mt=sum(function(p){return p.m[k].meta;});return {med:sum(function(p){return p.m[k].real;})/n,medProj:sum(function(p){return p.m[k].proj;})/n,rpct:mt?sum(function(p){return p.m[k].real;})/mt:null,ppct:mt?sum(function(p){return p.m[k].proj;})/mt:null};}
+   var fatT=sum(function(p){return p.m.fat.real;}),avT=sum(function(p){return p.m.aval.real;});
+   var fechT=sum(function(p){return num(p.m.aval.real)*num(p.m.conv.real);});
+   var convW=avT?fechT/avT:null,convMetaW=avT?sum(function(p){return num(p.m.aval.real)*num(p.m.conv.meta);})/avT:null;
+   var tkW=fechT?fatT/fechT:null,tkMetaW=fechT?sum(function(p){return num(p.m.aval.real)*num(p.m.conv.real)*num(p.m.tk.meta);})/fechT:null;
+   var d30ps=ps.filter(function(p){return p.m.d30.real!=null;});var d30T=0,d30M=0,d30P=0,d30PA=0;d30ps.forEach(function(p){d30T+=num(p.m.d30.real);d30PA+=num(p.m.d30.proj);if(p.m.d30.meta){d30M+=p.m.d30.meta;d30P+=num(p.m.d30.proj);}});
+   return {n:n,fat:blk('fat'),ent:blk('entrada'),av:blk('aval'),
+     conv:{med:convW,medProj:convW,rpct:(convW!=null&&convMetaW)?convW/convMetaW:null,ppct:(convW!=null&&convMetaW)?convW/convMetaW:null},
+     tk:{med:tkW,medProj:tkW,rpct:(tkW!=null&&tkMetaW)?tkW/tkMetaW:null,ppct:(tkW!=null&&tkMetaW)?tkW/tkMetaW:null},
+     d30:{med:d30ps.length?d30T/d30ps.length:null,medProj:d30ps.length?d30PA/d30ps.length:null,rpct:d30M?d30T/d30M:null,ppct:d30M?d30P/d30M:null}};
+ }
+ var ROWS=Object.keys(groups).sort(function(a,b){return ord.indexOf(a)-ord.indexOf(b);}).map(function(uf){var o=agg(groups[uf]);o.uf=uf;o.moe=(uf==='UY')?'$U':null;return o;});
+ var brAll=[];Object.keys(groups).forEach(function(uf){if(uf!=='UY')brAll=brAll.concat(groups[uf]);});
+ var rede=agg(brAll);rede.uf='REDE';rede.moe=null;
+ var COLS=[['fat','rs'],['ent','rs'],['av','num'],['conv','pct'],['tk','rs'],['d30','rs']];
+ function val(o,k){return (k==='conv'||k==='tk')?o[k].med:o[k].med;}
+ function leadersFor(mode){var L={};COLS.forEach(function(c){var k=c[0],mon=(k==='fat'||k==='ent'||k==='tk'||k==='d30');var best=null,bv=-Infinity;
+   ROWS.forEach(function(s){if(mon&&s.uf==='UY')return;var v=(mode==='real')?((k==='conv'||k==='tk')?s[k].med:s[k].med):s[k].ppct;if(v!=null&&v>bv){bv=v;best=s.uf;}});L[k]=best;});return L;}
+ function rowHtml(o,mode,L,isRede){
+   var moe=o.moe;
+   var tds=COLS.map(function(c){var k=c[0],f=c[1];var o2=o[k];
+     var mv=(mode==='real')?o2.med:(o2.medProj!=null?o2.medProj:o2.med);var txt=(mv!=null)?fmt(mv,f,(k==='fat'||k==='ent'||k==='tk')?moe:null):'—';
+     var pct=(mode==='real')?o2.rpct:o2.ppct;
+     var win=(!isRede)&&(L[k]===o.uf);
+     var col=isRede?'var(--ink)':((mode==='proj')?('var(--'+CC[fr(pct)]+')'):'var(--ink)');
+     var pt=pct!=null?' <span style="opacity:.5;font-size:10px">'+Math.round(pct*100)+'%</span>':'';
+     return '<td'+(win?' style="font-weight:800"':'')+'><span style="color:'+col+'">'+(win?'🏆 ':'')+txt+'</span>'+pt+'</td>';
+   }).join('');
+   var nm=isRede?'<b>REDE</b> <span style="color:var(--ink3);font-size:11px">'+o.n+' clín.</span>':'<b>'+o.uf+'</b> <span style="color:var(--ink3);font-size:11px">'+o.n+' clín.'+(moe?' · $U':'')+'</span>';
+   return '<tr'+(isRede?' class="rede"':'')+'><td>'+nm+'</td>'+tds+'</tr>';
+ }
+ function renderEst(mode){var est=document.getElementById('esttab');if(!est)return;
+   est.querySelector('thead').innerHTML='<tr><th>Estado</th><th>Faturam. médio</th><th>Entrada média</th><th>Avaliações méd.</th><th>Conversão</th><th>Ticket</th><th>30+ médio</th></tr>';
+   var L=leadersFor(mode);
+   est.querySelector('tbody').innerHTML=ROWS.map(function(o){return rowHtml(o,mode,L,false);}).join('')+rowHtml(rede,mode,L,true);
+ }
+ var em=document.getElementById('estmode');var mode='real';
+ if(em){em.innerHTML='<button class="selb on" data-m="real">Realizado até hoje</button><button class="selb" data-m="proj">Projeção fim do mês</button>';
+   em.addEventListener('click',function(e){var b=e.target.closest('.selb');if(!b)return;mode=b.dataset.m;[].forEach.call(em.querySelectorAll('.selb'),function(x){x.classList.remove('on')});b.classList.add('on');renderEst(mode);});}
+ renderEst('real');
+})();
+</script>
+</body></html>

@@ -1,0 +1,203 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><title>Dashboard do Diretor — AGO</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Spectral:wght@400;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap">
+<style>
+:root{
+ --pg:#0B0906;--pn:#141009;--pn2:#1A150C;--ln:#2A2213;--ln2:#3A3018;
+ --ink:#F3ECDA;--ink2:#B6A883;--ink3:#7C7256;
+ --ous:#F1CE68;--gold-d:#B8862B;--vd:#5CC98A;--vm:#E0796B;--am:#E8B54D;
+ --grad:linear-gradient(100deg,#FBEDB4,#F1CE68 40%,#CFA23B 70%,#F7DE8C);
+ --serif:'Spectral',Georgia,serif;--sans:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:radial-gradient(120% 80% at 85% -10%,rgba(233,194,90,.10),transparent 60%),var(--pg);color:var(--ink);font-family:var(--sans);line-height:1.5;-webkit-font-smoothing:antialiased;padding:clamp(14px,2.5vw,30px)}
+.wrap{max-width:1180px;margin:0 auto}
+.top{display:flex;align-items:center;justify-content:space-between;gap:18px;border-bottom:1px solid var(--ln);padding-bottom:16px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:14px}
+.brand img{height:52px;width:auto;filter:drop-shadow(0 2px 8px rgba(0,0,0,.4))}
+.brand .eyebrow{font-size:10.5px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--gold-d)}
+.brand h1{font-family:var(--serif);font-size:22px;font-weight:800;letter-spacing:-.01em;line-height:1.05}
+.who{text-align:right;font-size:13px;color:var(--ink2);line-height:1.5}
+.who b{color:var(--ink);font-family:var(--serif);font-size:16px;display:block}
+.who .cmp{color:var(--ous);font-weight:700}
+/* resumo */
+.resumo{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin:20px 0}
+.rc{background:linear-gradient(180deg,var(--pn),var(--pg));border:1px solid var(--ln);border-radius:14px;padding:15px 16px;position:relative;overflow:hidden}
+.rc::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:var(--grad);opacity:.7}
+.rc .l{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--ink3)}
+.rc .v{font-family:var(--serif);font-weight:800;font-size:30px;line-height:1;margin-top:8px}
+.rc .s{font-size:11.5px;color:var(--ink2);margin-top:5px}
+.alert{background:linear-gradient(180deg,rgba(224,121,107,.14),var(--pn));border-color:color-mix(in srgb,var(--vm) 45%,var(--ln))}
+.alert .v{color:var(--vm)}
+/* cards indicadores */
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:800px){.grid{grid-template-columns:1fr}}
+.card{background:linear-gradient(180deg,var(--pn),var(--pg));border:1px solid var(--ln);border-radius:15px;padding:16px 17px}
+.card.flag{border-color:color-mix(in srgb,var(--vm) 50%,var(--ln));box-shadow:0 0 0 1px color-mix(in srgb,var(--vm) 20%,transparent)}
+.ch{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
+.ch h3{font-family:var(--serif);font-size:17px;font-weight:700}
+.farol{font-size:10px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;padding:3px 9px;border-radius:20px}
+.farol.g{color:#0c2a19;background:var(--vd)}.farol.r{color:#2a120d;background:var(--vm)}.farol.n{color:var(--ink3);background:var(--pn2);border:1px solid var(--ln)}
+.nums{display:flex;gap:14px;margin:10px 0 4px;flex-wrap:wrap}
+.nums .n{font-size:12px;color:var(--ink3)}
+.nums .n b{display:block;font-size:15px;color:var(--ink);font-variant-numeric:tabular-nums;font-weight:700;margin-top:1px}
+.nums .n.real b{color:var(--ous)}
+.adh{margin-top:10px}
+.adh .lab{display:flex;justify-content:space-between;font-size:11.5px;color:var(--ink2);margin-bottom:5px}
+.adh .lab b{color:var(--ink)}
+.bar{height:8px;border-radius:5px;background:var(--pn2);overflow:hidden;border:1px solid var(--ln)}
+.bar i{display:block;height:100%;border-radius:5px}
+.bar i.hi{background:var(--vd)}.bar i.mid{background:var(--am)}.bar i.lo{background:var(--vm)}
+.leitura{font-size:11px;font-weight:600;margin-top:9px;padding:7px 10px;border-radius:8px;line-height:1.4}
+.leitura.bad{background:rgba(224,121,107,.13);color:#f0b3a9;border:1px solid rgba(224,121,107,.3)}
+.leitura.ok{background:rgba(92,201,138,.1);color:#a6e2c1;border:1px solid rgba(92,201,138,.25)}
+.dtog{margin-top:11px;font-size:11.5px;color:var(--gold-d);font-weight:700;cursor:pointer;user-select:none}
+.dlist{margin-top:8px;display:none}
+.dlist.open{display:block}
+.di{display:flex;align-items:flex-start;gap:9px;padding:6px 0;border-top:1px solid var(--ln2)}
+.di .ic{flex:0 0 auto;width:18px;height:18px;border-radius:5px;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;margin-top:1px}
+.ic.feito{background:var(--vd);color:#0c2a19}.ic.parcial{background:var(--am);color:#2a1e05}.ic.nao{background:transparent;border:1.5px solid var(--vm);color:var(--vm)}
+.di .tx{font-size:12.5px;color:var(--ink);line-height:1.4}
+.di.nao .tx{color:var(--ink2)}
+.foot{margin-top:22px;border-top:1px solid var(--ln);padding-top:14px;font-size:11px;color:var(--ink3);line-height:1.6}
+</style></head>
+<body><div class="wrap">
+<div class="top">
+  <div class="brand">
+    <img src="ageodonto_logo.png" alt="AGO Ageodonto">
+    <div><div class="eyebrow">Gestão Comercial · Acompanhamento</div><h1>Dashboard do Diretor</h1></div>
+  </div>
+  <div class="who">
+    <select id="dsel" style="display:none;background:var(--pn2);color:var(--ink);border:1px solid var(--ln);border-radius:8px;padding:6px 9px;font-family:var(--sans);font-size:13px;margin-bottom:6px"></select>
+    <b id="dnome"></b><span id="dcli"></span><br>Competência: <span class="cmp" id="dcmp"></span>
+    <div id="conn" style="font-size:10.5px;margin-top:4px"></div>
+  </div>
+</div>
+<div class="resumo" id="resumo"></div>
+<div class="grid" id="grid"></div>
+<div class="foot" id="foot"></div>
+</div>
+<script>
+// ===== Conexão Supabase (PostgREST) =====
+var SB_URL="https://pwbcehrfhspgipjhaedc.supabase.co";
+var SB_KEY="sb_publishable_mTx5xlUaUcLBM_YijXuCjg_vwCJ5v3x";
+var FMT={faturamento:"rs",recompra:"rs",entrada:"rs",avaliacoes:"num",conversao:"pct",ticket:"rs",resgate30:"rs",parcelamento:"x"};
+var MES=["","Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
+function competLabel(c){ if(!c)return "—"; var p=(""+c).split("-"); return (MES[+p[1]]||p[1])+"/"+p[0]; }
+function sbGet(path){ return fetch(SB_URL+"/rest/v1/"+path,{headers:{apikey:SB_KEY,Authorization:"Bearer "+SB_KEY}}).then(r=>{if(!r.ok)throw new Error(r.status);return r.json();}); }
+
+// ===== Dados de exemplo (fallback offline · Dourados · Ago/2026) =====
+var EXEMPLO={diretor:"Dr. Emerson",clinica:"Dourados — MS",competencia:"Agosto/2026",ind:[
+ {ch:"faturamento",nome:"Faturamento",fmt:"rs",meta:856500,real:968377,proj:968377,teto:false,dem:[
+   ["Agenda cheia dos avaliadores","feito"],["Leitura diária realizado × projeção","feito"],["Recuperar orçamentos de alto ticket","feito"],["Mix de tratamentos (além do implante)","parcial"],["Plano de recuperação quando furar a meta","feito"]]},
+ {ch:"recompra",nome:"Recompra",fmt:"rs",meta:105000,real:146864,proj:146864,teto:false,dem:[
+   ["Rotina de resgate da base","feito"],["Reavaliação e retorno agendados","feito"],["Trabalhar as altas → indicações","feito"],["Campanha e disparos p/ base ativa 🔒","nao"],["Alinhamento com os dentistas","parcial"],["Monitorar % de recompra","feito"]]},
+ {ch:"entrada",nome:"Entrada",fmt:"rs",meta:149887,real:209269,proj:209269,teto:false,dem:[
+   ["Entrada como pré-requisito","feito"],["Qualidade da negociação/credibilidade","parcial"],["Usar a Ovix Pro (gravação)","nao"],["Confirmação ativa áudio/vídeo","feito"],["Garantir entrada efetivada","feito"],["Monitorar entrada","feito"]]},
+ {ch:"avaliacoes",nome:"Avaliações",fmt:"num",meta:140,real:141,proj:141,teto:false,dem:[
+   ["Funil e agenda de avaliação","feito"],["Engajamento nas redes 🔒","nao"],["Entregar os vídeos solicitados","parcial"],["Presença ativa (clínica, rádio, reuniões, eventos)","parcial"],["Indicações dos funcionários","feito"],["Monitorar nº de avaliações","feito"]]},
+ {ch:"conversao",nome:"Conversão",fmt:"pct",meta:53,real:54,proj:54,teto:false,dem:[
+   ["Confirmação ativa das avaliações","feito"],["Padrão de atendimento e tour","parcial"],["Follow-up dos não-fechados","nao"],["Fechamento (treino + no ato)","parcial"],["Storytelling na venda","nao"],["Passagem para o relacionamento","feito"],["Monitorar conversão por avaliador","feito"]]},
+ {ch:"ticket",nome:"Ticket médio",fmt:"rs",meta:10500,real:10442,proj:10442,teto:false,dem:[
+   ["Venda consultiva (plano completo)","parcial"],["Upsell nos fechamentos parciais","nao"],["Diagnóstico 360","nao"],["Ferramentas de diagnóstico/imagem","nao"],["Revisar precificação/tabela","feito"],["Acompanhar ticket por avaliador","nao"]]},
+ {ch:"resgate30",nome:"Resgate 30+",fmt:"rs",meta:90000,real:106610,proj:106610,teto:false,dem:[
+   ["Rotina diária de resgate","feito"],["Priorizar pacientes com 30+ dias","feito"],["Registrar o resgate no sistema","feito"],["Cadência de contato e vídeos 🔒","parcial"],["Entusiasmo / tom de voz","feito"],["Doutor apoia e municia o resgate","nao"],["Bater a meta mínima / Vlr 30+","feito"]]},
+ {ch:"parcelamento",nome:"Parcelamento médio",fmt:"x",meta:18,real:11,proj:11,teto:true,dem:[
+   ["Entrada e prazo dentro da política","feito"],["Cartão para o perfil de risco","parcial"],["Acompanhar inadimplência de boleto","feito"],["Revisar renegociações","nao"],["Monitorar parcelamento (teto)","nao"]]}
+]};
+function fmt(v,f){ if(v==null||isNaN(v))return "—"; if(f==="rs")return "R$ "+Math.round(v).toLocaleString("pt-BR"); if(f==="pct")return v+"%"; if(f==="x")return "× "+v; return Math.round(v).toLocaleString("pt-BR"); }
+function atingiu(i){ if(i.meta==null)return null; var v=(i.proj!=null?i.proj:i.real); if(v==null)return null; return i.teto ? v<=i.meta : v>=i.meta; }
+function adh(i){ var t=i.dem.length; if(!t)return 0; var f=0; i.dem.forEach(d=>{f+= d[1]==="feito"?1: d[1]==="parcial"?0.5:0;}); return Math.round(f/t*100); }
+function feitas(i){ return i.dem.filter(d=>d[1]==="feito").length; }
+
+function render(D){
+ document.getElementById("dnome").textContent=D.diretor;
+ document.getElementById("dcli").textContent=D.clinica?(" · "+D.clinica):"";
+ document.getElementById("dcmp").textContent=D.competencia;
+ var n=D.ind.length||1;
+ var noAlvo=D.ind.filter(i=>atingiu(i)===true).length, adhGeral=Math.round(D.ind.reduce((s,i)=>s+adh(i),0)/n);
+ var flags=D.ind.filter(i=>atingiu(i)===false&&i.dem.length>0&&adh(i)<60);
+ document.getElementById("resumo").innerHTML=
+  '<div class="rc"><div class="l">Indicadores no alvo</div><div class="v">'+noAlvo+'/'+D.ind.length+'</div><div class="s">meta atingida no mês</div></div>'+
+  '<div class="rc"><div class="l">Aderência geral</div><div class="v">'+adhGeral+'%</div><div class="s">dever de casa cumprido</div></div>'+
+  '<div class="rc '+(flags.length?'alert':'')+'"><div class="l">Não fez × não bateu</div><div class="v">'+flags.length+'</div><div class="s">'+(flags.length?flags.map(f=>f.nome).join(', '):'nenhum — parabéns')+'</div></div>';
+ document.getElementById("grid").innerHTML=D.ind.map((i,idx)=>{
+  var a=adh(i), at=atingiu(i), flag=at===false&&i.dem.length>0&&a<60;
+  var bcls=a>=70?'hi':a>=40?'mid':'lo';
+  var farolCls=at===null?'n':at?'g':'r';
+  var farolTxt=at===null?'sem dado':at?(i.teto?'dentro do limite':'no alvo'):(i.teto?'acima do limite':'fora');
+  var leit = flag
+    ? '<div class="leitura bad">⚠️ '+(i.teto?'Passou do limite':'Não bateu a meta')+' <b>e</b> a aderência está baixa ('+a+'%) — o dever de casa não feito ajuda a explicar o resultado.</div>'
+    : (at===true && a>=60 ? '<div class="leitura ok">✅ '+(i.teto?'Dentro do limite':'No alvo')+', com o dever de casa em dia.</div>' : '');
+  var dl=i.dem.length? i.dem.map(d=>{var s=d[1];var ic=s==="feito"?'✓':s==="parcial"?'~':'';return '<div class="di '+s+'"><div class="ic '+s+'">'+ic+'</div><div class="tx">'+d[0]+'</div></div>';}).join('') : '<div class="di nao"><div class="tx" style="color:var(--ink3)">Sem reunião registrada ainda.</div></div>';
+  return '<div class="card'+(flag?' flag':'')+'"><div class="ch"><h3>'+i.nome+'</h3><span class="farol '+farolCls+'">'+farolTxt+'</span></div>'
+   +'<div class="nums"><span class="n">'+(i.teto?'Limite (teto)':'Meta')+'<b>'+fmt(i.meta,i.fmt)+'</b></span><span class="n real">Realizado<b>'+fmt(i.real,i.fmt)+'</b></span><span class="n">Projeção<b>'+fmt(i.proj,i.fmt)+'</b></span></div>'
+   +'<div class="adh"><div class="lab"><span>Aderência às demandas</span><b>'+a+'% · '+feitas(i)+'/'+i.dem.length+'</b></div><div class="bar"><i class="'+bcls+'" style="width:'+a+'%"></i></div></div>'
+   +leit
+   +'<div class="dtog" data-i="'+idx+'">▸ ver as '+i.dem.length+' demandas</div><div class="dlist" id="dl'+idx+'">'+dl+'</div></div>';
+ }).join('');
+ document.querySelectorAll(".dtog").forEach(t=>t.onclick=function(){var el=document.getElementById("dl"+this.dataset.i);var o=el.classList.toggle("open");this.textContent=(o?'▾ ocultar demandas':'▸ ver as '+D.ind[this.dataset.i].dem.length+' demandas');});
+}
+document.getElementById("foot").innerHTML='<b>Como ler:</b> cada indicador mostra meta × realizado × projeção (farol) e a <b>aderência</b> (o quanto o diretor cumpriu das demandas). O alerta <span style="color:var(--vm)">não fez × não bateu</span> acende quando a meta não foi atingida <b>e</b> a aderência está abaixo de 60% — é a justificativa visível. · Ageodonto · Plataforma de Gestão Comercial.';
+
+// ===== Monta o D de um diretor a partir das linhas da view + demandas/checagens =====
+function montarD(rowsDir, demandas, checMap){
+ var demByInd={};
+ demandas.forEach(d=>{ var ch=d.indicadores&&d.indicadores.chave; if(!ch)return; (demByInd[ch]=demByInd[ch]||[]).push([d.titulo, checMap[d.id]||"nao", d.ordem]); });
+ Object.keys(demByInd).forEach(ch=>demByInd[ch].sort((a,b)=>a[2]-b[2]));
+ var ind=rowsDir.slice().sort((a,b)=>a.indicador_ordem-b.indicador_ordem).map(r=>({
+   ch:r.indicador_chave, nome:r.indicador, fmt:FMT[r.indicador_chave]||"num",
+   meta:(r.meta==null?null:+r.meta), real:(r.realizado==null?null:+r.realizado), proj:(r.projecao==null?null:+r.projecao), teto:r.sentido==="teto",
+   dem:(demByInd[r.indicador_chave]||[]).map(x=>[x[0],x[1]])
+ }));
+ return { diretor:rowsDir[0].diretor, clinica:rowsDir[0].clinica, competencia:competLabel(rowsDir[0].competencia), ind:ind };
+}
+
+function carregar(){
+ var conn=document.getElementById("conn");
+ Promise.all([
+   sbGet("v_dashboard_diretor?select=*"),
+   sbGet("demandas?select=id,ordem,titulo,indicadores(chave)&order=ordem")
+ ]).then(([view, demandas])=>{
+   if(!view.length) throw new Error("sem dados");
+   // agrupa a view por diretor
+   var byDir={}; view.forEach(r=>{ (byDir[r.diretor_id]=byDir[r.diretor_id]||[]).push(r); });
+   var ids=Object.keys(byDir);
+   var params=new URLSearchParams(location.search);
+   var sel=params.get("diretor"); if(!sel||!byDir[sel]) sel=ids[0];
+   // seletor de diretor (se houver mais de um)
+   var dsel=document.getElementById("dsel");
+   if(ids.length>1){
+     dsel.style.display="inline-block";
+     dsel.innerHTML=ids.map(id=>'<option value="'+id+'"'+(id===sel?' selected':'')+'>'+byDir[id][0].diretor+' — '+byDir[id][0].clinica+'</option>').join('');
+     dsel.onchange=function(){ carregarDiretor(this.value, demandas, conn); };
+   } else dsel.style.display="none";
+   carregarDiretor(sel, demandas, conn);
+ }).catch(e=>{
+   conn.innerHTML='<span style="color:var(--vm)">● sem conexão — dados de exemplo</span>';
+   render(EXEMPLO);
+ });
+}
+
+function carregarDiretor(dirId, demandas, conn){
+ // última reunião concluída do diretor -> checagens
+ sbGet("reunioes?diretor_id=eq."+dirId+"&status=eq.concluida&order=data.desc&limit=1&select=id")
+  .then(reu=>{
+    if(!reu.length) return {};
+    return sbGet("checagens?reuniao_id=eq."+reu[0].id+"&select=demanda_id,status")
+      .then(ch=>{ var m={}; ch.forEach(c=>m[c.demanda_id]=c.status); return m; });
+  })
+  .then(checMap=>{
+    // recarrega a view só desse diretor (garante linhas atuais)
+    return sbGet("v_dashboard_diretor?diretor_id=eq."+dirId+"&select=*").then(rows=>{
+      conn.innerHTML='<span style="color:var(--vd)">● conectado ao Supabase</span>';
+      render(montarD(rows, demandas, checMap));
+    });
+  })
+  .catch(e=>{ conn.innerHTML='<span style="color:var(--vm)">● erro ao ler diretor</span>'; });
+}
+
+carregar();
+</script>
+</body></html>

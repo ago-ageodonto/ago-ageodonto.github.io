@@ -1,0 +1,272 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Centro de Comando Ageodonto</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800&family=Inter:wght@400;500;600;700;800&display=swap">
+<style>
+:root{
+  --bg0:#070605; --bg1:#0E0C08; --panel:#141009; --panel2:#1A150C;
+  --line:#2A2213; --line2:#1E1810;
+  --ink:#F3ECDA; --ink2:#B6A883; --ink3:#7C7256;
+  --gold:#E9C25A; --gold-d:#B8862B;
+  --grad-gold:linear-gradient(135deg,#FBEBA8 0%,#EFC862 34%,#C99A33 66%,#F4DA85 100%);
+  --grad-text:linear-gradient(100deg,#FBEDB4 0%,#F1CE68 26%,#CFA23B 50%,#F7DE8C 78%,#E9BE52 100%);
+  --good:#5CC98A; --crit:#E0796B;
+  --glow:0 0 0 1px rgba(233,194,90,.10),0 20px 60px rgba(0,0,0,.55);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:
+   radial-gradient(120% 80% at 80% -10%,rgba(233,194,90,.10),transparent 60%),
+   radial-gradient(90% 60% at -10% 110%,rgba(184,134,43,.08),transparent 55%),
+   var(--bg0);
+  color:var(--ink);font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  -webkit-font-smoothing:antialiased;min-height:100vh}
+.wrap{max-width:1180px;margin:0 auto;padding:0 26px 80px}
+.gold{background:var(--grad-text);-webkit-background-clip:text;background-clip:text;color:transparent}
+.sheen{background-size:220% 100%;animation:sheen 7s linear infinite}
+@keyframes sheen{to{background-position:-220% 0}}
+@media (prefers-reduced-motion:reduce){.sheen{animation:none}}
+.mono{font-variant-numeric:tabular-nums}
+
+.top{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:28px 0 26px;border-bottom:1px solid var(--line)}
+.brandblock{display:flex;flex-direction:column}
+.brandblock .eyebrow{font-size:10.5px;font-weight:700;letter-spacing:.34em;text-transform:uppercase;color:var(--gold-d)}
+.wordmark{font-family:'Spectral',serif;font-weight:800;font-size:34px;letter-spacing:-.01em;line-height:1;margin-top:3px}
+.top .meta{text-align:right;font-size:13px;color:var(--ink2);line-height:1.5}
+.top .meta b{color:var(--ink);font-family:'Spectral',serif;font-size:15px}
+
+.hero{display:grid;grid-template-columns:1.15fr 1fr;gap:26px;align-items:center;margin-top:34px}
+.headline .lbl{font-size:11px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--gold-d)}
+.headline .big{font-family:'Spectral',serif;font-weight:800;font-size:clamp(38px,6.6vw,74px);line-height:.9;letter-spacing:-.02em;margin:10px 0 4px}
+.headline .row{display:flex;align-items:center;gap:14px;margin-top:10px;flex-wrap:wrap}
+.delta{display:inline-flex;align-items:center;gap:5px;font-weight:700;font-size:15px;color:var(--good);
+  background:rgba(92,201,138,.12);border:1px solid rgba(92,201,138,.28);border-radius:20px;padding:4px 12px}
+.headline .ctx{color:var(--ink2);font-size:14px}
+.spark{background:linear-gradient(180deg,var(--panel),var(--bg1));border:1px solid var(--line);border-radius:16px;padding:20px 22px 16px;box-shadow:var(--glow)}
+.spark .st{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink3);margin-bottom:14px}
+.bars{display:flex;align-items:flex-end;gap:8px;height:118px}
+.bars .b{flex:1;border-radius:5px 5px 0 0;background:linear-gradient(180deg,rgba(233,194,90,.35),rgba(184,134,43,.12));position:relative;min-height:8px}
+.bars .b.on{background:var(--grad-gold);box-shadow:0 0 18px rgba(233,194,90,.4)}
+.bars .b span{position:absolute;top:-19px;left:0;right:0;text-align:center;font-size:11px;font-weight:700;color:var(--gold);font-variant-numeric:tabular-nums}
+.barx{display:flex;gap:8px;margin-top:9px}
+.barx span{flex:1;text-align:center;font-size:10.5px;color:var(--ink3);font-weight:600;text-transform:uppercase;letter-spacing:.04em}
+
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:14px;margin-top:22px}
+.kpi{background:linear-gradient(180deg,var(--panel),var(--bg1));border:1px solid var(--line);border-radius:14px;padding:16px 18px;position:relative;overflow:hidden}
+.kpi::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:var(--grad-gold);opacity:.7}
+.kpi .k{font-size:10.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--ink3)}
+.kpi .v{font-family:'Spectral',serif;font-weight:700;font-size:34px;line-height:1;margin-top:9px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.kpi .v.money{font-size:clamp(22px,2vw,30px)}
+.kpi .s{font-size:12px;color:var(--ink2);margin-top:6px}
+
+.sec{margin-top:46px}
+.sec-hd{display:flex;align-items:baseline;justify-content:space-between;border-bottom:1px solid var(--line);padding-bottom:12px;margin-bottom:18px;gap:14px;flex-wrap:wrap}
+.sec-hd h2{font-family:'Spectral',serif;font-weight:700;font-size:24px;letter-spacing:-.01em}
+.sec-hd .c{font-size:12px;color:var(--ink3);letter-spacing:.1em;text-transform:uppercase;font-weight:700}
+
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
+.filt{background:transparent;border:1px solid var(--line);color:var(--ink2);border-radius:20px;padding:7px 15px;font-size:12.5px;font-weight:600;cursor:pointer;font-family:inherit;transition:.18s}
+.filt:hover{border-color:var(--gold-d);color:var(--ink)}
+.filt.on{background:var(--grad-gold);border-color:transparent;color:#100E0B}
+
+.catgrp{margin-bottom:8px}
+.catgrp.hide{display:none}
+.cat-t{font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--gold-d);margin:22px 0 12px}
+.mats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.mat{display:flex;flex-direction:column;gap:7px;text-decoration:none;color:inherit;
+  background:linear-gradient(180deg,var(--panel),var(--bg1));border:1px solid var(--line);border-radius:14px;padding:17px 18px;
+  transition:border-color .2s,transform .2s,box-shadow .2s}
+.mat.hide{display:none}
+.mat:hover{border-color:rgba(233,194,90,.5);transform:translateY(-3px);box-shadow:var(--glow)}
+.mat .tag{font-size:9.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--gold-d)}
+.mat .tt{font-family:'Spectral',serif;font-size:19px;font-weight:600;line-height:1.12}
+.mat .ds{font-size:12.5px;color:var(--ink2);line-height:1.42;flex:1}
+.mat .go{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:var(--gold)}
+.mat .go .ar{transition:transform .2s}
+.mat:hover .go .ar{transform:translateX(4px)}
+
+.foot{margin-top:52px;border-top:1px solid var(--line);padding-top:18px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font-size:12px;color:var(--ink3)}
+.foot b{color:var(--ink2)}
+:focus-visible{outline:2px solid var(--gold);outline-offset:3px;border-radius:6px}
+@media (max-width:860px){.hero{grid-template-columns:1fr}.kpis{grid-template-columns:1fr 1fr}.mats{grid-template-columns:1fr}}
+</style>
+
+<div class="wrap">
+
+  <header class="top">
+    <div class="brandblock">
+      <span class="eyebrow">Direção Comercial · Centro de Comando</span>
+      <span class="wordmark gold sheen">Ageodonto</span>
+    </div>
+    <div class="meta"><b>Agosto 2026</b><br>36 unidades ativas · rede consolidada</div>
+  </header>
+
+  <section class="hero">
+    <div class="headline">
+      <div class="lbl">Faturamento da rede · mês</div>
+      <div class="big gold">R$ 22.374.017</div>
+      <div class="row">
+        <span class="delta" style="color:var(--crit)">▼ 2,4% vs julho</span>
+        <span class="ctx">acumulado 2026: <b class="mono" style="color:var(--ink)">R$ 175,6 mi</b> em 8 meses</span>
+      </div>
+    </div>
+    <div class="spark">
+      <div class="st">Faturamento da rede · R$ milhões · 2026</div>
+      <div class="bars">
+        <div class="b" style="height:88%"><span>20,5</span></div>
+        <div class="b" style="height:86%"><span>20,0</span></div>
+        <div class="b" style="height:99%"><span>22,9</span></div>
+        <div class="b" style="height:95%"><span>22,1</span></div>
+        <div class="b" style="height:94%"><span>21,7</span></div>
+        <div class="b" style="height:100%"><span>23,2</span></div>
+        <div class="b" style="height:99%"><span>22,9</span></div>
+        <div class="b on" style="height:96%"><span>22,4</span></div>
+      </div>
+      <div class="barx"><span>jan</span><span>fev</span><span>mar</span><span>abr</span><span>mai</span><span>jun</span><span>jul</span><span>ago</span></div>
+    </div>
+  </section>
+
+  <div class="kpis">
+    <div class="kpi"><div class="k">Margem de lucro</div><div class="v gold">14,0%</div><div class="s">lucro ÷ faturamento no mês</div></div>
+    <div class="kpi"><div class="k">Entrada / Faturamento</div><div class="v gold">18,1%</div><div class="s">entrada de caixa sobre o faturado</div></div>
+    <div class="kpi"><div class="k">Média por unidade</div><div class="v gold money">R$ 621.500</div><div class="s">faturamento ÷ 36 no mês</div></div>
+    <div class="kpi"><div class="k">Resgate 30+</div><div class="v">—</div><div class="s">planilha 30+ de agosto pendente (Drive)</div></div>
+    <div class="kpi"><div class="k">Conversão de avaliação</div><div class="v">52,3%</div><div class="s">média ponderada da rede</div></div>
+    <div class="kpi"><div class="k">Unidades ativas</div><div class="v">36</div><div class="s">reportando no mês</div></div>
+  </div>
+
+  <section class="sec">
+    <div class="sec-hd"><h2>Materiais &amp; projetos</h2><span class="c">A home de tudo</span></div>
+    <div class="filters" id="filters">
+      <button class="filt on" data-f="all">Todos</button>
+      <button class="filt" data-f="res">Resultados &amp; BI</button>
+      <button class="filt" data-f="gest">Gestão</button>
+      <button class="filt" data-f="apres">Apresentações</button>
+      <button class="filt" data-f="op">Listas de operação</button>
+      <button class="filt" data-f="acomp">Materiais de acompanhamento</button>
+      <button class="filt" data-f="rmrbr">RMR</button>
+      <button class="filt" data-f="rmr">RMR URY</button>
+      <button class="filt" data-f="campo">Campo &amp; pessoas</button>
+      <button class="filt" data-f="camp">Campanhas &amp; praças</button>
+      <button class="filt" data-f="an">Análises</button>
+      <button class="filt" data-f="id">Ferramentas</button>
+    </div>
+
+    <div class="catgrp" data-cat="res">
+      <div class="cat-t">Resultados &amp; BI</div>
+      <div class="mats">
+        <a class="mat" data-c="res" href="https://claude.ai/code/artifact/dae046dd-6c5c-413b-9bbb-05c876bfab24" target="_blank" rel="noopener"><span class="tag">Farol · dado vivo</span><span class="tt">Torre de Controle</span><span class="ds">A visão de cima das praças vs metas — 8 indicadores com farol e projeção de fechamento (pacing por praça), aba comparativa e drill por praça. Ao vivo do Giga.</span><span class="go">Abrir <span class="ar">→</span></span></a>
+        <a class="mat" data-c="res" href="https://claude.ai/code/artifact/9627695c-26b9-42ff-a440-aa41f7926ba7" target="_blank" rel="noopener"><span class="tag">Dashboard · dado vivo</span><span class="tt">Painel de Resultados</span><span class="ds">Rede, ranking, clusterização, unidade no tempo, mapa de calor, bloco e capacidade produtiva.</span><span class="go">Abrir <span class="ar">→</span></span></a>
+      </div>
+    </div>
+
+    <div class="catgrp" data-cat="gest">
+      <div class="cat-t">Gestão</div>
+      <div class="mats">
+        <a class="mat" data-c="gest" href="https://claude.ai/code/artifact/e466928f-5fde-4c51-9b89-88e9ca8b2ae2" target="_blank" rel="noopener"><span class="tag">Acompanhamento</span><span class="tt">Acompanhamento de Demandas</span><span class="ds">Status das demandas da direção comercial.</span><span class="go">Abrir <span class="ar">→</span></span></a>
+        <a class="mat" data-c="proj" href="https://claude.ai/code/artifact/e5f1d524-d10e-45a2-a672-1890840271c1" target="_blank" rel="noopener"><span class="tag">Pipeline · projeto</span><span class="tt">Pipeline — Cartão de Crédito</span><span class="ds">Linha do tempo do projeto com a Laiana: levantamento (compras no cartão × score), material de gaps/inadimplência e reuniões (21 e 23), com check por etapa.</span><span class="go">Abrir <span class="ar">→</span></span></a>
+        <a class="mat" data-c="proj" href="https://claude.ai/code/artifact/9e099285-f78b-4f35-a20c-53f53184e9a5" target="_blank" rel="noopener"><span class="tag">Plano · execução</span><span class="tt">Plano de Execução Uruguai</span><span class="ds">Passos, donos e prazos da estruturação das unidades do Uruguai, com checklist, praças e rostos por mês.</span><span class="go">Abrir <span class="ar">→</span></span></a>
+        <a class="mat" data-c="proj" href="https://claude.ai/code/artifact/2d7092a5-1172-4320-804e-8ce7fb5e74d9" target="_blank" rel="noopener"><span class="tag">Acompanhamento</span><span class="tt">CDC | RS — Acompanhamento</span><span class="ds">Implementação do Crédito Direto ao Consumidor (piloto em Encantado): reunião interna, banco, implementação e acompanhamento da aderência.</span><span class="go">Abrir <span class="ar">→</span></span></a>
+        <a class="mat" data-c="gest" href="https://claude.ai/code/artifact/8415c403-7c87-4250-8d31-db74132112e7" target="_blank" rel="noopener"><span class="tag">Projeto · Align</span><span class="tt">Programa Invisalign</span><span class="ds">Imersão de 4 aulas, Business Accelerator (Co-MKT), fases do projeto e execução no campo com o Alexandre.</span><span class="go">Abrir <span class="ar">→</span></span></a>
+      </div>
+    </div>
+
+    <div class="catgrp" data-cat="apres">
+      <div class="cat-t">Apresentações</div>
+      <div class="mats">
+        <a class="mat" data-c="apres" href="https://claude.ai/artifact/17vJheDtxvDZ6pEvVsx6tf" target="_blank" rel="noopener"><span class="tag">Cartão × Serasa · Viamão</span><span class="tt">Cartão de Crédito × Serasa · Viamão</span><span class="ds">Venda no cartão (jan–ago) + tratamentos por grupo, cruzados com o Serasa: score e dívida dos 168 clientes e o risco de crédito da base (1.943 laudos).</span><span class="go">Abrir <span class="ar">→</span></span></a>
+        <a class="mat" data-c="apres" href="https://claude.ai/code/artifact/3f888d93-5989-4c42-b44b-da99feb77cac" target="_blank" rel="noopener"><span class="tag">Deck · patrocínio</span><span class="tt">Bar do Sadi — Patrocínio</span><span class="ds">Leitura para o Dr. Carlos: turnê, agenda, elenco e alcance, cotas e a jogada recomendada.</span><span class="go">Abrir <span class="ar">→</span></span></a>
+        <a class="mat" data-c="apres" href="https://claude.ai/code/artifact/e0308a29-39aa-4f5e-a1c3-e6a6df2aadd4" target="_blank" rel="noopener"><span class="tag">Deck · capacitação</span><span class="tt">CRM para Diretores Clínicos</span><span class="ds">Deck de capacitação em CRM: o que é, o desafio, quanto o mercado investe e o retorno (com fontes).</span><span class="go">Abrir <span class="ar">→</span></span></a>
+      </div>
+    </div>
+
+    <div class="catgrp" data-cat="op">
+      <div class="cat-t">Listas de operação</div>
+      <div class="mats">
+        <a class="mat" data-c="proj" href="https://claude.ai/code/artifact/bd651630-001a-4581-8d6d-e6ecd050f119" target="_blank" rel="noopener"><span class="tag">Lista</span><span class="tt">CRM por Unidade</span><span class="ds">Tecnologia de CRM por unidade da rede: DIGIO, Bitrix e as unidades ainda sem tecnologia.</span><span class="go">Abrir <span class="ar">→</span></span></a>
+        <a class="mat" data-c="gest" href="https://claude.ai/code/artifact/3a19cb7e-ded4-42a8-b9cb-d9d74f999d5d" target="_blank" rel="noopener"><span class="tag">Operação · MS</span><span class="tt">Operacional MS — Dashboard</span><span class="ds">As 6 praças de MS que o Marcelo alimenta.</span><span class="go">Abrir <span class="ar">→</span></span></a>
+      </div>
+    </div>
+
+    <div class="catgrp" data-cat="acomp">
+      <div class="cat-t">Materiais de acompanhamento</div>
+      <div class="mats">
+        <a class="mat" data-c="acomp" href="https://claude.ai/artifact/WQfDUVnLc9B6dWK6eLx6QS" target="_blank" rel="noopener"><span class="tag">Evento · acompanhamento</span><span class="tt">Evento Bar do Sadi</span><span class="ds">Modelo de investimento (R$100k · franquia 50k + rateio 50k), as 13 clínicas da turnê (AGO × Oral Unic), a opção Badin nas clínicas (3 pontos: Caxias/Flores/Marau, +R$5k/unidade) e o checklist das etapas com progresso.</span><span class="go">Abrir <span class="ar">→</span></span></a>
+        <a class="mat" data-c="acomp" href="https://claude.ai/code/artifact/94998d71-82a6-4f1b-94cb-900c3f86b154" target="_blank" rel="noopener"><span class="tag">Plano</span><span class="tt">Plano de Atuação — Anderson</span><span class="ds">Consultor de campo: entregas, KPIs, ritos e metas.</span><span class="go">Abrir <span class="ar">→</span></span></a>
+        <a class="mat" data-c="acomp" href="https://claude.ai/code/artifact/95afbec3-6561-405c-80bf-f6a2c11e68bb" target="_blank" rel="noopener"><span class="tag">Checklist · campo</span><span class="tt">Checklist de Campo — Anderson</span><span class="ds">4 frentes por dia (relacionamento, recepção/tour, atendimento, eventos) — O.U. Indaial.</span><span class="go">Abrir <span class="ar">→</span></span></a>
+      </div>
+    </div>
+
+    <div class="catgrp" data-cat="rmrbr">
+      <div class="cat-t">RMR — Praças da rede</div>
+      <div class="mats">
+        <a class="mat" data-c="rmrbr" href="https://claude.ai/code/artifact/7079dd7d-bfe8-4fa3-8ab2-b6d4d95a8b32" target="_blank" rel="noopener"><span class="tag">RMR · agosto</span><span class="tt">Vermelhos — Defesa &amp; Plano</span><span class="ds">5 praças (Teutônia, Três Lagoas, Viamão, Passos, Capão): indicadores em vermelho, defesa dos números e plano por praça. Para o CEO.</span><span class="go">Abrir <span class="ar">→</span></span></a>
+        <a class="mat" data-c="rmrbr" href="https://claude.ai/code/artifact/dffb3d93-5aaa-4762-bb75-cd9dcddd47c3" target="_blank" rel="noopener"><span class="tag">RMR · diagnóstico</span><span class="tt">Diagnóstico Profundo por Praça</span><span class="ds">Funil de 6 meses + pacientes no sistema (avaliados, negociados, não fechados, não contatados) + ticket. Teutônia, Viamão, Capão, Três Lagoas.</span><span class="go">Abrir <span class="ar">→</span></span></a>
+        <a class="mat" data-c="rmrbr" href="https://claude.ai/code/artifact/1cf1bd8f-428b-40d9-bb45-c99bb25911c0" target="_blank" rel="noopener"><span class="tag">Diagnóstico · CG2</span><span class="tt">CG2 — Diagnóstico Comercial</span><span class="ds">Série mar–ago: o padrão "mais lead, menos venda", o gargalo do funil e o plano de ação.</span><span class="go">Abrir <span class="ar">→</span></span></a>
+        <a class="mat" data-c="rmrbr" href="https://claude.ai/code/artifact/5b78d89f-6da8-4b74-b5e9-10ad9762e39e" target="_blank" rel="noopener"><span class="tag">Oportunidade · CG2</span><span class="tt">CG2 — Oportunidade na Mesa</span><span class="ds">As três bolsas de ticket: alto ticket não fechado, fechamento parcial e upsell nos que fecham integral.</span><span class="go">Abrir <span class="ar">→</span></span></a>
+      </div>
+    </div>
+
+    <div class="catgrp" data-cat="rmr">
+      <div class="cat-t">RMR URY — Montevidéu</div>
+      <div class="mats">
+        <a class="mat" data-c="rmr" href="https://claude.ai/code/artifact/1333069f-8f0b-4ab6-86aa-fda8aad0f545" target="_blank" rel="noopener"><span class="tag">RMR · Uruguai</span><span class="tt">Montevidéu — Agosto</span><span class="ds">Reunião de resultado da unidade Odonto Vita.</span><span class="go">Abrir <span class="ar">→</span></span></a>
+        <a class="mat" data-c="rmr" href="https://claude.ai/code/artifact/0e76e855-38d5-413c-8f12-e3e3268892a8" target="_blank" rel="noopener"><span class="tag">RMR · Uruguai</span><span class="tt">Montevidéu — Julho</span><span class="ds">Resultado do mês anterior de Odonto Vita.</span><span class="go">Abrir <span class="ar">→</span></span></a>
+      </div>
+    </div>
+
+    <div class="catgrp" data-cat="campo">
+      <div class="cat-t">Campo &amp; pessoas</div>
+      <div class="mats">
+        <a class="mat" data-c="campo" href="https://claude.ai/code/artifact/6724a1a6-df90-499a-9663-5667f025ee28" target="_blank" rel="noopener"><span class="tag">Rito</span><span class="tt">Responsabilidades da RMR · Agosto</span><span class="ds">O que cada papel entrega na reunião de resultado.</span><span class="go">Abrir <span class="ar">→</span></span></a>
+        <a class="mat" data-c="campo" href="https://claude.ai/code/artifact/FbN4hKS9a6ckrY6pVDdqhL" target="_blank" rel="noopener"><span class="tag">Rito · setembro</span><span class="tt">Responsabilidades da RMR · Setembro</span><span class="ds">Meus 23 encaminhamentos da RMR Unidade 002 (10/09), por prazo, com checklist pra ir marcando.</span><span class="go">Abrir <span class="ar">→</span></span></a>
+      </div>
+    </div>
+
+    <div class="catgrp" data-cat="camp">
+      <div class="cat-t">Campanhas &amp; praças</div>
+      <div class="mats">
+        <a class="mat" data-c="camp" href="https://claude.ai/code/artifact/0b11364e-2139-4d14-bff6-920841478a7f" target="_blank" rel="noopener"><span class="tag">Análise</span><span class="tt">Cartão de Crédito na Rede</span><span class="ds">Uso do cartão como meio de pagamento na rede.</span><span class="go">Abrir <span class="ar">→</span></span></a>
+      </div>
+    </div>
+
+    <div class="catgrp" data-cat="an">
+      <div class="cat-t">Análises</div>
+      <div class="mats">
+        <a class="mat" data-c="an" href="https://claude.ai/code/artifact/221b101d-a3de-4cc3-b362-2e75c1fb170f" target="_blank" rel="noopener"><span class="tag">Marketing</span><span class="tt">Evolução de Marketing por Clínica</span><span class="ds">Investimento e retorno de mídia por unidade.</span><span class="go">Abrir <span class="ar">→</span></span></a>
+        <a class="mat" data-c="an" href="https://claude.ai/code/artifact/80cd56a4-5592-4711-9249-62ccd818fb2c" target="_blank" rel="noopener"><span class="tag">Análise</span><span class="tt">Avaliadores × Resultado</span><span class="ds">Venda consultiva do avaliador vs resultado do mês.</span><span class="go">Abrir <span class="ar">→</span></span></a>
+      </div>
+    </div>
+
+    <div class="catgrp" data-cat="id">
+      <div class="cat-t">Ferramentas</div>
+      <div class="mats">
+        <a class="mat" data-c="id" href="https://claude.ai/code/artifact/6ffd6517-64ac-4882-96af-ca87270b4ff1" target="_blank" rel="noopener"><span class="tag">Ferramenta</span><span class="tt">Gerador de Materiais</span><span class="ds">Monta KPI, one-pager e comparativo na identidade da marca, com PDF.</span><span class="go">Abrir <span class="ar">→</span></span></a>
+      </div>
+    </div>
+
+  </section>
+
+  <div class="foot">
+    <span><b>Ageodonto · Centro de Comando</b> — KPIs consolidados do Painel de Resultados (agosto/2026).</span>
+    <span>Faturamento bruto · fonte: apontamentos por unidade</span>
+  </div>
+
+</div>
+
+<script>
+(function(){
+  var filts=[].slice.call(document.querySelectorAll('.filt'));
+  var grps=[].slice.call(document.querySelectorAll('.catgrp'));
+  filts.forEach(function(b){
+    b.addEventListener('click',function(){
+      filts.forEach(function(x){x.classList.remove('on');});
+      b.classList.add('on');
+      var f=b.dataset.f;
+      grps.forEach(function(g){g.classList.toggle('hide', f!=='all' && g.dataset.cat!==f);});
+    });
+  });
+})();
+</script>
+
+</body></html>

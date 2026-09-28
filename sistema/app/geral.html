@@ -1,0 +1,125 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><title>Visão Geral — AGO</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Spectral:wght@400;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap">
+<style>
+:root{--pg:#0B0906;--pn:#141009;--pn2:#1A150C;--ln:#2A2213;--ln2:#3A3018;--ink:#F3ECDA;--ink2:#B6A883;--ink3:#7C7256;--ous:#F1CE68;--gold-d:#B8862B;--vd:#5CC98A;--vm:#E0796B;--am:#E8B54D;--grad:linear-gradient(100deg,#FBEDB4,#F1CE68 40%,#CFA23B 70%,#F7DE8C);--serif:'Spectral',Georgia,serif;--sans:'Inter',-apple-system,sans-serif;}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--pg);color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased;padding:clamp(14px,2vw,26px)}
+.hd{display:flex;align-items:baseline;justify-content:space-between;gap:14px;flex-wrap:wrap;border-bottom:1px solid var(--ln);padding-bottom:14px;margin-bottom:18px}
+.hd h1{font-family:var(--serif);font-size:20px;font-weight:800}
+.hd .cmp{font-size:12px;color:var(--ink2)}.hd .cmp b{color:var(--ous)}
+.sec{font-family:var(--serif);font-size:15px;font-weight:700;color:var(--ink);margin:24px 2px 12px}
+/* KPIs */
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px}
+.kpi{background:linear-gradient(180deg,var(--pn),var(--pg));border:1px solid var(--ln);border-radius:14px;padding:15px 16px;position:relative;overflow:hidden}
+.kpi::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:var(--grad);opacity:.7}
+.kpi .l{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--ink3)}
+.kpi .v{font-family:var(--serif);font-weight:800;font-size:32px;line-height:1;margin-top:8px}
+.kpi .s{font-size:11px;color:var(--ink2);margin-top:5px}
+.kpi .v.g{color:var(--vd)}.kpi .v.a{color:var(--am)}.kpi .v.r{color:var(--vm)}
+/* donut */
+.dwrap{display:flex;align-items:center;gap:18px;background:linear-gradient(180deg,var(--pn),var(--pg));border:1px solid var(--ln);border-radius:14px;padding:16px 18px;flex-wrap:wrap}
+.donut{--p:0;--c:var(--vd);width:120px;height:120px;border-radius:50%;flex:0 0 auto;background:conic-gradient(var(--c) calc(var(--p)*1%),var(--pn2) 0);display:flex;align-items:center;justify-content:center;position:relative}
+.donut::after{content:"";position:absolute;width:82px;height:82px;border-radius:50%;background:var(--pg)}
+.donut b{position:relative;font-family:var(--serif);font-size:24px;font-weight:800;z-index:1}
+.dwrap .dl{flex:1;min-width:180px}.dwrap .dl h3{font-family:var(--serif);font-size:16px;margin-bottom:4px}.dwrap .dl p{font-size:12.5px;color:var(--ink2);line-height:1.5}
+/* barras por indicador */
+.ind{background:linear-gradient(180deg,var(--pn),var(--pg));border:1px solid var(--ln);border-radius:14px;padding:14px 16px}
+.irow{display:grid;grid-template-columns:150px 1fr 92px;gap:12px;align-items:center;padding:8px 0;border-top:1px solid var(--ln2)}
+.irow:first-child{border-top:0}
+@media(max-width:640px){.irow{grid-template-columns:110px 1fr 64px}}
+.iname{font-size:13px;font-weight:600}
+.iname small{display:block;color:var(--ink3);font-weight:400;font-size:10.5px}
+.stack{display:flex;height:22px;border-radius:6px;overflow:hidden;background:var(--pn2);border:1px solid var(--ln)}
+.stack i{height:100%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;min-width:0}
+.stack i.g{background:var(--vd);color:#0c2a19}.stack i.a{background:var(--am);color:#2a1e05}.stack i.r{background:var(--vm);color:#2a120d}.stack i.n{background:var(--pn2);color:var(--ink3)}
+.ipct{text-align:right;font-family:var(--serif);font-weight:800;font-size:18px;font-variant-numeric:tabular-nums}
+.ipct.g{color:var(--vd)}.ipct.a{color:var(--am)}.ipct.r{color:var(--vm)}
+.leg{display:flex;gap:14px;margin-top:12px;font-size:11px;color:var(--ink2);flex-wrap:wrap}
+.leg span{display:flex;align-items:center;gap:5px}
+.leg i{width:11px;height:11px;border-radius:3px;display:inline-block}
+.leg i.g{background:var(--vd)}.leg i.a{background:var(--am)}.leg i.r{background:var(--vm)}
+/* ranking */
+.rk{background:linear-gradient(180deg,var(--pn),var(--pg));border:1px solid var(--ln);border-radius:14px;padding:14px 16px}
+.rkrow{display:grid;grid-template-columns:150px 1fr 46px;gap:12px;align-items:center;padding:7px 0;cursor:pointer;border-top:1px solid var(--ln2)}
+.rkrow:first-child{border-top:0}.rkrow:hover{background:color-mix(in srgb,var(--ous) 6%,transparent)}
+@media(max-width:640px){.rkrow{grid-template-columns:120px 1fr 40px}}
+.rku{font-size:12.5px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rktrack{background:var(--pn2);border-radius:6px;height:18px;overflow:hidden;border:1px solid var(--ln)}
+.rkfill{height:100%;border-radius:6px 0 0 6px}
+.rkfill.g{background:var(--vd)}.rkfill.a{background:var(--am)}.rkfill.r{background:var(--vm)}
+.rkn{text-align:right;font-size:12.5px;font-weight:700;font-variant-numeric:tabular-nums}
+.empty{color:var(--ink3);font-size:13px;padding:24px;text-align:center}
+</style></head>
+<body>
+<div class="hd"><h1>Visão Geral da Rede</h1><div class="cmp">Competência: <b id="cmp">—</b> · <span id="qtd">—</span> · farol por <b>projeção</b></div></div>
+<div id="body"><div class="empty">Carregando…</div></div>
+<script>
+var SB_URL="https://pwbcehrfhspgipjhaedc.supabase.co";
+var SB_KEY="sb_publishable_mTx5xlUaUcLBM_YijXuCjg_vwCJ5v3x";
+var MES=["","Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
+function competLabel(c){ if(!c)return "—"; var p=(""+c).split("-"); return (MES[+p[1]]||p[1])+"/"+p[0]; }
+function get(p){return fetch(SB_URL+"/rest/v1/"+p,{headers:{apikey:SB_KEY,Authorization:"Bearer "+SB_KEY}}).then(r=>r.json());}
+function abrir(id){ if(window.parent&&window.parent!==window&&window.parent.openDiretor)window.parent.openDiretor(id); else location.href="dashboard.html?diretor="+id; }
+function ratioOf(r){ var v=(r.projecao!=null?+r.projecao:+r.realizado); if(v==null||isNaN(v)||r.meta==null)return null; var m=+r.meta; if(!m)return null; return r.sentido==="teto"?(v?m/v:2):v/m; }
+function tier(r){ var x=ratioOf(r); if(x==null)return null; return x>=1?'g':x>=0.85?'a':'r'; }
+
+get("v_dashboard_diretor?select=*").then(rows=>{
+  var withData=rows.filter(r=>r.meta!=null&&r.realizado!=null);
+  if(!withData.length){document.getElementById("body").innerHTML='<div class="empty">Sem resultados lançados ainda. Lance no Console (aba ②) para ver os gráficos.</div>';return;}
+  document.getElementById("cmp").textContent=competLabel(rows[0].competencia);
+  // agrupa por unidade e por indicador
+  var units={}; rows.forEach(r=>{(units[r.diretor_id]=units[r.diretor_id]||{nome:r.clinica||r.diretor,dir:r.diretor,rs:[]}).rs.push(r);});
+  var unitArr=Object.keys(units).map(id=>({id:id,nome:units[id].nome,dir:units[id].dir,rs:units[id].rs}));
+  document.getElementById("qtd").textContent=unitArr.length+" unidades";
+  // por indicador
+  var indOrder=[]; var byInd={};
+  rows.forEach(r=>{ if(!byInd[r.indicador_chave]){byInd[r.indicador_chave]={nome:r.indicador,ordem:r.indicador_ordem,g:0,a:0,r:0};indOrder.push(r.indicador_chave);} });
+  withData.forEach(r=>{ var t=tier(r); if(t)byInd[r.indicador_chave][t]++; });
+  indOrder.sort((x,y)=>byInd[x].ordem-byInd[y].ordem);
+  // overall
+  var G=withData.filter(r=>tier(r)==='g').length, TOT=withData.filter(r=>tier(r)).length;
+  var pctGeral=TOT?Math.round(G/TOT*100):0;
+  // unidades por nº no alvo
+  var uAgg=unitArr.map(u=>{var wd=u.rs.filter(r=>r.meta!=null&&r.realizado!=null);var g=wd.filter(r=>tier(r)==='g').length;return {id:u.id,nome:u.nome,g:g,tot:wd.length};}).sort((a,b)=>(b.g/(b.tot||1))-(a.g/(a.tot||1))||b.g-a.g);
+  var noAlvoUnidades=uAgg.filter(u=>u.tot&&u.g/u.tot>=0.75).length;
+  // melhor/pior indicador
+  var indPct=indOrder.map(k=>{var o=byInd[k];var t=o.g+o.a+o.r;return {k:k,nome:o.nome,pct:t?o.g/t*100:0};});
+  var melhor=indPct.slice().sort((a,b)=>b.pct-a.pct)[0], pior=indPct.slice().sort((a,b)=>a.pct-b.pct)[0];
+  var cls=p=>p>=75?'g':p>=50?'a':'r';
+
+  var H='';
+  // donut + KPIs
+  H+='<div class="dwrap"><div class="donut" style="--p:'+pctGeral+'"><b>'+pctGeral+'%</b></div>'
+   +'<div class="dl"><h3>'+pctGeral+'% dos indicadores projetam bater a meta</h3><p>Considerando '+TOT+' medições (unidade × indicador) com dado no mês. <b>'+noAlvoUnidades+'</b> de '+unitArr.length+' unidades projetam bater ≥ 75% dos indicadores.</p></div></div>';
+  H+='<div class="sec">Panorama</div><div class="kpis">'
+   +'<div class="kpi"><div class="l">Unidades</div><div class="v">'+unitArr.length+'</div><div class="s">com dados no mês</div></div>'
+   +'<div class="kpi"><div class="l">Indicadores no alvo</div><div class="v '+cls(pctGeral)+'">'+G+'/'+TOT+'</div><div class="s">projeção ≥ meta</div></div>'
+   +'<div class="kpi"><div class="l">Indicador mais forte</div><div class="v g" style="font-size:20px">'+Math.round(melhor.pct)+'%</div><div class="s">'+melhor.nome+'</div></div>'
+   +'<div class="kpi"><div class="l">Indicador mais fraco</div><div class="v r" style="font-size:20px">'+Math.round(pior.pct)+'%</div><div class="s">'+pior.nome+'</div></div>'
+   +'</div>';
+  // fix donut color var (conic uses --c literal)
+  // por indicador
+  H+='<div class="sec">% de praças no alvo — por indicador</div><div class="ind">';
+  indOrder.forEach(k=>{var o=byInd[k];var t=o.g+o.a+o.r;var pct=t?Math.round(o.g/t*100):0;
+    var seg=(n,c,lbl)=>n?'<i class="'+c+'" style="flex:'+n+'" title="'+lbl+': '+n+'">'+(n)+'</i>':'';
+    H+='<div class="irow"><div class="iname">'+o.nome+'<small>'+t+' praças com dado</small></div>'
+      +'<div class="stack">'+seg(o.g,'g','no alvo')+seg(o.a,'a','atenção')+seg(o.r,'r','fora')+'</div>'
+      +'<div class="ipct '+cls(pct)+'">'+pct+'%</div></div>';
+  });
+  H+='<div class="leg"><span><i class="g"></i>no alvo (proj ≥ meta)</span><span><i class="a"></i>atenção (85–99%)</span><span><i class="r"></i>fora (&lt;85%)</span></div></div>';
+  // ranking
+  H+='<div class="sec">Ranking de unidades — indicadores no alvo</div><div class="rk">';
+  uAgg.forEach(u=>{var pct=u.tot?Math.round(u.g/u.tot*100):0;
+    H+='<div class="rkrow" onclick="abrir(\''+u.id+'\')"><div class="rku">'+u.nome+'</div>'
+      +'<div class="rktrack"><div class="rkfill '+cls(pct)+'" style="width:'+pct+'%"></div></div>'
+      +'<div class="rkn">'+u.g+'/'+u.tot+'</div></div>';
+  });
+  H+='</div>';
+  document.getElementById("body").innerHTML=H;
+  // ajusta cor do donut conforme pct
+  var dc=pctGeral>=75?'var(--vd)':pctGeral>=50?'var(--am)':'var(--vm)';
+  var dn=document.querySelector(".donut"); if(dn)dn.style.setProperty("--c",dc);
+}).catch(e=>{document.getElementById("body").innerHTML='<div class="empty" style="color:var(--vm)">Erro de conexão com o banco.</div>';});
+</script></body></html>

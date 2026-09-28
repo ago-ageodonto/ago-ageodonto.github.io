@@ -1,0 +1,62 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><title>Sistema de Gestão Comercial — AGO</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Spectral:wght@400;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap">
+<style>
+:root{--pg:#0B0906;--pn:#141009;--pn2:#1A150C;--ln:#2A2213;--ln2:#3A3018;--ink:#F3ECDA;--ink2:#B6A883;--ink3:#7C7256;--ous:#F1CE68;--gold-d:#B8862B;--grad:linear-gradient(100deg,#FBEDB4,#F1CE68 40%,#CFA23B 70%,#F7DE8C);--serif:'Spectral',Georgia,serif;--sans:'Inter',-apple-system,sans-serif;}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{background:var(--pg);color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased;display:flex;height:100vh;overflow:hidden}
+/* sidebar */
+.side{width:236px;flex:0 0 236px;background:linear-gradient(180deg,var(--pn),var(--pg));border-right:1px solid var(--ln);display:flex;flex-direction:column;padding:18px 14px}
+.brand{display:flex;align-items:center;gap:11px;padding:4px 6px 16px;border-bottom:1px solid var(--ln)}
+.brand img{height:40px;width:auto;filter:drop-shadow(0 2px 6px rgba(0,0,0,.4))}
+.brand .e{font-size:9px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--gold-d)}
+.brand .t{font-family:var(--serif);font-size:15px;font-weight:800;line-height:1.1}
+nav{margin-top:14px;display:flex;flex-direction:column;gap:4px}
+.nav{display:flex;align-items:center;gap:11px;padding:11px 13px;border-radius:10px;font-size:14px;font-weight:600;color:var(--ink2);cursor:pointer;border:1px solid transparent;text-align:left;background:none;font-family:var(--sans)}
+.nav:hover{background:var(--pn2);color:var(--ink)}
+.nav.on{background:var(--grad);color:#241a06;font-weight:800;border-color:transparent}
+.nav .i{font-size:16px;width:20px;text-align:center}
+.side .sp{flex:1}
+.side .conn{font-size:10.5px;padding:6px 8px;color:var(--ink3)}
+.side .ft{font-size:10px;color:var(--ink3);padding:8px 8px 0;border-top:1px solid var(--ln);line-height:1.5}
+/* main */
+.main{flex:1;display:flex;flex-direction:column;min-width:0}
+.bar{display:none}
+iframe{flex:1;width:100%;border:0;background:var(--pg)}
+/* mobile */
+.hamb{display:none}
+@media(max-width:760px){
+  body{flex-direction:column;overflow:auto}
+  .side{width:100%;flex:none;flex-direction:row;align-items:center;gap:10px;padding:10px 12px;overflow-x:auto}
+  .brand{border:0;padding:0;flex:0 0 auto}.brand .txt{display:none}
+  nav{flex-direction:row;margin:0;gap:6px}
+  .side .sp,.side .conn,.side .ft{display:none}
+  .nav{padding:9px 12px;white-space:nowrap}
+  .main{height:calc(100vh - 62px)}
+  iframe{min-height:70vh}
+}
+</style></head>
+<body>
+<aside class="side">
+  <div class="brand"><img src="ageodonto_logo.png" alt="AGO"><div class="txt"><div class="e">Gestão Comercial</div><div class="t">Sistema AGO</div></div></div>
+  <nav>
+    <button class="nav on" data-v="rede.html" data-nav="rede"><span class="i">🗼</span> Rede</button>
+    <button class="nav" data-v="geral.html" data-nav="geral"><span class="i">📈</span> Visão Geral</button>
+    <button class="nav" data-v="avaliador.html" data-nav="aval"><span class="i">🧑‍💼</span> Avaliador</button>
+    <button class="nav" data-v="console.html" data-nav="console"><span class="i">🗂️</span> Console</button>
+  </nav>
+  <div class="sp"></div>
+  <div class="conn" id="conn">● pronto</div>
+  <div class="ft">Ageodonto · dados no Supabase<br>Acompanhamento por indicador.</div>
+</aside>
+<div class="main"><iframe id="view" src="rede.html"></iframe></div>
+<script>
+var frame=document.getElementById("view");
+function setNav(key){document.querySelectorAll(".nav").forEach(b=>b.classList.toggle("on",b.dataset.nav===key));}
+document.querySelectorAll(".nav").forEach(b=>b.onclick=function(){frame.src=this.dataset.v;setNav(this.dataset.nav);});
+// chamado pela tela Rede quando clica numa unidade
+window.openDiretor=function(id){frame.src="dashboard.html?diretor="+encodeURIComponent(id);setNav("rede");};
+</script>
+</body></html>

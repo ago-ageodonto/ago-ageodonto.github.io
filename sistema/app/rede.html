@@ -1,0 +1,84 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><title>Rede — AGO</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Spectral:wght@400;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap">
+<style>
+:root{--pg:#0B0906;--pn:#141009;--pn2:#1A150C;--ln:#2A2213;--ln2:#3A3018;--ink:#F3ECDA;--ink2:#B6A883;--ink3:#7C7256;--ous:#F1CE68;--gold-d:#B8862B;--vd:#5CC98A;--vm:#E0796B;--am:#E8B54D;--grad:linear-gradient(100deg,#FBEDB4,#F1CE68 40%,#CFA23B 70%,#F7DE8C);--serif:'Spectral',Georgia,serif;--sans:'Inter',-apple-system,sans-serif;}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--pg);color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased;padding:clamp(14px,2vw,26px)}
+.hd{display:flex;align-items:baseline;justify-content:space-between;gap:14px;flex-wrap:wrap;border-bottom:1px solid var(--ln);padding-bottom:14px;margin-bottom:18px}
+.hd h1{font-family:var(--serif);font-size:20px;font-weight:800}
+.hd .cmp{font-size:12px;color:var(--ink2)}.hd .cmp b{color:var(--ous)}
+.resumo{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:11px;margin-bottom:18px}
+.rc{background:linear-gradient(180deg,var(--pn),var(--pg));border:1px solid var(--ln);border-radius:13px;padding:13px 15px;position:relative;overflow:hidden}
+.rc::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:var(--grad);opacity:.7}
+.rc .l{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--ink3)}
+.rc .v{font-family:var(--serif);font-weight:800;font-size:26px;margin-top:6px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:13px}
+.card{background:linear-gradient(180deg,var(--pn),var(--pg));border:1px solid var(--ln);border-radius:14px;padding:15px 16px;cursor:pointer;transition:border-color .15s}
+.card:hover{border-color:var(--gold-d)}
+.card.flag{border-color:color-mix(in srgb,var(--vm) 45%,var(--ln))}
+.card .top{display:flex;align-items:baseline;justify-content:space-between;gap:8px}
+.card h3{font-family:var(--serif);font-size:16px;font-weight:700}
+.card .dir{font-size:11.5px;color:var(--ink2);margin-top:1px}
+.badge{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;padding:3px 8px;border-radius:20px}
+.badge.g{color:#0c2a19;background:var(--vd)}.badge.m{color:#2a1e05;background:var(--am)}.badge.r{color:#2a120d;background:var(--vm)}.badge.n{color:var(--ink3);background:var(--pn2);border:1px solid var(--ln)}
+.dots{display:flex;gap:5px;margin:12px 0 4px;flex-wrap:wrap}
+.dot{width:22px;height:22px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800}
+.dot.on{background:var(--vd);color:#0c2a19}.dot.off{background:var(--vm);color:#2a120d}.dot.na{background:var(--pn2);color:var(--ink3);border:1px solid var(--ln)}
+.mrow{display:flex;justify-content:space-between;font-size:11.5px;color:var(--ink2);margin-top:9px;padding-top:9px;border-top:1px solid var(--ln2)}
+.mrow b{color:var(--ink)}
+.empty{color:var(--ink3);font-size:13px;padding:20px;text-align:center}
+.abre{font-size:11px;color:var(--gold-d);font-weight:700;margin-top:8px}
+</style></head>
+<body>
+<div class="hd"><h1>Rede — visão geral</h1><div class="cmp">Competência: <b id="cmp">—</b> · <span id="qtd">—</span></div></div>
+<div class="resumo" id="resumo"></div>
+<div class="grid" id="grid"><div class="empty">Carregando…</div></div>
+<script>
+var SB_URL="https://pwbcehrfhspgipjhaedc.supabase.co";
+var SB_KEY="sb_publishable_mTx5xlUaUcLBM_YijXuCjg_vwCJ5v3x";
+var MES=["","Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
+function competLabel(c){ if(!c)return "—"; var p=(""+c).split("-"); return (MES[+p[1]]||p[1])+"/"+p[0]; }
+function atg(r){ if(r.meta==null)return null; var v=(r.projecao!=null?+r.projecao:+r.realizado); if(v==null||isNaN(v))return null; return r.sentido==="teto"? v<=+r.meta : v>=+r.meta; }
+var ICON={faturamento:"F",recompra:"Rc",entrada:"E",avaliacoes:"Av",conversao:"Cv",ticket:"Tk",resgate30:"R30",parcelamento:"Pc"};
+function get(p){return fetch(SB_URL+"/rest/v1/"+p,{headers:{apikey:SB_KEY,Authorization:"Bearer "+SB_KEY}}).then(r=>r.json());}
+function abrir(id){ if(window.parent&&window.parent!==window&&window.parent.openDiretor)window.parent.openDiretor(id); else location.href="dashboard.html?diretor="+id; }
+
+get("v_dashboard_diretor?select=*").then(rows=>{
+  if(!rows.length){document.getElementById("grid").innerHTML='<div class="empty">Nenhuma unidade com resultados ainda. Cadastre no Console e lance os resultados.</div>';return;}
+  var byDir={}; rows.forEach(r=>{(byDir[r.diretor_id]=byDir[r.diretor_id]||[]).push(r);});
+  var comp=rows[0].competencia; document.getElementById("cmp").textContent=competLabel(comp);
+  var units=Object.keys(byDir).map(id=>{
+    var rs=byDir[id].slice().sort((a,b)=>a.indicador_ordem-b.indicador_ordem);
+    var comMeta=rs.filter(r=>r.meta!=null&&r.realizado!=null);
+    var noAlvo=comMeta.filter(r=>atg(r)===true).length;
+    var adhs=rs.map(r=>r.aderencia_pct).filter(v=>v!=null);
+    var adhMed=adhs.length?Math.round(adhs.reduce((a,b)=>a+ +b,0)/adhs.length):null;
+    var flags=rs.filter(r=>atg(r)===false&&r.aderencia_pct!=null&&+r.aderencia_pct<60).length;
+    return {id:id,dir:rs[0].diretor,cli:rs[0].clinica,rs:rs,noAlvo:noAlvo,tot:comMeta.length,adh:adhMed,flags:flags};
+  }).sort((a,b)=>(a.cli||"").localeCompare(b.cli||""));
+  document.getElementById("qtd").textContent=units.length+" unidade"+(units.length>1?"s":"");
+  var totNoAlvo=units.reduce((s,u)=>s+u.noAlvo,0), totInd=units.reduce((s,u)=>s+u.tot,0);
+  var totFlags=units.reduce((s,u)=>s+u.flags,0);
+  var adhGeral=(()=>{var a=units.map(u=>u.adh).filter(v=>v!=null);return a.length?Math.round(a.reduce((x,y)=>x+y,0)/a.length):"—";})();
+  document.getElementById("resumo").innerHTML=
+    '<div class="rc"><div class="l">Unidades</div><div class="v">'+units.length+'</div></div>'+
+    '<div class="rc"><div class="l">Indicadores no alvo</div><div class="v">'+totNoAlvo+(totInd?'/'+totInd:'')+'</div></div>'+
+    '<div class="rc"><div class="l">Aderência média</div><div class="v">'+adhGeral+(adhGeral==="—"?"":"%")+'</div></div>'+
+    '<div class="rc"><div class="l">Alertas (não fez × não bateu)</div><div class="v" style="color:'+(totFlags?'var(--vm)':'var(--vd)')+'">'+totFlags+'</div></div>';
+  document.getElementById("grid").innerHTML=units.map(u=>{
+    var pct=u.tot?u.noAlvo/u.tot:0;
+    var bcls=u.tot?(pct>=0.75?'g':pct>=0.5?'m':'r'):'n';
+    var badgeTxt=u.tot?(u.noAlvo+'/'+u.tot):'sem dados';
+    var dots=u.rs.map(r=>{var a=atg(r);var s=a===true?'on':a===false?'off':'na';return '<div class="dot '+s+'" title="'+r.indicador+'">'+(ICON[r.indicador_chave]||'')+'</div>';}).join('');
+    return '<div class="card'+(u.flags?' flag':'')+'" onclick="abrir(\''+u.id+'\')">'+
+      '<div class="top"><div><h3>'+(u.cli||u.dir)+'</h3><div class="dir">'+u.dir+'</div></div>'+
+      '<span class="badge '+bcls+'">'+badgeTxt+'</span></div>'+
+      '<div class="dots">'+dots+'</div>'+
+      '<div class="mrow"><span>Aderência média</span><b>'+(u.adh==null?'—':u.adh+'%')+'</b></div>'+
+      (u.flags?'<div class="mrow" style="border:0;padding-top:2px"><span style="color:var(--vm)">'+u.flags+' alerta(s)</span><b></b></div>':'')+
+      '<div class="abre">abrir dashboard →</div></div>';
+  }).join('');
+}).catch(e=>{document.getElementById("grid").innerHTML='<div class="empty" style="color:var(--vm)">Erro de conexão com o banco.</div>';});
+</script></body></html>

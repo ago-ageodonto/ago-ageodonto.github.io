@@ -1,0 +1,60 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><title>Fontes — AGO</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Spectral:wght@400;600;700;800&family=Inter:wght@400;500;600;700;800&family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,800&family=Playfair+Display:wght@600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=Sora:wght@400;600;700;800&family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;600;700;800&display=swap">
+<style>
+:root{--pg:#0B0906;--pn:#141009;--pn2:#1A150C;--ln:#2A2213;--ink:#F3ECDA;--ink2:#B6A883;--ink3:#7C7256;--ous:#F1CE68;--gold-d:#B8862B;--vd:#5CC98A;--vm:#E0796B;--grad:linear-gradient(100deg,#FBEDB4,#F1CE68 40%,#CFA23B 70%,#F7DE8C);}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--pg);color:var(--ink);font-family:'Inter',sans-serif;padding:24px;line-height:1.5}
+h2.lab{font-family:'Inter',sans-serif;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:var(--gold-d);margin:0 0 10px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:18px}
+.card{background:linear-gradient(180deg,var(--pn),var(--pg));border:1px solid var(--ln);border-radius:16px;padding:20px}
+.eyebrow{font-size:10px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--gold-d)}
+.brand{font-weight:800;letter-spacing:-.01em;font-size:26px;margin:4px 0 2px}
+.sub{font-size:13px;color:var(--ink2);margin-bottom:16px}
+.kpis{display:flex;gap:10px;margin-bottom:14px}
+.kpi{flex:1;background:var(--pn2);border:1px solid var(--ln);border-radius:12px;padding:12px 13px}
+.kpi .l{font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--ink3)}
+.kpi .v{font-weight:800;font-size:30px;line-height:1;margin-top:6px;color:var(--vd)}
+.sec{font-weight:700;font-size:16px;margin:6px 0 8px}
+.body{font-size:13px;color:var(--ink2);margin-bottom:12px}
+.badge{display:inline-block;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;padding:4px 10px;border-radius:20px;color:#0c2a19;background:var(--vd)}
+.name{font-family:'Inter';font-size:12px;color:var(--ink3);margin-top:14px;border-top:1px solid var(--ln);padding-top:10px}
+.name b{color:var(--ous)}
+/* combos */
+.f0 .brand,.f0 .kpi .v,.f0 .sec{font-family:'Spectral',serif}
+.f1 .brand,.f1 .kpi .v,.f1 .sec{font-family:'Fraunces',serif}
+.f2 .brand,.f2 .kpi .v,.f2 .sec{font-family:'Playfair Display',serif}
+.f3 .brand,.f3 .kpi .v,.f3 .sec{font-family:'Space Grotesk',sans-serif}
+.f3{font-family:'Space Grotesk',sans-serif}
+.f4 .brand,.f4 .kpi .v,.f4 .sec{font-family:'DM Serif Display',serif}
+.f4 .body,.f4 .sub,.f4 .eyebrow,.f4 .kpi .l{font-family:'DM Sans',sans-serif}
+.f5{font-family:'Manrope',sans-serif}
+.f5 .brand,.f5 .kpi .v,.f5 .sec{font-family:'Sora',sans-serif}
+</style></head>
+<body>
+<h2 class="lab">Sistema AGO · opções de tipografia (mesma identidade dourado/preto)</h2>
+<div class="grid" id="g"></div>
+<script>
+var opts=[
+ ["f0","Spectral + Inter","ATUAL — serifada clássica, editorial, sóbria"],
+ ["f1","Fraunces + Inter","Serifada quente e sofisticada, com personalidade (premium)"],
+ ["f2","Playfair Display + Inter","Serifada de luxo, alto contraste, editorial/moda"],
+ ["f3","Space Grotesk","Moderna, techy, números afiados (cara de SaaS)"],
+ ["f4","DM Serif Display + DM Sans","Display elegante + sans coeso, clássico-moderno"],
+ ["f5","Sora + Manrope","Geométrica, limpa, corporativa-moderna"]
+];
+document.getElementById("g").innerHTML=opts.map(o=>
+ '<div class="card '+o[0]+'">'
+ +'<div class="eyebrow">Gestão Comercial</div>'
+ +'<div class="brand">Sistema AGO</div>'
+ +'<div class="sub">Acompanhamento dos avaliadores por indicador.</div>'
+ +'<div class="kpis"><div class="kpi"><div class="l">Nota média</div><div class="v">87</div></div><div class="kpi"><div class="l">No alvo</div><div class="v">6/8</div></div></div>'
+ +'<div class="sec">Notas por indicador</div>'
+ +'<div class="body">Parcelamento médio, Resgate 30+, Ticket. Cada nota abre e mostra o que a define. R$ 1.046.944 · 142 avaliações.</div>'
+ +'<span class="badge">no alvo</span>'
+ +'<div class="name">'+o[1]+' — <b></b>'+o[2]+'</div>'
+ +'</div>'
+).join('');
+</script>
+</body></html>

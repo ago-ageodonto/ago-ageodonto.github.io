@@ -1,0 +1,151 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><title>Avaliador — AGO</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Spectral:wght@400;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap">
+<style>
+:root{--pg:#0B0906;--pn:#141009;--pn2:#1A150C;--ln:#2A2213;--ln2:#3A3018;--ink:#F3ECDA;--ink2:#B6A883;--ink3:#7C7256;--ous:#F1CE68;--gold-d:#B8862B;--vd:#5CC98A;--vm:#E0796B;--am:#E8B54D;--grad:linear-gradient(100deg,#FBEDB4,#F1CE68 40%,#CFA23B 70%,#F7DE8C);--serif:'Spectral',Georgia,serif;--sans:'Inter',-apple-system,sans-serif;}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--pg);color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased;padding:clamp(14px,2vw,26px)}
+.hd{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;border-bottom:1px solid var(--ln);padding-bottom:14px;margin-bottom:18px}
+.hd h1{font-family:var(--serif);font-size:20px;font-weight:800}
+.hd .who{font-size:12.5px;color:var(--ink2)}.hd .who b{color:var(--ous)}
+select{background:var(--pn2);color:var(--ink);border:1px solid var(--ln);border-radius:9px;padding:9px 12px;font-family:var(--sans);font-size:14px;font-weight:600}
+.sec{font-family:var(--serif);font-size:15px;font-weight:700;margin:22px 2px 12px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+.kpi{background:linear-gradient(180deg,var(--pn),var(--pg));border:1px solid var(--ln);border-radius:14px;padding:15px 16px;position:relative;overflow:hidden}
+.kpi::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:var(--grad);opacity:.7}
+.kpi .l{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--ink3)}
+.kpi .v{font-family:var(--serif);font-weight:800;font-size:30px;line-height:1;margin-top:8px}
+.kpi .v.g{color:var(--vd)}.kpi .v.a{color:var(--am)}.kpi .v.r{color:var(--vm)}
+.kpi .s{font-size:11px;color:var(--ink2);margin-top:5px}
+.box{background:linear-gradient(180deg,var(--pn),var(--pg));border:1px solid var(--ln);border-radius:14px;padding:14px 16px}
+.evrow{display:grid;grid-template-columns:120px 1fr 56px;gap:12px;align-items:center;padding:9px 0;border-top:1px solid var(--ln2)}
+.evrow:first-child{border-top:0}
+@media(max-width:640px){.evrow{grid-template-columns:92px 1fr 48px}}
+.evdt{font-size:12.5px;font-weight:600}
+.evtrack{background:var(--pn2);border-radius:6px;height:20px;overflow:hidden;border:1px solid var(--ln)}
+.evfill{height:100%;border-radius:6px 0 0 6px;background:var(--grad)}
+.evn{text-align:right;font-family:var(--serif);font-weight:800;font-size:15px}
+.delta{font-size:10.5px;font-weight:700;margin-left:6px}.delta.up{color:var(--vd)}.delta.dn{color:var(--vm)}
+/* blocos de indicador */
+.iblk{border:1px solid var(--ln);border-radius:12px;margin-bottom:10px;overflow:hidden;background:var(--pn2)}
+.ihd{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:13px 15px;cursor:pointer}
+.ihd .lft{display:flex;align-items:baseline;gap:10px}
+.ihd h3{font-family:var(--serif);font-size:16px;font-weight:700}
+.ihd .cmp{font-size:10.5px;color:var(--ink3)}
+.ihd .rgt{display:flex;align-items:center;gap:10px}
+.nbig{font-family:var(--serif);font-weight:800;font-size:26px;line-height:1}
+.nbig.g{color:var(--vd)}.nbig.a{color:var(--am)}.nbig.r{color:var(--vm)}
+.chev{color:var(--ink3);font-size:13px;transition:transform .15s}
+.iblk.open .chev{transform:rotate(90deg)}
+.dl{display:none;padding:0 15px 12px}.iblk.open .dl{display:block}
+.fn{padding:11px 0;border-top:1px solid var(--ln)}
+.fn .h{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.fn .h b{font-size:13px}
+.fn .nb{font-family:var(--serif);font-weight:800;font-size:17px;flex:0 0 auto}
+.fn .nb.g{color:var(--vd)}.fn .nb.a{color:var(--am)}.fn .nb.r{color:var(--vm)}.fn .nb.na{color:var(--ink3)}
+.fn .li{font-size:11.5px;color:var(--ink2);margin-top:5px}.fn .li b{color:var(--ink)}
+.fn .crit{font-size:11px;color:var(--ink3);margin-top:4px;line-height:1.5;border-left:2px solid var(--ln2);padding-left:9px}
+.empty{color:var(--ink3);font-size:13px;padding:26px;text-align:center;background:var(--pn);border:1px dashed var(--ln);border-radius:12px}
+.foot{margin-top:20px;font-size:11px;color:var(--ink3);line-height:1.6}
+</style></head>
+<body>
+<div class="hd">
+  <div><h1>Dashboard do Avaliador</h1><div class="who" id="who">as notas das responsabilidades — não o resultado da praça</div></div>
+  <select id="sel"></select>
+</div>
+<div id="body"><div class="empty">Carregando…</div></div>
+<div class="foot" id="foot"></div>
+<script>
+var SB_URL="https://pwbcehrfhspgipjhaedc.supabase.co";
+var SB_KEY="sb_publishable_mTx5xlUaUcLBM_YijXuCjg_vwCJ5v3x";
+var MES=["","Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
+function competLabel(c){ if(!c)return "—"; var p=(""+c).split("-"); return (MES[+p[1]]||p[1])+"/"+p[0]; }
+function get(p){return fetch(SB_URL+"/rest/v1/"+p,{headers:{apikey:SB_KEY,Authorization:"Bearer "+SB_KEY}}).then(r=>r.json());}
+function cls(n){return n==null?"na":n>=85?"g":n>=70?"a":"r";}
+var STATE={dirs:[]};
+
+get("diretores?select=id,nome,clinicas(nome)&order=nome").then(dirs=>{
+  STATE.dirs=dirs;
+  var sel=document.getElementById("sel");
+  sel.innerHTML=dirs.map(d=>'<option value="'+d.id+'">'+d.nome+' — '+((d.clinicas||{}).nome||'')+'</option>').join('');
+  var pre=new URLSearchParams(location.search).get("diretor");
+  if(pre&&dirs.some(d=>d.id===pre))sel.value=pre;
+  sel.onchange=()=>load(sel.value);
+  if(dirs.length)load(sel.value); else document.getElementById("body").innerHTML='<div class="empty">Nenhuma pessoa cadastrada ainda.</div>';
+}).catch(e=>{document.getElementById("body").innerHTML='<div class="empty" style="color:var(--vm)">Erro de conexão.</div>';});
+
+function load(dirId){
+  var d=STATE.dirs.find(x=>x.id===dirId);
+  document.getElementById("who").innerHTML='<b>'+d.nome+'</b> · '+((d.clinicas||{}).nome||'')+' — notas das responsabilidades (não o resultado da praça)';
+  document.getElementById("body").innerHTML='<div class="empty">Carregando…</div>';
+  Promise.all([
+    get("apuracoes?diretor_id=eq."+dirId+"&select=competencia,nota,dados,obs,indicadores(chave,nome,ordem)&order=competencia"),
+    get("reunioes?diretor_id=eq."+dirId+"&select=id,data,resumo,video_url&order=data.desc")
+  ]).then(([apurs,reus])=>render(apurs,reus)).catch(e=>{document.getElementById("body").innerHTML='<div class="empty" style="color:var(--vm)">Erro ao ler dados.</div>';});
+}
+function reunioesHtml(reus){
+  if(!reus||!reus.length)return '';
+  var rows=reus.map(r=>'<div class="evrow"><div class="evdt">'+(r.data?(""+r.data).split("-").reverse().join("/"):"—")+'</div><div style="font-size:12.5px;color:var(--ink2);line-height:1.4">'+(r.resumo||"—")+'</div><div style="text-align:right">'+(r.video_url?'<a href="'+r.video_url+'" target="_blank" style="color:var(--ous);font-weight:700;font-size:12px">vídeo ▸</a>':'')+'</div></div>').join('');
+  return '<div class="sec">Reuniões registradas <span style="font-size:11px;color:var(--ink3);font-weight:400">— histórico dos encontros</span></div><div class="box">'+rows+'</div>';
+}
+
+function render(apurs,reus){
+  reus=reus||[];
+  var foot=document.getElementById("foot");
+  if(!apurs||!apurs.length){
+    document.getElementById("body").innerHTML='<div class="empty">Ainda não há notas lançadas para esta pessoa.<br>Lance no <b>Console → aba Notas por função</b> e as notas aparecem aqui, com o detalhe do que as define.</div>'+reunioesHtml(reus);
+    foot.innerHTML=''; return;
+  }
+  // agrupa por indicador
+  var byInd={}; apurs.forEach(a=>{var k=(a.indicadores||{}).chave||"?";(byInd[k]=byInd[k]||{nome:(a.indicadores||{}).nome||k,ordem:(a.indicadores||{}).ordem||99,items:[]}).items.push(a);});
+  // competências (evolução = nota média por competência)
+  var comps={}; apurs.forEach(a=>{if(a.nota!=null){(comps[a.competencia]=comps[a.competencia]||[]).push(a.nota);}});
+  var compKeys=Object.keys(comps).sort();
+  var ultima=compKeys[compKeys.length-1];
+  var mediaUlt=comps[ultima]?Math.round(comps[ultima].reduce((x,y)=>x+ +y,0)/comps[ultima].length):null;
+  var prevKey=compKeys.length>1?compKeys[compKeys.length-2]:null;
+  var mediaPrev=prevKey?Math.round(comps[prevKey].reduce((x,y)=>x+ +y,0)/comps[prevKey].length):null;
+  var indKeys=Object.keys(byInd).sort((a,b)=>byInd[a].ordem-byInd[b].ordem);
+
+  var H='<div class="kpis">'
+    +'<div class="kpi"><div class="l">Nota média</div><div class="v '+cls(mediaUlt)+'">'+(mediaUlt==null?"—":mediaUlt)+'</div><div class="s">'+competLabel(ultima)+(mediaPrev!=null?' · <span class="delta '+(mediaUlt>=mediaPrev?'up':'dn')+'">'+(mediaUlt>=mediaPrev?'▲':'▼')+' '+Math.abs(mediaUlt-mediaPrev)+'</span> vs mês anterior':'')+'</div></div>'
+    +'<div class="kpi"><div class="l">Indicadores avaliados</div><div class="v">'+indKeys.length+'</div><div class="s">com nota lançada</div></div>'
+    +'<div class="kpi"><div class="l">Competências</div><div class="v">'+compKeys.length+'</div><div class="s">no histórico</div></div>'
+    +'</div>';
+
+  // evolução por competência
+  if(compKeys.length>1){
+    H+='<div class="sec">Evolução da nota (média por mês)</div><div class="box">';
+    compKeys.slice().reverse().forEach((c,idx)=>{
+      var m=Math.round(comps[c].reduce((x,y)=>x+ +y,0)/comps[c].length);
+      var oi=compKeys.length-1-idx; var pr=oi>0?Math.round(comps[compKeys[oi-1]].reduce((x,y)=>x+ +y,0)/comps[compKeys[oi-1]].length):null;
+      var dl=pr!=null?m-pr:null;
+      H+='<div class="evrow"><div class="evdt">'+competLabel(c)+'</div><div class="evtrack"><div class="evfill" style="width:'+m+'%"></div></div><div class="evn '+cls(m)+'" style="color:var(--'+(cls(m)==="g"?"vd":cls(m)==="a"?"am":cls(m)==="r"?"vm":"ink3")+')">'+m+(dl!=null?'<span class="delta '+(dl>=0?'up':'dn')+'">'+(dl>=0?'▲':'▼')+Math.abs(dl)+'</span>':'')+'</div></div>';
+    });
+    H+='</div>';
+  }
+
+  // notas por indicador (expandível)
+  H+='<div class="sec">Notas por indicador <span style="font-size:11px;color:var(--ink3);font-weight:400">— clique para ver o que define cada nota</span></div>';
+  indKeys.forEach(k=>{
+    var o=byInd[k]; var items=o.items.slice().sort((a,b)=>(""+a.competencia).localeCompare(b.competencia));
+    var last=items[items.length-1]; var nota=last.nota!=null?Math.round(last.nota):null;
+    var funcs=(last.dados||{}).funcs||[];
+    var fnHtml=funcs.map(f=>{
+      var fn=f.nota==null?"—":Math.round(f.nota);
+      var tag=f.neutro?' <span style="font-size:9.5px;color:var(--ink3);font-weight:700;text-transform:uppercase;letter-spacing:.04em;border:1px solid var(--ln);border-radius:6px;padding:1px 6px;margin-left:6px">neutro · sem peso</span>':'';
+      return '<div class="fn"'+(f.neutro?' style="opacity:.72"':'')+'><div class="h"><b>'+f.label+tag+'</b><span class="nb '+(f.neutro?'na':cls(f.nota))+'">'+fn+'</span></div>'
+        +(f.detail?'<div class="li">Você lançou: <b>'+f.detail+'</b></div>':'<div class="li" style="color:var(--ink3)">Sem dado lançado.</div>')
+        +(f.crit?'<div class="crit">O que define a nota: '+f.crit+'</div>':'')+'</div>';
+    }).join('');
+    H+='<div class="iblk"><div class="ihd" data-t><div class="lft"><h3>'+o.nome+'</h3><span class="cmp">'+competLabel(last.competencia)+'</span></div>'
+      +'<div class="rgt"><span class="nbig '+cls(last.nota)+'">'+(nota==null?"—":nota)+'</span><span class="chev">▸</span></div></div>'
+      +'<div class="dl">'+(fnHtml||'<div class="fn" style="border:0;color:var(--ink3)">Sem funções detalhadas.</div>')
+      +(last.obs?'<div class="li" style="margin-top:10px;padding-top:10px;border-top:1px solid var(--ln)">Obs.: '+last.obs+'</div>':'')+'</div></div>';
+  });
+  document.getElementById("body").innerHTML=H+reunioesHtml(reus);
+  document.querySelectorAll(".ihd").forEach(h=>h.onclick=function(){this.parentElement.classList.toggle("open");});
+  foot.innerHTML='<b>Como ler:</b> cada indicador mostra a <b>nota</b> (média das funções, todas com peso igual). Clique para abrir e ver <b>o que você lançou</b> e <b>o que define a nota</b> em cada função. A evolução acompanha a nota mês a mês. As notas vêm do que você lança no <b>Console → aba Notas por função</b>.';
+}
+</script></body></html>
