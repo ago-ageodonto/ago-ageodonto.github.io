@@ -442,8 +442,8 @@ function unidade(nome){
   };
   const sumRows=(recs,label,cls)=>{
     const c=agg(recs),n=c.n,nL=c.nL,iwN=recs.filter(d=>d.inadimp!=null).length,inad=iwN?Math.round(c.inad)+'%':'—';
-    const acc=`<tr class="${cls}"><th class="l">∑ ${label}</th><td class="r">${brl(c.fat)}</td><td class="r ${c.luc!=null&&c.luc<0?'neg':''}">${c.luc==null?'—':brl(c.luc)}</td><td class="r ${c.mar!=null&&c.mar<0?'neg':''}">${c.mar==null?'—':c.mar.toFixed(1)+'%'}</td><td class="r">${c.av.toLocaleString("pt-BR")}</td><td class="r">${Math.round(c.conv)}%</td><td class="r">${brl(c.ticket)}</td><td class="r">${inad}</td><td class="r">${brl(c.rg)}</td></tr>`;
-    const med=`<tr class="${cls} med"><th class="l">x̄ ${label} · média/mês</th><td class="r">${brl(c.fat/n)}</td><td class="r ${c.luc!=null&&c.luc<0?'neg':''}">${nL?brl(c.luc/nL):'—'}</td><td class="r ${c.mar!=null&&c.mar<0?'neg':''}">${c.mar==null?'—':c.mar.toFixed(1)+'%'}</td><td class="r">${Math.round(c.av/n).toLocaleString("pt-BR")}</td><td class="r">${Math.round(c.conv)}%</td><td class="r">${brl(c.ticket)}</td><td class="r">${inad}</td><td class="r">${brl(c.rg/n)}</td></tr>`;
+    const acc=`<tr class="${cls}"><th class="l">∑ ${label}</th><td class="r">${brl(c.fat)}</td><td class="r ${c.luc!=null&&c.luc<0?'neg':''}">${c.luc==null?'—':brl(c.luc)}</td><td class="r ${c.mar!=null&&c.mar<0?'neg':''}">${c.mar==null?'—':c.mar.toFixed(1)+'%'}</td><td class="r">${c.av==null?'N/D':c.av.toLocaleString("pt-BR")}</td><td class="r">${Math.round(c.conv)}%</td><td class="r">${brl(c.ticket)}</td><td class="r">${inad}</td><td class="r">${brl(c.rg)}</td></tr>`;
+    const med=`<tr class="${cls} med"><th class="l">x̄ ${label} · média/mês</th><td class="r">${brl(c.fat/n)}</td><td class="r ${c.luc!=null&&c.luc<0?'neg':''}">${nL?brl(c.luc/nL):'—'}</td><td class="r ${c.mar!=null&&c.mar<0?'neg':''}">${c.mar==null?'—':c.mar.toFixed(1)+'%'}</td><td class="r">${c.av==null?'N/D':Math.round(c.av/n).toLocaleString("pt-BR")}</td><td class="r">${Math.round(c.conv)}%</td><td class="r">${brl(c.ticket)}</td><td class="r">${inad}</td><td class="r">${brl(c.rg/n)}</td></tr>`;
     return acc+med;
   };
   let uhtml="";
