@@ -1,0 +1,25 @@
+name: Refresh Torre Snapshot
+
+# Roda quando a Torre é atualizada (push no torre_controle.html) e regrava a
+# "foto" torre_snapshot que alimenta os links dos dentistas. Também pode ser
+# disparado manualmente na aba Actions (Run workflow).
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'materiais/torre_controle.html'
+  workflow_dispatch: {}
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Regravar torre_snapshot no Supabase
+        env:
+          SUPABASE_URL: https://pwbcehrfhspgipjhaedc.supabase.co
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+        run: python sistema/db/refresh_snapshot.py
