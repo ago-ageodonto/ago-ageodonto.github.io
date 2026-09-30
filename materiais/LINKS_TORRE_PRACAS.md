@@ -1,6 +1,6 @@
 # Links da Torre por Praça — Ageodonto
 
-Cada dentista recebe **o link da praça dele + a senha B** (a senha dos dentistas).
+Cada dentista recebe **o link da praça dele + a Senha AGO** (a senha dos dentistas).
 Sem a senha, o link não abre. Cada link mostra **só a praça dele**.
 
 | Praça | Link |

@@ -52,7 +52,8 @@
 
   function overlay(){
     var title=cfg.title||(cfg.audience==="praca"?"Torre da sua praça":"Gestão Comercial AGO");
-    var sub=cfg.sub||(cfg.audience==="praca"?"Digite a senha que a Direção Comercial te enviou.":"Acesso restrito ao time. Digite a senha.");
+    var sub=cfg.sub||(cfg.audience==="praca"?"Digite a Senha AGO que a Direção Comercial te enviou.":"Acesso restrito aos sócios. Digite a Senha Sócio.");
+    var pwl=cfg.audience==="praca"?"Senha AGO":"Senha Sócio";
     var css="position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;background:radial-gradient(120% 80% at 85% -10%,rgba(233,194,90,.10),transparent 60%),#0B0906;font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;padding:20px";
     var d=document.createElement("div"); d.id="ago-login"; d.setAttribute("style",css);
     d.innerHTML=''+
@@ -60,7 +61,7 @@
         '<div style="font-size:10px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:#B8862B">Ageodonto</div>'+
         '<div style="font-family:Spectral,Georgia,serif;font-size:24px;font-weight:800;color:#F3ECDA;margin:6px 0 6px">'+title+'</div>'+
         '<div style="font-size:13px;color:#B6A883;margin-bottom:18px;line-height:1.5">'+sub+'</div>'+
-        '<label style="display:block;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#7C7256;margin-bottom:6px">Senha</label>'+
+        '<label style="display:block;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#7C7256;margin-bottom:6px">'+pwl+'</label>'+
         '<input id="ago-pw" type="password" autocomplete="current-password" style="width:100%;background:#1A150C;color:#F3ECDA;border:1px solid #2A2213;border-radius:9px;padding:11px 12px;font-size:15px;font-family:inherit">'+
         '<button id="ago-go" style="width:100%;margin-top:14px;background:linear-gradient(100deg,#FBEDB4,#F1CE68 40%,#CFA23B 70%,#F7DE8C);color:#241a06;border:none;border-radius:10px;padding:12px;font-size:15px;font-weight:800;cursor:pointer;font-family:inherit">Entrar</button>'+
         '<div id="ago-err" style="font-size:12.5px;color:#E0796B;margin-top:10px;min-height:16px"></div>'+
