@@ -49,8 +49,13 @@ if not rows:
     print("Nenhuma praça live encontrada — abortando sem escrever.", file=sys.stderr)
     sys.exit(1)
 
-print("Lidas %d praças de %s. SUPABASE_URL=%s. Key presente: %s (len %d)."
-      % (len(rows), SRC, SB, "sim" if KEY else "NAO", len(KEY or "")))
+ktype = ("vazio" if not KEY else
+         "sb_secret (correta)" if KEY.startswith("sb_secret_") else
+         "sb_publishable (ERRADA - e a publica)" if KEY.startswith("sb_publishable_") else
+         "jwt/legacy service_role" if KEY.startswith("eyJ") else
+         "desconhecida")
+print("Lidas %d praças de %s. SUPABASE_URL=%s. Chave: tipo=%s, tamanho=%d."
+      % (len(rows), SRC, SB, ktype, len(KEY or "")))
 
 body = json.dumps(rows).encode("utf-8")
 req = urllib.request.Request(
