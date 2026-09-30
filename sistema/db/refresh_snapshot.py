@@ -49,6 +49,9 @@ if not rows:
     print("Nenhuma praça live encontrada — abortando sem escrever.", file=sys.stderr)
     sys.exit(1)
 
+print("Lidas %d praças de %s. SUPABASE_URL=%s. Key presente: %s (len %d)."
+      % (len(rows), SRC, SB, "sim" if KEY else "NAO", len(KEY or "")))
+
 body = json.dumps(rows).encode("utf-8")
 req = urllib.request.Request(
     SB + "/rest/v1/torre_snapshot?on_conflict=slug",
@@ -56,5 +59,13 @@ req = urllib.request.Request(
     headers={"apikey": KEY, "Authorization": "Bearer " + KEY,
              "Content-Type": "application/json",
              "Prefer": "resolution=merge-duplicates,return=minimal"})
-with urllib.request.urlopen(req, timeout=60) as r:
-    print("OK %d praças gravadas (HTTP %d)" % (len(rows), r.status))
+try:
+    with urllib.request.urlopen(req, timeout=60) as r:
+        print("OK %d praças gravadas (HTTP %d)" % (len(rows), r.status))
+except urllib.error.HTTPError as e:
+    detail = e.read().decode("utf-8", "replace")
+    print("FALHA HTTP %d ao gravar torre_snapshot:\n%s" % (e.code, detail), file=sys.stderr)
+    sys.exit(1)
+except Exception as e:
+    print("FALHA: %r" % (e,), file=sys.stderr)
+    sys.exit(1)
