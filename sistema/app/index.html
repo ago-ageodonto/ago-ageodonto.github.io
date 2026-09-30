@@ -94,7 +94,7 @@ function activate(btn){
   document.getElementById("h-open").href=btn.dataset.v;
   body.classList.remove("menu");
 }
-document.querySelectorAll(".nav").forEach(function(b){b.onclick=function(){activate(b)}});
+document.querySelectorAll(".nav[data-nav]").forEach(function(b){b.onclick=function(){activate(b)}});
 function setNav(key){var b=document.querySelector('.nav[data-nav="'+key+'"]');if(b)activate(b);}
 // hook chamado pela tela Rede/Visão Geral quando clica numa unidade
 window.openDiretor=function(id){frame.src="dashboard.html?diretor="+encodeURIComponent(id);document.querySelectorAll(".nav").forEach(function(b){b.classList.remove("on")});document.getElementById("h-ic").textContent="👤";document.getElementById("h-ttl").textContent="Dashboard do Diretor";document.getElementById("h-bc").textContent="Acompanhamento · unidade selecionada";};
