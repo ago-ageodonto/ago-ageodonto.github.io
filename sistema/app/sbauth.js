@@ -73,7 +73,7 @@
       go.disabled=true; go.textContent="Entrando…"; err.textContent="";
       login(v).then(function(res){
         if(res.ok&&res.j&&res.j.access_token){store(res.j);d.remove();resolveReady();}
-        else{err.textContent="Senha incorreta.";go.disabled=false;go.textContent="Entrar";pw.select();}
+        else{err.textContent=(res.j&&(res.j.error_description||res.j.msg||res.j.error))||("Erro "+((res.j&&res.j.code)||"?"));go.disabled=false;go.textContent="Entrar";pw.select();}
       }).catch(function(){err.textContent="Erro de conexão. Tente de novo.";go.disabled=false;go.textContent="Entrar";});
     }
     go.onclick=attempt; pw.addEventListener("keydown",function(e){if(e.key==="Enter")attempt();});
