@@ -1,0 +1,90 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Torre de Controle — Rede</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Spectral:wght@400;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap">
+<style>
+:root{--pg:#0B0906;--pn:#141009;--pn2:#1A150C;--ln:#2A2213;--ln2:#3A3018;--ink:#F3ECDA;--ink2:#B6A883;--ink3:#7C7256;--ous:#F1CE68;--gold-d:#B8862B;--vd:#5CC98A;--am:#E8B54D;--vm:#E0796B;--grad:linear-gradient(100deg,#FBEDB4,#F1CE68 40%,#CFA23B 70%,#F7DE8C);--serif:'Spectral',Georgia,serif;--sans:'Inter',-apple-system,BlinkMacSystemFont,sans-serif}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:radial-gradient(120% 80% at 85% -10%,rgba(233,194,90,.10),transparent 60%),var(--pg);color:var(--ink);font-family:var(--sans);line-height:1.5;-webkit-font-smoothing:antialiased;padding:clamp(14px,2.5vw,28px)}
+.wrap{max-width:1200px;margin:0 auto}
+.eyebrow{font-size:10.5px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--gold-d)}
+h1{font-family:var(--serif);font-size:clamp(24px,4vw,34px);font-weight:800;margin:4px 0 4px;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.sub{color:var(--ink2);font-size:13px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.chip{background:var(--pn);border:1px solid var(--ln);border-radius:999px;padding:4px 11px;font-size:11.5px;color:var(--ink2)}
+.chip b{color:var(--ous)}
+.placar{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:20px 0}
+.pc{background:linear-gradient(180deg,var(--pn),var(--pg));border:1px solid var(--ln);border-radius:12px;padding:12px 13px}
+.pc .l{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--ink3)}
+.pc .big{font-family:var(--serif);font-weight:800;font-size:22px;margin:6px 0 2px}
+.pc .bar{display:flex;height:6px;border-radius:4px;overflow:hidden;margin-top:8px;background:var(--ln)}
+.pc .bar i{display:block;height:100%}
+.pc .leg{font-size:10.5px;color:var(--ink3);margin-top:6px;display:flex;gap:9px;flex-wrap:wrap}
+.tbl{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:6px}
+.tbl th{position:sticky;top:0;background:var(--pn2);text-align:center;font-size:9.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--ink3);padding:9px 6px;border-bottom:1px solid var(--ln);cursor:pointer;white-space:nowrap}
+.tbl th.l{text-align:left}
+.tbl td{padding:7px 6px;border-bottom:1px solid var(--ln2);text-align:center;font-variant-numeric:tabular-nums}
+.tbl td.l{text-align:left;font-weight:600}
+.tbl td.l small{display:block;color:var(--ink3);font-weight:400;font-size:10px}
+.cell{display:inline-flex;flex-direction:column;align-items:center;gap:1px;border-radius:7px;padding:4px 7px;min-width:62px}
+.cell b{font-size:12px}.cell span{font-size:9.5px;opacity:.85}
+.g{background:rgba(92,201,138,.16);color:#8fe3b3;border:1px solid rgba(92,201,138,.3)}
+.a{background:rgba(232,181,77,.16);color:#f0cd7e;border:1px solid rgba(232,181,77,.3)}
+.r{background:rgba(224,121,107,.16);color:#f0a99d;border:1px solid rgba(224,121,107,.3)}
+.na{background:var(--pn2);color:var(--ink3);border:1px solid var(--ln)}
+.tblwrap{overflow-x:auto;border:1px solid var(--ln);border-radius:12px;background:var(--pn)}
+.foot{margin:20px 2px 0;color:var(--ink3);font-size:11px;line-height:1.6;border-top:1px solid var(--ln);padding-top:12px}
+.foot a{color:var(--ink3);text-decoration:underline;cursor:pointer}
+.empty{max-width:560px;margin:12vh auto;text-align:center;color:var(--ink2)}
+</style>
+<script>window.AGO_AUTH={audience:"team",title:"Torre de Controle",sub:"Acesso restrito aos sócios. Digite a Senha Sócio."};</script>
+<script src="sbauth.js"></script>
+</head>
+<body><div class="wrap" id="app"><div class="empty">Carregando…</div></div>
+<script>
+var SB="https://pwbcehrfhspgipjhaedc.supabase.co",KEY="sb_publishable_mTx5xlUaUcLBM_YijXuCjg_vwCJ5v3x";
+var IND=[{k:"fat",lbl:"Faturamento",sh:"Fat",fmt:"rs",type:"cum"},{k:"recompra",lbl:"Recompra",sh:"Rec",fmt:"rs",type:"cum"},{k:"entrada",lbl:"Entrada",sh:"Ent",fmt:"rs",type:"cum"},{k:"aval",lbl:"Avaliações",sh:"Aval",fmt:"num",type:"cum"},{k:"conv",lbl:"Conversão",sh:"Conv",fmt:"pct",type:"rate"},{k:"tk",lbl:"Ticket",sh:"Tk",fmt:"rs",type:"rate"},{k:"d30",lbl:"30+",sh:"30+",fmt:"rs",type:"cum"},{k:"parc",lbl:"Parcelam.",sh:"Parc",fmt:"x",type:"ceiling"}];
+function farolCls(f){return f==="g"?"g":f==="a"?"a":f==="r"?"r":"na"}
+function fmt(v,f){if(v==null)return "—";if(f==="rs"){var n=Math.round(v);return n>=1000?"R$ "+(n/1000).toFixed(0)+"k":"R$ "+n}if(f==="num")return Math.round(v);if(f==="pct")return (v*100).toFixed(0)+"%";if(f==="x")return v.toFixed(1).replace(".",",")+"×";return v}
+function api(p){return fetch(SB+"/rest/v1/"+p,{headers:{apikey:KEY,Authorization:"Bearer "+KEY,"Content-Type":"application/json"}}).then(function(r){if(!r.ok)return r.text().then(function(t){throw new Error(t||r.status)});return r.json()})}
+var DATA=[],sortK="nome",sortDir=1;
+function render(){
+  var app=document.getElementById("app");
+  if(!DATA.length){app.innerHTML='<div class="empty">Nenhuma praça no banco ainda.</div>';return}
+  var meta=DATA[0].dados||{};
+  // placar por indicador
+  var placar=IND.map(function(ind){
+    var g=0,a=0,r=0,na=0;
+    DATA.forEach(function(p){var c=((p.dados||{}).ind||{})[ind.k];var f=c?c[4]:"na";if(f==="g")g++;else if(f==="a")a++;else if(f==="r")r++;else na++;});
+    var tot=g+a+r||1;
+    return '<div class="pc"><div class="l">'+ind.lbl+'</div><div class="big">'+g+'<span style="font-size:13px;color:var(--ink3)">/'+(g+a+r)+'</span></div>'+
+      '<div class="bar"><i style="width:'+(g/tot*100)+'%;background:var(--vd)"></i><i style="width:'+(a/tot*100)+'%;background:var(--am)"></i><i style="width:'+(r/tot*100)+'%;background:var(--vm)"></i></div>'+
+      '<div class="leg"><span style="color:var(--vd)">●'+g+'</span><span style="color:var(--am)">●'+a+'</span><span style="color:var(--vm)">●'+r+'</span></div></div>';
+  }).join("");
+  // tabela
+  var rows=DATA.slice().sort(function(A,B){
+    if(sortK==="nome")return A.nome.localeCompare(B.nome)*sortDir;
+    var ca=((A.dados||{}).ind||{})[sortK],cb=((B.dados||{}).ind||{})[sortK];
+    var va=ca?(ca[3]==null?-1:ca[3]):-1,vb=cb?(cb[3]==null?-1:cb[3]):-1;
+    return (va-vb)*sortDir;
+  });
+  var head='<tr><th class="l" data-k="nome">Praça</th>'+IND.map(function(i){return '<th data-k="'+i.k+'" title="'+i.lbl+'">'+i.sh+'</th>'}).join("")+'</tr>';
+  var body=rows.map(function(p){
+    var cells=IND.map(function(ind){
+      var c=((p.dados||{}).ind||{})[ind.k];
+      if(!c)return '<td><span class="cell na">—</span></td>';
+      var real=c[1],pct=c[3],f=c[4];
+      return '<td><span class="cell '+farolCls(f)+'"><b>'+fmt(real,ind.fmt)+'</b><span>'+(pct!=null?Math.round(pct*100)+"%":"")+'</span></span></td>';
+    }).join("");
+    return '<tr><td class="l">'+p.nome+'<small>'+((p.dados||{}).ref||"")+'</small></td>'+cells+'</tr>';
+  }).join("");
+  app.innerHTML='<div class="eyebrow">Ageodonto · Direção Comercial</div><h1>Torre de Controle — Rede</h1>'+
+    '<div class="sub"><span class="chip">Competência <b>'+(meta.mes||"")+'</b></span><span class="chip">dia <b>'+(meta.dia||"")+"/"+(meta.dias||"")+'</b></span><span class="chip">'+DATA.length+' praças</span></div>'+
+    '<div class="placar">'+placar+'</div>'+
+    '<div class="tblwrap"><table class="tbl"><thead>'+head+'</thead><tbody>'+body+'</tbody></table></div>'+
+    '<div class="foot">Farol = projeção de fechamento vs meta. <span style="color:var(--vd)">verde no alvo</span> · <span style="color:var(--am)">amarelo atenção</span> · <span style="color:var(--vm)">vermelho abaixo</span>. Parcelamento é teto (menor = melhor). Clique no cabeçalho pra ordenar. Fonte: Giga + planilhas, atualizado pela Direção. · <a onclick="agoLogout()">sair</a></div>';
+  document.querySelectorAll(".tbl th").forEach(function(th){th.onclick=function(){var k=th.dataset.k;if(sortK===k)sortDir*=-1;else{sortK=k;sortDir=k==="nome"?1:-1;}render();}});
+}
+api("torre_snapshot?select=slug,nome,dados").then(function(rows){DATA=rows;render();}).catch(function(e){document.getElementById("app").innerHTML='<div class="empty">Não foi possível carregar. '+(e&&e.message||"")+' <a onclick="agoLogout()" style="color:var(--ous);cursor:pointer">sair</a></div>'});
+</script>
+</body></html>
