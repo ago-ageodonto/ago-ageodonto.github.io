@@ -1,6 +1,7 @@
 # GitHub Pages — arquivos que NÃO devem ir pro site público.
 # Ficam no repositório (o robô da Action lê via checkout), mas não são publicados.
 exclude:
+  - materiais/painel_data.json        # dados do Painel (só no banco)
   - materiais/torre_controle.html   # Torre completa (dados por praça) — servida logada via sistema/app/torre_rede.html
   - sistema/db/                      # SQLs e script do robô
   - README.md
