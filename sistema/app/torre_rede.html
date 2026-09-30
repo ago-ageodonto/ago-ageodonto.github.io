@@ -13,7 +13,18 @@ h1{font-family:var(--serif);font-size:clamp(24px,4vw,34px);font-weight:800;margi
 .sub{color:var(--ink2);font-size:13px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
 .chip{background:var(--pn);border:1px solid var(--ln);border-radius:999px;padding:4px 11px;font-size:11.5px;color:var(--ink2)}
 .chip b{color:var(--ous)}
-.placar{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:20px 0}
+.ticker{overflow:hidden;border:1px solid var(--ln);border-radius:10px;background:linear-gradient(180deg,var(--pn2),var(--pn));margin:16px 0 6px;position:relative}
+.ticker::before,.ticker::after{content:"";position:absolute;top:0;bottom:0;width:36px;z-index:2;pointer-events:none}
+.ticker::before{left:0;background:linear-gradient(90deg,var(--pn),transparent)}
+.ticker::after{right:0;background:linear-gradient(270deg,var(--pn),transparent)}
+.ticker .track{display:flex;gap:28px;white-space:nowrap;padding:9px 0;width:max-content;animation:agoscroll 120s linear infinite}
+.ticker:hover .track{animation-play-state:paused}
+.tk{display:inline-flex;align-items:center;gap:7px;font-size:12.5px;color:var(--ink2)}
+.tk b{color:var(--ink);font-weight:700}
+.tk .v{font-variant-numeric:tabular-nums;color:var(--ink2)}
+.tk .dot{width:8px;height:8px;border-radius:50%}
+@keyframes agoscroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.placar{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:14px 0 20px}
 .pc{background:linear-gradient(180deg,var(--pn),var(--pg));border:1px solid var(--ln);border-radius:12px;padding:12px 13px}
 .pc .l{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--ink3)}
 .pc .big{font-family:var(--serif);font-weight:800;font-size:22px;margin:6px 0 2px}
@@ -53,6 +64,12 @@ function render(){
   if(!DATA.length){app.innerHTML='<div class="empty">Nenhuma praça no banco ainda.</div>';return}
   var meta=DATA[0].dados||{};
   // placar por indicador
+  var tick=DATA.map(function(p){
+    var c=((p.dados||{}).ind||{}).fat;var f=c?c[4]:"na";var proj=c?c[2]:null;
+    var col=f==="g"?"var(--vd)":f==="a"?"var(--am)":f==="r"?"var(--vm)":"var(--ln)";
+    return '<span class="tk"><b>'+p.nome+'</b> <span class="v">'+fmt(proj,"rs")+'</span><i class="dot" style="background:'+col+'"></i></span>';
+  }).join("");
+  var ticker='<div class="ticker"><div class="track">'+tick+tick+'</div></div>';
   var placar=IND.map(function(ind){
     var g=0,a=0,r=0,na=0;
     DATA.forEach(function(p){var c=((p.dados||{}).ind||{})[ind.k];var f=c?c[4]:"na";if(f==="g")g++;else if(f==="a")a++;else if(f==="r")r++;else na++;});
@@ -80,6 +97,7 @@ function render(){
   }).join("");
   app.innerHTML='<div class="eyebrow">Ageodonto · Direção Comercial</div><h1>Torre de Controle — Rede</h1>'+
     '<div class="sub"><span class="chip">Competência <b>'+(meta.mes||"")+'</b></span><span class="chip">dia <b>'+(meta.dia||"")+"/"+(meta.dias||"")+'</b></span><span class="chip">'+DATA.length+' praças</span></div>'+
+    ticker+
     '<div class="placar">'+placar+'</div>'+
     '<div class="tblwrap"><table class="tbl"><thead>'+head+'</thead><tbody>'+body+'</tbody></table></div>'+
     '<div class="foot">Farol = projeção de fechamento vs meta. <span style="color:var(--vd)">verde no alvo</span> · <span style="color:var(--am)">amarelo atenção</span> · <span style="color:var(--vm)">vermelho abaixo</span>. Parcelamento é teto (menor = melhor). Clique no cabeçalho pra ordenar. Fonte: Giga + planilhas, atualizado pela Direção. · <a onclick="agoLogout()">sair</a></div>';
