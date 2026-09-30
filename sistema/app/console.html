@@ -77,7 +77,6 @@ td{padding:8px;border-bottom:1px solid var(--ln2);color:var(--ink)}
 <div class="tabs">
   <div class="tab on" data-p="cad">① Clínicas &amp; Diretores</div>
   <div class="tab" data-p="nota">② Notas por função</div>
-  <div class="tab" data-p="reu">③ Reuniões</div>
 </div>
 
 <!-- ===== CADASTRO ===== -->
@@ -131,24 +130,6 @@ td{padding:8px;border-bottom:1px solid var(--ln2);color:var(--ink)}
   </div>
 </div>
 
-<!-- ===== REUNIÕES (registro) ===== -->
-<div class="panel" id="p-reu">
-  <div class="box">
-    <h2>Registrar reunião</h2><div class="sub">Guarde o registro do encontro com o avaliador: data, link do vídeo (Meet/Drive) e um resumo. O vídeo mora no seu Drive; aqui fica o histórico.</div>
-    <div class="row r3">
-      <div><label>Avaliador (diretor)</label><select id="rn-dir"></select></div>
-      <div><label>Data</label><input id="rn-data" type="date"></div>
-      <div><label>Link do vídeo</label><input id="rn-video" placeholder="https://..."></div>
-    </div>
-    <div class="row"><div><label>Resumo / combinados</label><textarea id="rn-resumo" placeholder="Pontos principais, combinados, próximos passos…"></textarea></div></div>
-    <button class="btn" id="rn-save">Salvar reunião</button> <span class="msg" id="rn-msg" style="display:inline-block"></span>
-  </div>
-  <div class="box">
-    <h2>Reuniões registradas</h2><div class="sub">Do avaliador selecionado acima — mais recentes primeiro.</div>
-    <table><thead><tr><th>Data</th><th>Resumo</th><th>Vídeo</th><th></th></tr></thead><tbody id="rn-list"></tbody></table>
-  </div>
-</div>
-
 <script>
 var SB_URL="https://pwbcehrfhspgipjhaedc.supabase.co";
 var SB_KEY="sb_publishable_mTx5xlUaUcLBM_YijXuCjg_vwCJ5v3x";
@@ -170,7 +151,7 @@ document.querySelectorAll(".tab").forEach(t=>t.onclick=function(){
 
 function fillDiretorSelects(){
   var opts=STATE.diretores.map(d=>'<option value="'+d.id+'">'+d.nome+(d._cli?(" — "+d._cli):"")+'</option>').join('');
-  ["n-dir","rn-dir"].forEach(id=>{var s=document.getElementById(id);if(!s)return;var v=s.value;s.innerHTML=opts;if(v)s.value=v;});
+  ["n-dir"].forEach(id=>{var s=document.getElementById(id);if(!s)return;var v=s.value;s.innerHTML=opts;if(v)s.value=v;});
   document.getElementById("d-cli").innerHTML=STATE.clinicas.map(c=>'<option value="'+c.id+'">'+c.nome+(c.uf?(" — "+c.uf):"")+'</option>').join('') || '<option value="">(cadastre uma clínica)</option>';
 }
 function renderLista(){
@@ -210,7 +191,7 @@ function loadBase(){
     STATE.indicadores=ind;
     STATE.demandas={}; dem.forEach(x=>{(STATE.demandas[x.indicador_id]=STATE.demandas[x.indicador_id]||[]).push(x);});
     document.getElementById("conn").innerHTML='<span style="color:var(--vd)">● conectado</span>';
-    fillDiretorSelects(); fillIndSelect(); renderLista(); loadNota(); loadReunioes();
+    fillDiretorSelects(); fillIndSelect(); renderLista(); loadNota();
   }).catch(e=>{document.getElementById("conn").innerHTML='<span style="color:var(--vm)">● erro de conexão</span>';});
 }
 
@@ -413,29 +394,8 @@ document.getElementById("n-save").onclick=function(){
    .catch(e=>flash(document.getElementById("n-msg"),"Erro: "+e.message,false)).finally(()=>this.disabled=false);
 };
 
-// ---- REUNIÕES (registro) ----
-function loadReunioes(){
-  var sel=document.getElementById("rn-dir");if(!sel)return;var dir=sel.value;
-  if(!dir){document.getElementById("rn-list").innerHTML="";return;}
-  get("reunioes?diretor_id=eq."+dir+"&select=id,data,resumo,video_url&order=data.desc").then(rs=>{
-    document.getElementById("rn-list").innerHTML=rs.map(r=>'<tr><td>'+(r.data?(""+r.data).split("-").reverse().join("/"):"—")+'</td><td style="color:var(--ink2)">'+(r.resumo?r.resumo.slice(0,90):"—")+'</td><td>'+(r.video_url?'<a href="'+r.video_url+'" target="_blank" style="color:var(--ous);font-weight:700">abrir ▸</a>':"—")+'</td><td style="text-align:right"><button class="del" data-rid="'+r.id+'">apagar</button></td></tr>').join('') || '<tr><td colspan="4" style="color:var(--ink3)">Nenhuma reunião registrada.</td></tr>';
-    document.querySelectorAll("#rn-list .del").forEach(b=>b.onclick=function(){if(!confirm("Apagar esta reunião?"))return;del("reunioes?id=eq."+this.dataset.rid).then(loadReunioes).catch(e=>alert("Erro: "+e.message));});
-  }).catch(()=>{});
-}
-document.getElementById("rn-dir").addEventListener("change",loadReunioes);
-document.getElementById("rn-save").onclick=function(){
-  var dir=document.getElementById("rn-dir").value;
-  if(!dir)return flash(document.getElementById("rn-msg"),"Escolha o avaliador.",false);
-  var data=document.getElementById("rn-data").value||new Date().toISOString().slice(0,10);
-  this.disabled=true;
-  write("reunioes","POST",{diretor_id:dir,data:data,status:"concluida",criado_por:"Gregori",video_url:document.getElementById("rn-video").value.trim()||null,resumo:document.getElementById("rn-resumo").value.trim()||null},"return=minimal")
-   .then(()=>{flash(document.getElementById("rn-msg"),"Reunião registrada.",true);document.getElementById("rn-video").value=document.getElementById("rn-resumo").value="";return loadReunioes();})
-   .catch(e=>flash(document.getElementById("rn-msg"),"Erro: "+e.message,false)).finally(()=>this.disabled=false);
-};
-
 // init
 document.getElementById("n-comp").value="2026-09";
-document.getElementById("rn-data").value=new Date().toISOString().slice(0,10);
 loadBase();
 </script>
 </body></html>
