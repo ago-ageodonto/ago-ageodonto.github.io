@@ -74,3 +74,18 @@ except urllib.error.HTTPError as e:
 except Exception as e:
     print("FALHA: %r" % (e,), file=sys.stderr)
     sys.exit(1)
+
+# 2) Torre COMPLETA (D inteiro) -> painel_blob id='torre' (a Torre logada lê daqui)
+tbody = json.dumps([{"id": "torre", "data": {"D": D}}]).encode("utf-8")
+treq = urllib.request.Request(
+    SB + "/rest/v1/painel_blob?on_conflict=id",
+    data=tbody, method="POST",
+    headers={"apikey": KEY, "Authorization": "Bearer " + KEY,
+             "Content-Type": "application/json",
+             "Prefer": "resolution=merge-duplicates,return=minimal"})
+try:
+    with urllib.request.urlopen(treq, timeout=60) as r:
+        print("OK Torre completa gravada em painel_blob:torre (HTTP %d)" % r.status)
+except urllib.error.HTTPError as e:
+    print("FALHA HTTP %d ao gravar painel_blob:torre:\n%s" % (e.code, e.read().decode("utf-8","replace")), file=sys.stderr)
+    sys.exit(1)
