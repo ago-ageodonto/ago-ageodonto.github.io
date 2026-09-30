@@ -17,7 +17,9 @@
 <div class="box"><h2>Novo compromisso</h2><div class="row r3"><div><label>Descrição</label><input id="c-desc"></div><div><label>Indicador</label><select id="c-ind"><option value="">Geral</option></select></div><div><label>Prazo</label><input id="c-prazo" type="date"></div></div><div class="sub">O compromisso será criado junto com a avaliação e continuará pendente até ser concluído.</div></div>
 <div class="actions"><button class="btn ghost" id="a-rascunho">Salvar rascunho</button><button class="btn" id="a-concluir">Concluir avaliação</button><span class="msg" id="a-msg"></span></div></section>
 <section class="panel" id="his"><div class="box"><h2>Histórico e pendências</h2><div class="row r2"><div><label>Profissional</label><select id="h-dir"></select></div><div></div></div><div id="pendencias"></div><div id="historico"></div></div></section>
-</div><script>
+</div><script>window.AGO_AUTH={audience:"team",title:"Gestão Comercial AGO"};</script>
+<script src="sbauth.js"></script>
+<script>
 var SB_URL="https://pwbcehrfhspgipjhaedc.supabase.co";
 var SB_KEY="sb_publishable_mTx5xlUaUcLBM_YijXuCjg_vwCJ5v3x";
 var HEAD={apikey:SB_KEY,Authorization:"Bearer "+SB_KEY,"Content-Type":"application/json"};
