@@ -62,7 +62,7 @@ select{background:var(--pn2);color:var(--ink);border:1px solid var(--ln);border-
 var SB_URL="https://pwbcehrfhspgipjhaedc.supabase.co";
 var SB_KEY="sb_publishable_mTx5xlUaUcLBM_YijXuCjg_vwCJ5v3x";
 var MES=["","Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
-function competLabel(c){ if(!c)return "—"; var p=(""+c).split("-"); return (MES[+p[1]]||p[1])+"/"+p[0]; }
+function competLabel(c){ if(!c)return "—"; var p=(""+c).split("-"); if(p.length>=3) return p[2]+"/"+p[1]+"/"+p[0].slice(2); return (MES[+p[1]]||p[1])+"/"+p[0]; }
 function get(p){return fetch(SB_URL+"/rest/v1/"+p,{headers:{apikey:SB_KEY,Authorization:"Bearer "+SB_KEY}}).then(r=>r.json());}
 function cls(n){return n==null?"na":n>=85?"g":n>=70?"a":"r";}
 var STATE={dirs:[]};
@@ -111,9 +111,9 @@ function render(apurs,reus){
   var indKeys=Object.keys(byInd).sort((a,b)=>byInd[a].ordem-byInd[b].ordem);
 
   var H='<div class="kpis">'
-    +'<div class="kpi"><div class="l">Nota média</div><div class="v '+cls(mediaUlt)+'">'+(mediaUlt==null?"—":mediaUlt)+'</div><div class="s">'+competLabel(ultima)+(mediaPrev!=null?' · <span class="delta '+(mediaUlt>=mediaPrev?'up':'dn')+'">'+(mediaUlt>=mediaPrev?'▲':'▼')+' '+Math.abs(mediaUlt-mediaPrev)+'</span> vs mês anterior':'')+'</div></div>'
+    +'<div class="kpi"><div class="l">Nota média</div><div class="v '+cls(mediaUlt)+'">'+(mediaUlt==null?"—":mediaUlt)+'</div><div class="s">'+competLabel(ultima)+(mediaPrev!=null?' · <span class="delta '+(mediaUlt>=mediaPrev?'up':'dn')+'">'+(mediaUlt>=mediaPrev?'▲':'▼')+' '+Math.abs(mediaUlt-mediaPrev)+'</span> vs análise anterior':'')+'</div></div>'
     +'<div class="kpi"><div class="l">Indicadores avaliados</div><div class="v">'+indKeys.length+'</div><div class="s">com nota lançada</div></div>'
-    +'<div class="kpi"><div class="l">Competências</div><div class="v">'+compKeys.length+'</div><div class="s">no histórico</div></div>'
+    +'<div class="kpi"><div class="l">Análises</div><div class="v">'+compKeys.length+'</div><div class="s">no histórico</div></div>'
     +'</div>';
 
   // evolução por competência
@@ -148,6 +148,6 @@ function render(apurs,reus){
   });
   document.getElementById("body").innerHTML=H+reunioesHtml(reus);
   document.querySelectorAll(".ihd").forEach(h=>h.onclick=function(){this.parentElement.classList.toggle("open");});
-  foot.innerHTML='<b>Como ler:</b> cada indicador mostra a <b>nota</b> (média das funções, todas com peso igual). Clique para abrir e ver <b>o que você lançou</b> e <b>o que define a nota</b> em cada função. A evolução acompanha a nota mês a mês. As notas vêm do que você lança no <b>Console → aba Notas por função</b>.';
+  foot.innerHTML='<b>Como ler:</b> cada indicador mostra a <b>nota</b> (média das funções, todas com peso igual). Clique para abrir e ver <b>o que você lançou</b> e <b>o que define a nota</b> em cada função. A evolução acompanha a nota análise a análise (pela data da análise). As notas vêm do que você lança no <b>Console → aba Notas por função</b>.';
 }
 </script></body></html>

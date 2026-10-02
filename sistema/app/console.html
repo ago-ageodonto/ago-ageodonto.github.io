@@ -118,7 +118,7 @@ td{padding:8px;border-bottom:1px solid var(--ln2);color:var(--ink)}
     <div class="row r3">
       <div><label>Indicador</label><select id="n-ind"></select></div>
       <div><label>Avaliador (diretor)</label><select id="n-dir"></select></div>
-      <div><label>Competência</label><input id="n-comp" placeholder="2026-09"></div>
+      <div><label>Data da análise</label><input id="n-comp" type="date"></div>
     </div>
     <div id="n-funcs"></div>
     <div style="background:var(--pn2);border:1px solid var(--ln);border-radius:12px;padding:14px 16px;margin:6px 0 12px;display:flex;align-items:center;gap:18px;flex-wrap:wrap">
@@ -397,7 +397,7 @@ document.getElementById("n-save").onclick=function(){
 };
 
 // init
-document.getElementById("n-comp").value="2026-09";
+document.getElementById("n-comp").value=new Date().toISOString().slice(0,10);
 loadBase();
 </script>
 </body></html>
