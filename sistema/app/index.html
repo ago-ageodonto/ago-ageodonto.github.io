@@ -81,28 +81,34 @@ iframe{flex:1;width:100%;border:0;background:var(--pg)}
       <span class="badge"><span class="d"></span> no ar</span>
     </div>
   </header>
-  <iframe id="view" src="torre.html" title="conteúdo"></iframe>
+  <iframe id="view" src="about:blank" title="conteúdo"></iframe>
 </div>
 <script>window.AGO_AUTH={audience:"team",title:"Gestão Comercial AGO"};</script>
 <script src="sbauth.js"></script>
 <script>
 var frame=document.getElementById("view"),body=document.body;
+// cache-bust: cada carregamento do hub gera uma versão nova, forçando o iframe
+// a pegar a versão mais recente das páginas (resolve o cache de 10 min do navegador).
+var CB="v="+Date.now();
+function withCB(u){return u+(u.indexOf("?")>=0?"&":"?")+CB;}
 function activate(btn){
   document.querySelectorAll(".nav").forEach(function(b){b.classList.toggle("on",b===btn)});
-  frame.src=btn.dataset.v;
+  frame.src=withCB(btn.dataset.v);
   document.getElementById("h-ic").textContent=btn.dataset.ic;
   document.getElementById("h-ttl").textContent=btn.dataset.t;
   document.getElementById("h-bc").textContent=btn.dataset.bc;
-  document.getElementById("h-open").href=btn.dataset.v;
+  document.getElementById("h-open").href=withCB(btn.dataset.v);
   body.classList.remove("menu");
 }
 document.querySelectorAll(".nav[data-nav]").forEach(function(b){b.onclick=function(){activate(b)}});
 function setNav(key){var b=document.querySelector('.nav[data-nav="'+key+'"]');if(b)activate(b);}
 // hook chamado pela tela Rede/Visão Geral quando clica numa unidade
-window.openDiretor=function(id){frame.src="dashboard.html?diretor="+encodeURIComponent(id);document.querySelectorAll(".nav").forEach(function(b){b.classList.remove("on")});document.getElementById("h-ic").textContent="👤";document.getElementById("h-ttl").textContent="Dashboard do Diretor";document.getElementById("h-bc").textContent="Acompanhamento · unidade selecionada";};
+window.openDiretor=function(id){frame.src=withCB("dashboard.html?diretor="+encodeURIComponent(id));document.querySelectorAll(".nav").forEach(function(b){b.classList.remove("on")});document.getElementById("h-ic").textContent="👤";document.getElementById("h-ttl").textContent="Dashboard do Diretor";document.getElementById("h-bc").textContent="Acompanhamento · unidade selecionada";};
 // mobile menu
 var hamb=document.getElementById("hamb"),scrim=document.getElementById("scrim");
 if(hamb)hamb.onclick=function(){body.classList.toggle("menu")};
 if(scrim)scrim.onclick=function(){body.classList.remove("menu")};
+// carrega a página inicial (Torre) já com cache-bust
+frame.src=withCB("torre.html");
 </script>
 </body></html>
