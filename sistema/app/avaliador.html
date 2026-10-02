@@ -1,66 +1,88 @@
-<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><title>Avaliador — AGO</title>
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><title>Painel do Avaliador — AGO</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Spectral:wght@400;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap">
 <style>
 :root{--pg:#0B0906;--pn:#141009;--pn2:#1A150C;--ln:#2A2213;--ln2:#3A3018;--ink:#F3ECDA;--ink2:#B6A883;--ink3:#7C7256;--ous:#F1CE68;--gold-d:#B8862B;--vd:#5CC98A;--vm:#E0796B;--am:#E8B54D;--grad:linear-gradient(100deg,#FBEDB4,#F1CE68 40%,#CFA23B 70%,#F7DE8C);--serif:'Spectral',Georgia,serif;--sans:'Inter',-apple-system,sans-serif;}
 *{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--pg);color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased;padding:clamp(14px,2vw,26px)}
-.hd{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;border-bottom:1px solid var(--ln);padding-bottom:14px;margin-bottom:18px}
-.hd h1{font-family:var(--serif);font-size:20px;font-weight:800}
-.hd .who{font-size:12.5px;color:var(--ink2)}.hd .who b{color:var(--ous)}
-select{background:var(--pn2);color:var(--ink);border:1px solid var(--ln);border-radius:9px;padding:9px 12px;font-family:var(--sans);font-size:14px;font-weight:600}
-.sec{font-family:var(--serif);font-size:15px;font-weight:700;margin:22px 2px 12px}
-.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
-.kpi{background:linear-gradient(180deg,var(--pn),var(--pg));border:1px solid var(--ln);border-radius:14px;padding:15px 16px;position:relative;overflow:hidden}
-.kpi::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:var(--grad);opacity:.7}
-.kpi .l{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--ink3)}
-.kpi .v{font-family:var(--serif);font-weight:800;font-size:30px;line-height:1;margin-top:8px}
-.kpi .v.g{color:var(--vd)}.kpi .v.a{color:var(--am)}.kpi .v.r{color:var(--vm)}
-.kpi .s{font-size:11px;color:var(--ink2);margin-top:5px}
-.box{background:linear-gradient(180deg,var(--pn),var(--pg));border:1px solid var(--ln);border-radius:14px;padding:14px 16px}
-.evrow{display:grid;grid-template-columns:120px 1fr 56px;gap:12px;align-items:center;padding:9px 0;border-top:1px solid var(--ln2)}
-.evrow:first-child{border-top:0}
-@media(max-width:640px){.evrow{grid-template-columns:92px 1fr 48px}}
-.evdt{font-size:12.5px;font-weight:600}
-.evtrack{background:var(--pn2);border-radius:6px;height:20px;overflow:hidden;border:1px solid var(--ln)}
-.evfill{height:100%;border-radius:6px 0 0 6px;background:var(--grad)}
-.evn{text-align:right;font-family:var(--serif);font-weight:800;font-size:15px}
-.delta{font-size:10.5px;font-weight:700;margin-left:6px}.delta.up{color:var(--vd)}.delta.dn{color:var(--vm)}
-/* blocos de indicador */
-.iblk{border:1px solid var(--ln);border-radius:12px;margin-bottom:10px;overflow:hidden;background:var(--pn2)}
-.ihd{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:13px 15px;cursor:pointer}
-.ihd .lft{display:flex;align-items:baseline;gap:10px}
-.ihd h3{font-family:var(--serif);font-size:16px;font-weight:700}
-.ihd .cmp{font-size:10.5px;color:var(--ink3)}
-.ihd .rgt{display:flex;align-items:center;gap:10px}
-.nbig{font-family:var(--serif);font-weight:800;font-size:26px;line-height:1}
-.nbig.g{color:var(--vd)}.nbig.a{color:var(--am)}.nbig.r{color:var(--vm)}
-.chev{color:var(--ink3);font-size:13px;transition:transform .15s}
-.iblk.open .chev{transform:rotate(90deg)}
-.dl{display:none;padding:0 15px 12px}.iblk.open .dl{display:block}
-.fn{padding:11px 0;border-top:1px solid var(--ln)}
+body{background:radial-gradient(120% 70% at 90% -10%,rgba(233,194,90,.07),transparent 60%),var(--pg);color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased;padding:clamp(14px,2vw,26px)}
+.hd{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;border-bottom:1px solid var(--ln);padding-bottom:16px;margin-bottom:20px}
+.person{display:flex;align-items:center;gap:13px}
+.avatar{width:46px;height:46px;border-radius:50%;background:var(--grad);color:#241a06;font-family:var(--serif);font-weight:800;font-size:19px;display:flex;align-items:center;justify-content:center;flex:0 0 auto;box-shadow:0 3px 12px rgba(241,206,104,.2)}
+.person h1{font-family:var(--serif);font-size:21px;font-weight:800;line-height:1.1}
+.person .who{font-size:12px;color:var(--ink2);margin-top:1px}
+select{background:var(--pn2);color:var(--ink);border:1px solid var(--ln);border-radius:9px;padding:9px 12px;font-family:var(--sans);font-size:13.5px;font-weight:600;cursor:pointer}
+select:focus{outline:none;border-color:var(--gold-d)}
+.sec{font-family:var(--serif);font-size:16px;font-weight:700;margin:26px 2px 13px;display:flex;align-items:baseline;gap:10px}
+.hint-s{font-size:11px;color:var(--ink3);font-weight:400;font-family:var(--sans)}
+/* hero */
+.hero{display:flex;gap:24px;align-items:center;background:linear-gradient(180deg,var(--pn),var(--pg));border:1px solid var(--ln);border-radius:16px;padding:20px 24px;flex-wrap:wrap;position:relative;overflow:hidden}
+.hero::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:var(--grad);opacity:.7}
+.donut{--p:0;--c:var(--vd);width:132px;height:132px;border-radius:50%;flex:0 0 auto;background:conic-gradient(var(--c) calc(var(--p)*1%),var(--pn2) 0);display:flex;align-items:center;justify-content:center;position:relative}
+.donut::after{content:"";position:absolute;width:92px;height:92px;border-radius:50%;background:var(--pn)}
+.donut b{position:relative;font-family:var(--serif);font-size:38px;font-weight:800;z-index:1;color:var(--c)}
+.hl{flex:1;min-width:250px}
+.hl-l{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--ink3)}
+.hl-s{font-size:12.5px;color:var(--ink2);margin:3px 0 15px}
+.hl-tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(118px,1fr));gap:10px}
+.tile{background:var(--pn2);border:1px solid var(--ln);border-radius:11px;padding:11px 13px}
+.tile .tl{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--ink3)}
+.tile .tv{font-family:var(--serif);font-weight:800;font-size:24px;margin-top:4px;color:var(--ink);line-height:1}
+.tile .nm{font-size:12.5px;font-weight:700;color:var(--ink);margin-top:5px;line-height:1.2}
+.tile .tt{font-family:var(--serif);font-weight:800;font-size:22px;line-height:1;margin-top:3px}
+.g{color:var(--vd)}.a{color:var(--am)}.r{color:var(--vm)}.na{color:var(--ink3)}
+.delta{font-size:10.5px;font-weight:700;margin-left:4px}.delta.up{color:var(--vd)}.delta.dn{color:var(--vm)}
+/* grid de indicadores */
+.indgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(152px,1fr));gap:12px}
+.icard{text-align:left;cursor:pointer;background:linear-gradient(180deg,var(--pn),var(--pg));border:1px solid var(--ln);border-radius:14px;padding:14px 15px 13px;font-family:inherit;color:inherit;transition:border-color .15s,transform .12s,box-shadow .15s}
+.icard:hover{border-color:color-mix(in srgb,var(--ous) 40%,var(--ln));transform:translateY(-2px)}
+.icard.active{border-color:var(--ous);box-shadow:0 0 0 1px var(--ous),0 8px 22px rgba(0,0,0,.35)}
+.ic-top{display:flex;justify-content:space-between;align-items:center;gap:8px;min-height:18px}
+.ic-nome{font-size:12.5px;font-weight:700;color:var(--ink)}
+.ic-nota{font-family:var(--serif);font-weight:800;font-size:36px;line-height:1;margin:9px 0 9px}
+.ic-bar{height:6px;border-radius:4px;background:var(--pn2);overflow:hidden}
+.ic-bar i{display:block;height:100%;border-radius:4px}
+.ic-bar i.g{background:var(--vd)}.ic-bar i.a{background:var(--am)}.ic-bar i.r{background:var(--vm)}.ic-bar i.na{background:var(--ln2)}
+.ic-foot{font-size:10px;font-weight:800;margin-top:8px;text-transform:uppercase;letter-spacing:.04em}
+.chip-pl{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;color:var(--ous);background:rgba(241,206,104,.12);border:1px solid color-mix(in srgb,var(--ous) 35%,var(--ln));border-radius:20px;padding:2px 8px}
+/* detalhe */
+#detail{margin-top:14px}
+.detail-box{background:linear-gradient(180deg,var(--pn),var(--pg));border:1px solid color-mix(in srgb,var(--ous) 22%,var(--ln));border-radius:16px;padding:17px 19px}
+.d-hd{display:flex;align-items:center;gap:12px;flex-wrap:wrap;border-bottom:1px solid var(--ln);padding-bottom:13px;margin-bottom:4px}
+.d-hd h3{font-family:var(--serif);font-size:20px;font-weight:800}
+.d-hd .d-cmp{font-size:11.5px;color:var(--ink3);flex:1}
+.d-hd .nbig{font-family:var(--serif);font-weight:800;font-size:30px;line-height:1}
+.fn{padding:12px 0;border-top:1px solid var(--ln)}
+.fn:first-child{border-top:0}
 .fn .h{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
 .fn .h b{font-size:13px}
 .fn .nb{font-family:var(--serif);font-weight:800;font-size:17px;flex:0 0 auto}
 .fn .nb.g{color:var(--vd)}.fn .nb.a{color:var(--am)}.fn .nb.r{color:var(--vm)}.fn .nb.na{color:var(--ink3)}
 .fn .li{font-size:11.5px;color:var(--ink2);margin-top:5px}.fn .li b{color:var(--ink)}
 .fn .crit{font-size:11px;color:var(--ink3);margin-top:4px;line-height:1.5;border-left:2px solid var(--ln2);padding-left:9px}
-.empty{color:var(--ink3);font-size:13px;padding:26px;text-align:center;background:var(--pn);border:1px dashed var(--ln);border-radius:12px}
-.foot{margin-top:20px;font-size:11px;color:var(--ink3);line-height:1.6}
-.chip-pl{font-size:9.5px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;color:var(--ous);background:rgba(241,206,104,.12);border:1px solid color-mix(in srgb,var(--ous) 35%,var(--ln));border-radius:20px;padding:2px 9px;align-self:center}
-.plano{margin-top:12px;padding:13px 14px;border:1px solid color-mix(in srgb,var(--ous) 28%,var(--ln));border-radius:11px;background:linear-gradient(180deg,rgba(241,206,104,.05),transparent)}
+.plano{margin-top:13px;padding:14px 15px;border:1px solid color-mix(in srgb,var(--ous) 30%,var(--ln));border-radius:12px;background:linear-gradient(180deg,rgba(241,206,104,.06),transparent)}
 .plano .pl-h{display:flex;align-items:center;gap:7px;font-size:11px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--ous);margin-bottom:9px}
-.plano textarea{width:100%;background:var(--pg);color:var(--ink);border:1px solid var(--ln);border-radius:8px;padding:10px 12px;font:13.5px/1.55 var(--sans);min-height:92px;resize:vertical}
+.plano textarea{width:100%;background:var(--pg);color:var(--ink);border:1px solid var(--ln);border-radius:9px;padding:11px 13px;font:13.5px/1.55 var(--sans);min-height:100px;resize:vertical}
 .plano textarea:focus{outline:none;border-color:var(--gold-d)}
-.plano .pl-act{display:flex;align-items:center;gap:11px;margin-top:9px}
-.plano .pl-save{background:var(--grad);color:#241a06;border:none;border-radius:8px;padding:8px 16px;font:800 12.5px var(--sans);cursor:pointer}
+.plano .pl-act{display:flex;align-items:center;gap:11px;margin-top:10px}
+.plano .pl-save{background:var(--grad);color:#241a06;border:none;border-radius:9px;padding:9px 17px;font:800 12.5px var(--sans);cursor:pointer}
 .plano .pl-save:disabled{opacity:.6;cursor:default}
 .plano .pl-msg{font-size:12px;font-weight:600}
+/* evolução + reuniões */
+.box{background:linear-gradient(180deg,var(--pn),var(--pg));border:1px solid var(--ln);border-radius:14px;padding:14px 16px}
+.evrow{display:grid;grid-template-columns:120px 1fr 64px;gap:12px;align-items:center;padding:9px 0;border-top:1px solid var(--ln2)}
+.evrow:first-child{border-top:0}
+@media(max-width:640px){.evrow{grid-template-columns:92px 1fr 52px}}
+.evdt{font-size:12.5px;font-weight:600}
+.evtrack{background:var(--pn2);border-radius:6px;height:20px;overflow:hidden;border:1px solid var(--ln)}
+.evfill{height:100%;border-radius:6px 0 0 6px;background:var(--grad)}
+.evn{text-align:right;font-family:var(--serif);font-weight:800;font-size:15px}
+.empty{color:var(--ink3);font-size:13px;padding:30px;text-align:center;background:var(--pn);border:1px dashed var(--ln);border-radius:14px}
+.foot{margin-top:22px;font-size:11px;color:var(--ink3);line-height:1.6}
 </style></head>
 <body>
 <div class="hd">
-  <div><h1>Painel do Avaliador</h1><div class="who" id="who">notas das responsabilidades e plano de ação por indicador</div></div>
+  <div class="person"><div class="avatar" id="av">—</div><div><h1 id="pnome">Painel do Avaliador</h1><div class="who" id="who">notas das responsabilidades e plano de ação por indicador</div></div></div>
   <select id="sel"></select>
 </div>
 <div id="body"><div class="empty">Carregando…</div></div>
@@ -76,12 +98,14 @@ function get(p){return fetch(SB_URL+"/rest/v1/"+p,{headers:{apikey:SB_KEY,Author
 function write(p,body,prefer){return fetch(SB_URL+"/rest/v1/"+p,{method:"POST",headers:{apikey:SB_KEY,Authorization:"Bearer "+SB_KEY,"Content-Type":"application/json",Prefer:prefer||"return=minimal"},body:JSON.stringify(body)}).then(r=>{if(!r.ok)return r.text().then(t=>{throw new Error(t||r.status)});return r.text().then(t=>t?JSON.parse(t):[]);});}
 function esc(s){return (s==null?"":""+s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 function cls(n){return n==null?"na":n>=85?"g":n>=70?"a":"r";}
-var STATE={dirs:[]}, CUR_DIR=null;
+function statusTxt(n){return n==null?"sem nota":n>=85?"no alvo":n>=70?"atenção":"abaixo";}
+function initials(nm){var p=(nm||"").replace(/^Dr[a]?\.?\s*/i,"").trim().split(/\s+/);return ((p[0]||"")[0]||"")+((p[1]||"")[0]||"");}
+var STATE={dirs:[]}, CUR_DIR=null, VIEW={byInd:{},planoMap:{}};
 
 get("diretores?select=id,nome,clinicas(nome)&order=nome").then(dirs=>{
   STATE.dirs=dirs;
   var sel=document.getElementById("sel");
-  sel.innerHTML=dirs.map(d=>'<option value="'+d.id+'">'+d.nome+' — '+((d.clinicas||{}).nome||'')+'</option>').join('');
+  sel.innerHTML=dirs.map(d=>'<option value="'+d.id+'">'+esc(d.nome)+' — '+esc((d.clinicas||{}).nome||'')+'</option>').join('');
   var pre=new URLSearchParams(location.search).get("diretor");
   if(pre&&dirs.some(d=>d.id===pre))sel.value=pre;
   sel.onchange=()=>load(sel.value);
@@ -90,7 +114,9 @@ get("diretores?select=id,nome,clinicas(nome)&order=nome").then(dirs=>{
 
 function load(dirId){
   var d=STATE.dirs.find(x=>x.id===dirId);
-  document.getElementById("who").innerHTML='<b>'+d.nome+'</b> · '+((d.clinicas||{}).nome||'')+' — notas das responsabilidades (não o resultado da praça)';
+  document.getElementById("pnome").textContent=d.nome;
+  document.getElementById("who").textContent=((d.clinicas||{}).nome||'')+' — notas das responsabilidades e plano de ação';
+  document.getElementById("av").textContent=(initials(d.nome)||"—").toUpperCase();
   document.getElementById("body").innerHTML='<div class="empty">Carregando…</div>';
   CUR_DIR=dirId;
   Promise.all([
@@ -99,84 +125,100 @@ function load(dirId){
     get("planos_acao?diretor_id=eq."+dirId+"&select=indicador_id,texto").catch(function(){return [];})
   ]).then(([apurs,reus,planos])=>render(apurs,reus,planos)).catch(e=>{document.getElementById("body").innerHTML='<div class="empty" style="color:var(--vm)">Erro ao ler dados.</div>';});
 }
+
 function reunioesHtml(reus){
   if(!reus||!reus.length)return '';
-  var rows=reus.map(r=>'<div class="evrow"><div class="evdt">'+(r.data?(""+r.data).split("-").reverse().join("/"):"—")+'</div><div style="font-size:12.5px;color:var(--ink2);line-height:1.4">'+(r.resumo||"—")+'</div><div style="text-align:right">'+(r.video_url?'<a href="'+r.video_url+'" target="_blank" style="color:var(--ous);font-weight:700;font-size:12px">vídeo ▸</a>':'')+'</div></div>').join('');
-  return '<div class="sec">Reuniões registradas <span style="font-size:11px;color:var(--ink3);font-weight:400">— histórico dos encontros</span></div><div class="box">'+rows+'</div>';
+  var rows=reus.map(r=>'<div class="evrow"><div class="evdt">'+(r.data?(""+r.data).split("-").reverse().join("/"):"—")+'</div><div style="font-size:12.5px;color:var(--ink2);line-height:1.4">'+esc(r.resumo||"—")+'</div><div style="text-align:right">'+(r.video_url?'<a href="'+esc(r.video_url)+'" target="_blank" style="color:var(--ous);font-weight:700;font-size:12px">vídeo ▸</a>':'')+'</div></div>').join('');
+  return '<div class="sec">Reuniões registradas <span class="hint-s">— histórico dos encontros</span></div><div class="box">'+rows+'</div>';
 }
 
 function render(apurs,reus,planos){
   reus=reus||[];
-  var planoMap={}; (planos||[]).forEach(function(p){planoMap[p.indicador_id]=p.texto||"";});
+  VIEW.planoMap={}; (planos||[]).forEach(function(p){VIEW.planoMap[p.indicador_id]=p.texto||"";});
   var foot=document.getElementById("foot");
   if(!apurs||!apurs.length){
-    document.getElementById("body").innerHTML='<div class="empty">Ainda não há notas lançadas para esta pessoa.<br>Lance no <b>Console → aba Notas por função</b> e as notas aparecem aqui, com o detalhe do que as define.</div>'+reunioesHtml(reus);
+    document.getElementById("body").innerHTML='<div class="empty">Ainda não há notas lançadas para esta pessoa.<br>Lance no <b>Console → aba Notas por função</b> e o painel aparece aqui.</div>'+reunioesHtml(reus);
     foot.innerHTML=''; return;
   }
-  // agrupa por indicador
-  var byInd={}; apurs.forEach(a=>{var k=(a.indicadores||{}).chave||"?";(byInd[k]=byInd[k]||{nome:(a.indicadores||{}).nome||k,ordem:(a.indicadores||{}).ordem||99,items:[]}).items.push(a);});
-  // competências (evolução = nota média por competência)
-  var comps={}; apurs.forEach(a=>{if(a.nota!=null){(comps[a.competencia]=comps[a.competencia]||[]).push(a.nota);}});
+  var byInd={}; apurs.forEach(function(a){var k=(a.indicadores||{}).chave||"?"; (byInd[k]=byInd[k]||{nome:(a.indicadores||{}).nome||k,ordem:(a.indicadores||{}).ordem||99,items:[]}).items.push(a);});
+  Object.keys(byInd).forEach(function(k){byInd[k].items.sort(function(a,b){return (""+a.competencia).localeCompare(b.competencia);});});
+  VIEW.byInd=byInd;
+  var indKeys=Object.keys(byInd).sort(function(a,b){return byInd[a].ordem-byInd[b].ordem;});
+  var comps={}; apurs.forEach(function(a){if(a.nota!=null){(comps[a.competencia]=comps[a.competencia]||[]).push(a.nota);}});
   var compKeys=Object.keys(comps).sort();
   var ultima=compKeys[compKeys.length-1];
-  var mediaUlt=comps[ultima]?Math.round(comps[ultima].reduce((x,y)=>x+ +y,0)/comps[ultima].length):null;
+  var avg=function(arr){return Math.round(arr.reduce(function(x,y){return x+ +y;},0)/arr.length);};
+  var mediaUlt=comps[ultima]?avg(comps[ultima]):null;
   var prevKey=compKeys.length>1?compKeys[compKeys.length-2]:null;
-  var mediaPrev=prevKey?Math.round(comps[prevKey].reduce((x,y)=>x+ +y,0)/comps[prevKey].length):null;
-  var indKeys=Object.keys(byInd).sort((a,b)=>byInd[a].ordem-byInd[b].ordem);
+  var mediaPrev=prevKey?avg(comps[prevKey]):null;
+  var notas=indKeys.map(function(k){var it=byInd[k].items,last=it[it.length-1];return {k:k,nome:byInd[k].nome,nota:last.nota!=null?Math.round(last.nota):null,iid:last.indicador_id};});
+  var ranked=notas.filter(function(n){return n.nota!=null;}).slice().sort(function(a,b){return b.nota-a.nota;});
+  var melhor=ranked[0], pior=ranked[ranked.length-1];
+  var dc=mediaUlt==null?"var(--ln)":mediaUlt>=85?"var(--vd)":mediaUlt>=70?"var(--am)":"var(--vm)";
 
-  var H='<div class="kpis">'
-    +'<div class="kpi"><div class="l">Nota média</div><div class="v '+cls(mediaUlt)+'">'+(mediaUlt==null?"—":mediaUlt)+'</div><div class="s">'+competLabel(ultima)+(mediaPrev!=null?' · <span class="delta '+(mediaUlt>=mediaPrev?'up':'dn')+'">'+(mediaUlt>=mediaPrev?'▲':'▼')+' '+Math.abs(mediaUlt-mediaPrev)+'</span> vs análise anterior':'')+'</div></div>'
-    +'<div class="kpi"><div class="l">Indicadores avaliados</div><div class="v">'+indKeys.length+'</div><div class="s">com nota lançada</div></div>'
-    +'<div class="kpi"><div class="l">Análises</div><div class="v">'+compKeys.length+'</div><div class="s">no histórico</div></div>'
-    +'</div>';
+  var H='<div class="hero"><div class="donut" style="--p:'+(mediaUlt||0)+';--c:'+dc+'"><b>'+(mediaUlt==null?"—":mediaUlt)+'</b></div>'
+    +'<div class="hl"><div class="hl-l">Nota média</div><div class="hl-s">'+competLabel(ultima)+(mediaPrev!=null?' · <span class="delta '+(mediaUlt>=mediaPrev?"up":"dn")+'">'+(mediaUlt>=mediaPrev?"▲":"▼")+" "+Math.abs(mediaUlt-mediaPrev)+'</span> vs análise anterior':'')+'</div>'
+    +'<div class="hl-tiles">'
+    +'<div class="tile"><div class="tl">Indicadores</div><div class="tv">'+indKeys.length+'</div></div>'
+    +'<div class="tile"><div class="tl">Análises</div><div class="tv">'+compKeys.length+'</div></div>'
+    +(melhor?'<div class="tile"><div class="tl">Mais forte</div><div class="nm">'+esc(melhor.nome)+'</div><div class="tt g">'+melhor.nota+'</div></div>':'')
+    +(pior?'<div class="tile"><div class="tl">Precisa de atenção</div><div class="nm">'+esc(pior.nome)+'</div><div class="tt '+cls(pior.nota)+'">'+pior.nota+'</div></div>':'')
+    +'</div></div></div>';
 
-  // evolução por competência
+  H+='<div class="sec">Indicadores <span class="hint-s">— clique num card pra ver as funções e lançar o plano de ação</span></div><div class="indgrid">';
+  notas.forEach(function(n){var c=cls(n.nota),plano=VIEW.planoMap[n.iid];
+    H+='<button class="icard" data-k="'+n.k+'"><div class="ic-top"><span class="ic-nome">'+esc(n.nome)+'</span>'+(plano?'<span class="chip-pl">plano</span>':'')+'</div>'
+      +'<div class="ic-nota '+c+'">'+(n.nota==null?"—":n.nota)+'</div>'
+      +'<div class="ic-bar"><i class="'+c+'" style="width:'+(n.nota||0)+'%"></i></div>'
+      +'<div class="ic-foot '+c+'">'+statusTxt(n.nota)+'</div></button>';
+  });
+  H+='</div><div id="detail"></div>';
+
   if(compKeys.length>1){
-    H+='<div class="sec">Evolução da nota (média por mês)</div><div class="box">';
-    compKeys.slice().reverse().forEach((c,idx)=>{
-      var m=Math.round(comps[c].reduce((x,y)=>x+ +y,0)/comps[c].length);
-      var oi=compKeys.length-1-idx; var pr=oi>0?Math.round(comps[compKeys[oi-1]].reduce((x,y)=>x+ +y,0)/comps[compKeys[oi-1]].length):null;
-      var dl=pr!=null?m-pr:null;
-      H+='<div class="evrow"><div class="evdt">'+competLabel(c)+'</div><div class="evtrack"><div class="evfill" style="width:'+m+'%"></div></div><div class="evn '+cls(m)+'" style="color:var(--'+(cls(m)==="g"?"vd":cls(m)==="a"?"am":cls(m)==="r"?"vm":"ink3")+')">'+m+(dl!=null?'<span class="delta '+(dl>=0?'up':'dn')+'">'+(dl>=0?'▲':'▼')+Math.abs(dl)+'</span>':'')+'</div></div>';
+    H+='<div class="sec">Evolução da nota média</div><div class="box">';
+    compKeys.slice().reverse().forEach(function(c,idx){var m=avg(comps[c]);var oi=compKeys.length-1-idx;var pr=oi>0?avg(comps[compKeys[oi-1]]):null;var dl=pr!=null?m-pr:null;
+      H+='<div class="evrow"><div class="evdt">'+competLabel(c)+'</div><div class="evtrack"><div class="evfill" style="width:'+m+'%"></div></div><div class="evn '+cls(m)+'">'+m+(dl!=null?'<span class="delta '+(dl>=0?"up":"dn")+'">'+(dl>=0?"▲":"▼")+Math.abs(dl)+'</span>':'')+'</div></div>';
     });
     H+='</div>';
   }
 
-  // notas por indicador (expandível)
-  H+='<div class="sec">Notas por indicador <span style="font-size:11px;color:var(--ink3);font-weight:400">— clique para ver o que define cada nota</span></div>';
-  indKeys.forEach(k=>{
-    var o=byInd[k]; var items=o.items.slice().sort((a,b)=>(""+a.competencia).localeCompare(b.competencia));
-    var last=items[items.length-1]; var nota=last.nota!=null?Math.round(last.nota):null;
-    var funcs=(last.dados||{}).funcs||[];
-    var fnHtml=funcs.map(f=>{
-      var fn=f.nota==null?"—":Math.round(f.nota);
-      var tag=f.neutro?' <span style="font-size:9.5px;color:var(--ink3);font-weight:700;text-transform:uppercase;letter-spacing:.04em;border:1px solid var(--ln);border-radius:6px;padding:1px 6px;margin-left:6px">neutro · sem peso</span>':'';
-      return '<div class="fn"'+(f.neutro?' style="opacity:.72"':'')+'><div class="h"><b>'+f.label+tag+'</b><span class="nb '+(f.neutro?'na':cls(f.nota))+'">'+fn+'</span></div>'
-        +(f.detail?'<div class="li">Você lançou: <b>'+f.detail+'</b></div>':'<div class="li" style="color:var(--ink3)">Sem dado lançado.</div>')
-        +(f.crit?'<div class="crit">O que define a nota: '+f.crit+'</div>':'')+'</div>';
-    }).join('');
-    var iid=last.indicador_id; var plano=planoMap[iid]||"";
-    H+='<div class="iblk"><div class="ihd" data-t><div class="lft"><h3>'+o.nome+'</h3><span class="cmp">'+competLabel(last.competencia)+'</span>'+(plano?'<span class="chip-pl">✓ plano</span>':'')+'</div>'
-      +'<div class="rgt"><span class="nbig '+cls(last.nota)+'">'+(nota==null?"—":nota)+'</span><span class="chev">▸</span></div></div>'
-      +'<div class="dl">'+(fnHtml||'<div class="fn" style="border:0;color:var(--ink3)">Sem funções detalhadas.</div>')
-      +(last.obs?'<div class="li" style="margin-top:10px;padding-top:10px;border-top:1px solid var(--ln)">Obs.: '+esc(last.obs)+'</div>':'')
-      +'<div class="plano"><div class="pl-h">📋 Plano de ação</div><textarea data-pl="'+iid+'" placeholder="O que vamos fazer pra melhorar este indicador — passos, responsável, prazo…">'+esc(plano)+'</textarea><div class="pl-act"><button class="pl-save" data-save="'+iid+'">Salvar plano</button><span class="pl-msg" data-plmsg="'+iid+'"></span></div></div>'
-      +'</div></div>';
-  });
   document.getElementById("body").innerHTML=H+reunioesHtml(reus);
-  document.querySelectorAll(".ihd").forEach(h=>h.onclick=function(){this.parentElement.classList.toggle("open");});
-  document.querySelectorAll(".pl-save").forEach(function(b){b.onclick=function(){
-    var iid=b.dataset.save, ta=document.querySelector('textarea[data-pl="'+iid+'"]'), st=document.querySelector('[data-plmsg="'+iid+'"]');
-    if(!CUR_DIR||!ta)return;
-    b.disabled=true; if(st){st.textContent="salvando…";st.style.color="var(--ink3)";}
+  document.querySelectorAll(".icard").forEach(function(b){b.onclick=function(){selectInd(b.dataset.k);};});
+  selectInd((pior&&pior.k)||indKeys[0]);
+  foot.innerHTML='<b>Como ler:</b> o <b>donut</b> é a nota média da última análise. Cada <b>card</b> é um indicador — a nota, a barra e o status. Clique num card pra abrir as <b>funções que compõem a nota</b> e escrever o <b>plano de ação</b> daquele indicador (fica salvo e aparece aqui pra apresentar). As notas vêm do <b>Console → Notas por função</b>.';
+}
+
+function fnBlock(funcs){
+  return (funcs||[]).map(function(f){
+    var fn=f.nota==null?"—":Math.round(f.nota);
+    var tag=f.neutro?' <span style="font-size:9.5px;color:var(--ink3);font-weight:700;text-transform:uppercase;letter-spacing:.04em;border:1px solid var(--ln);border-radius:6px;padding:1px 6px;margin-left:6px">neutro · sem peso</span>':'';
+    return '<div class="fn"'+(f.neutro?' style="opacity:.72"':'')+'><div class="h"><b>'+esc(f.label)+tag+'</b><span class="nb '+(f.neutro?'na':cls(f.nota))+'">'+fn+'</span></div>'
+      +(f.detail?'<div class="li">Você lançou: <b>'+esc(f.detail)+'</b></div>':'<div class="li" style="color:var(--ink3)">Sem dado lançado.</div>')
+      +(f.crit?'<div class="crit">O que define a nota: '+esc(f.crit)+'</div>':'')+'</div>';
+  }).join('');
+}
+
+function selectInd(k){
+  document.querySelectorAll(".icard").forEach(function(c){c.classList.toggle("active",c.dataset.k===k);});
+  var o=VIEW.byInd[k]; if(!o)return;
+  var items=o.items, last=items[items.length-1], iid=last.indicador_id, plano=VIEW.planoMap[iid]||"";
+  var funcs=(last.dados||{}).funcs||[];
+  var html='<div class="detail-box"><div class="d-hd"><h3>'+esc(o.nome)+'</h3><span class="d-cmp">análise de '+competLabel(last.competencia)+'</span><span class="nbig '+cls(last.nota)+'">'+(last.nota==null?"—":Math.round(last.nota))+'</span></div>'
+    +(fnBlock(funcs)||'<div class="fn" style="color:var(--ink3)">Sem funções detalhadas.</div>')
+    +(last.obs?'<div class="li" style="margin:11px 0 0;padding-top:11px;border-top:1px solid var(--ln);font-size:11.5px;color:var(--ink2)">Obs.: '+esc(last.obs)+'</div>':'')
+    +'<div class="plano"><div class="pl-h">📋 Plano de ação — '+esc(o.nome)+'</div><textarea data-pl="'+iid+'" placeholder="O que vamos fazer pra melhorar este indicador — ações, responsável, prazo…">'+esc(plano)+'</textarea><div class="pl-act"><button class="pl-save" data-save="'+iid+'">Salvar plano</button><span class="pl-msg" data-plmsg="'+iid+'"></span></div></div>'
+    +'</div>';
+  var det=document.getElementById("detail"); det.innerHTML=html;
+  var b=det.querySelector(".pl-save");
+  b.onclick=function(){
+    var ta=det.querySelector('textarea[data-pl="'+iid+'"]'), st=det.querySelector('[data-plmsg="'+iid+'"]');
+    b.disabled=true; st.textContent="salvando…"; st.style.color="var(--ink3)";
     write("planos_acao?on_conflict=diretor_id,indicador_id",[{diretor_id:CUR_DIR,indicador_id:iid,texto:(ta.value.trim()||null),atualizado_em:new Date().toISOString()}],"resolution=merge-duplicates,return=minimal")
-     .then(function(){if(st){st.textContent="plano salvo ✓";st.style.color="var(--vd)";}
-       var lft=b.closest(".iblk").querySelector(".lft"), has=lft&&lft.querySelector(".chip-pl");
-       if(ta.value.trim()&&lft&&!has){var c=document.createElement("span");c.className="chip-pl";c.textContent="✓ plano";lft.appendChild(c);}
-       if(!ta.value.trim()&&has)has.remove();})
-     .catch(function(e){if(st){st.textContent="erro: "+e.message;st.style.color="var(--vm)";}})
+     .then(function(){st.textContent="plano salvo ✓"; st.style.color="var(--vd)"; VIEW.planoMap[iid]=ta.value.trim();
+       var card=document.querySelector('.icard[data-k="'+k+'"]'); if(card){var top=card.querySelector(".ic-top"),has=top.querySelector(".chip-pl");
+         if(ta.value.trim()&&!has){var c=document.createElement("span");c.className="chip-pl";c.textContent="plano";top.appendChild(c);} if(!ta.value.trim()&&has)has.remove();}})
+     .catch(function(e){st.textContent="erro: "+e.message; st.style.color="var(--vm)";})
      .finally(function(){b.disabled=false;});
-  };});
-  foot.innerHTML='<b>Como ler:</b> cada indicador mostra a <b>nota</b> (média das funções, todas com peso igual). Clique para abrir e ver <b>o que você lançou</b> e <b>o que define a nota</b> em cada função. A evolução acompanha a nota análise a análise (pela data da análise). As notas vêm do que você lança no <b>Console → aba Notas por função</b>. Em cada indicador, abra e escreva o <b>plano de ação</b> — ele fica salvo e aparece aqui pra você apresentar.';
+  };
 }
 </script></body></html>
