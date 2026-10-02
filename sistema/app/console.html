@@ -157,17 +157,21 @@ function fillDiretorSelects(){
   document.getElementById("d-cli").innerHTML=STATE.clinicas.map(c=>'<option value="'+c.id+'">'+c.nome+(c.uf?(" — "+c.uf):"")+'</option>').join('') || '<option value="">(cadastre uma clínica)</option>';
 }
 function renderLista(){
-  document.getElementById("lista").innerHTML=STATE.diretores.map(d=>'<tr><td>'+d.nome+'</td><td>'+(d._cli||"—")+'</td><td>'+(d._uf||"")+'</td><td>'+(d.email||"—")+'</td><td style="text-align:right"><button class="del" data-type="dir" data-id="'+d.id+'">apagar</button></td></tr>').join('') || '<tr><td colspan="5" style="color:var(--ink3)">Nenhum diretor ainda.</td></tr>';
+  document.getElementById("lista").innerHTML=STATE.diretores.map(d=>'<tr><td>'+d.nome+'</td><td>'+(d._cli||"—")+'</td><td>'+(d._uf||"")+'</td><td>'+(d.email||"—")+'</td><td style="text-align:right;white-space:nowrap"><button class="edt" data-type="dir" data-id="'+d.id+'" style="background:none;border:none;color:var(--ous);cursor:pointer;font:inherit;font-weight:700;margin-right:10px">editar</button><button class="del" data-type="dir" data-id="'+d.id+'">apagar</button></td></tr>').join('') || '<tr><td colspan="5" style="color:var(--ink3)">Nenhum diretor ainda.</td></tr>';
   renderClinicas(); bindDels();
 }
 function renderClinicas(){
-  document.getElementById("clist").innerHTML=STATE.clinicas.map(c=>'<tr><td>'+c.nome+'</td><td>'+(c.praca||"—")+'</td><td>'+(c.uf||"")+'</td><td style="text-align:right"><button class="del" data-type="cli" data-id="'+c.id+'">apagar</button></td></tr>').join('') || '<tr><td colspan="4" style="color:var(--ink3)">Nenhuma clínica.</td></tr>';
+  document.getElementById("clist").innerHTML=STATE.clinicas.map(c=>'<tr><td>'+c.nome+'</td><td>'+(c.praca||"—")+'</td><td>'+(c.uf||"")+'</td><td style="text-align:right;white-space:nowrap"><button class="edt" data-type="cli" data-id="'+c.id+'" style="background:none;border:none;color:var(--ous);cursor:pointer;font:inherit;font-weight:700;margin-right:10px">editar</button><button class="del" data-type="cli" data-id="'+c.id+'">apagar</button></td></tr>').join('') || '<tr><td colspan="4" style="color:var(--ink3)">Nenhuma clínica.</td></tr>';
 }
 function bindDels(){
   document.querySelectorAll("#lista .del, #clist .del").forEach(b=>b.onclick=function(){
     var id=this.dataset.id;
     if(this.dataset.type==="dir"){var d=STATE.diretores.find(x=>x.id===id);delDiretor(id,d?d.nome:"esse diretor");}
     else {var c=STATE.clinicas.find(x=>x.id===id);delClinica(id,c?c.nome:"essa clínica");}
+  });
+  document.querySelectorAll("#lista .edt, #clist .edt").forEach(b=>b.onclick=function(){
+    var id=this.dataset.id;
+    if(this.dataset.type==="dir")editDiretor(id); else editClinica(id);
   });
 }
 function delDiretor(id,nome){
@@ -197,21 +201,30 @@ function loadBase(){
   }).catch(e=>{document.getElementById("conn").innerHTML='<span style="color:var(--vm)">● erro de conexão</span>';});
 }
 
-// ---- CADASTRO ----
+// ---- CADASTRO (adicionar / editar) ----
+var edCli=null, edDir=null;
+function resetCli(){edCli=null;document.getElementById("c-nome").value=document.getElementById("c-praca").value=document.getElementById("c-uf").value="";document.getElementById("c-add").textContent="Adicionar clínica";var cc=document.getElementById("c-cancel");if(cc)cc.remove();}
+function resetDir(){edDir=null;document.getElementById("d-nome").value=document.getElementById("d-email").value="";document.getElementById("d-add").textContent="Adicionar diretor";var dc=document.getElementById("d-cancel");if(dc)dc.remove();}
+function cancelBtn(afterId,onclick,id){if(document.getElementById(id))return;var b=document.createElement("button");b.id=id;b.className="btn ghost";b.textContent="Cancelar";b.style.marginLeft="8px";b.onclick=onclick;document.getElementById(afterId).after(b);}
+function editClinica(id){var c=STATE.clinicas.find(x=>x.id===id);if(!c)return;edCli=id;document.getElementById("c-nome").value=c.nome||"";document.getElementById("c-praca").value=c.praca||"";document.getElementById("c-uf").value=c.uf||"";document.getElementById("c-add").textContent="Salvar alterações";cancelBtn("c-add",resetCli,"c-cancel");document.getElementById("c-nome").scrollIntoView({behavior:"smooth",block:"center"});document.getElementById("c-nome").focus();}
+function editDiretor(id){var d=STATE.diretores.find(x=>x.id===id);if(!d)return;edDir=id;document.getElementById("d-nome").value=d.nome||"";document.getElementById("d-email").value=d.email||"";if(d.clinica_id)document.getElementById("d-cli").value=d.clinica_id;document.getElementById("d-add").textContent="Salvar alterações";cancelBtn("d-add",resetDir,"d-cancel");document.getElementById("d-nome").scrollIntoView({behavior:"smooth",block:"center"});document.getElementById("d-nome").focus();}
+
 document.getElementById("c-add").onclick=function(){
   var nome=document.getElementById("c-nome").value.trim(); if(!nome)return flash(document.getElementById("c-msg"),"Informe o nome.",false);
+  var body={nome:nome,praca:document.getElementById("c-praca").value.trim()||null,uf:document.getElementById("c-uf").value.trim().toUpperCase()||null};
   this.disabled=true;
-  write("clinicas","POST",{nome:nome,praca:document.getElementById("c-praca").value.trim()||null,uf:document.getElementById("c-uf").value.trim().toUpperCase()||null})
-   .then(()=>{document.getElementById("c-nome").value=document.getElementById("c-praca").value=document.getElementById("c-uf").value="";flash(document.getElementById("c-msg"),"Clínica adicionada.",true);return loadBase();})
+  var p=edCli?write("clinicas?id=eq."+edCli,"PATCH",body,"return=minimal"):write("clinicas","POST",body);
+  p.then(()=>{flash(document.getElementById("c-msg"),edCli?"Clínica atualizada.":"Clínica adicionada.",true);resetCli();return loadBase();})
    .catch(e=>flash(document.getElementById("c-msg"),"Erro: "+e.message,false)).finally(()=>this.disabled=false);
 };
 document.getElementById("d-add").onclick=function(){
   var nome=document.getElementById("d-nome").value.trim(); var cli=document.getElementById("d-cli").value;
   if(!nome)return flash(document.getElementById("d-msg"),"Informe o nome.",false);
   if(!cli)return flash(document.getElementById("d-msg"),"Cadastre/escolha uma clínica.",false);
+  var body={nome:nome,clinica_id:cli,email:document.getElementById("d-email").value.trim()||null};
   this.disabled=true;
-  write("diretores","POST",{nome:nome,clinica_id:cli,email:document.getElementById("d-email").value.trim()||null})
-   .then(()=>{document.getElementById("d-nome").value=document.getElementById("d-email").value="";flash(document.getElementById("d-msg"),"Diretor adicionado.",true);return loadBase();})
+  var p=edDir?write("diretores?id=eq."+edDir,"PATCH",body,"return=minimal"):write("diretores","POST",body);
+  p.then(()=>{flash(document.getElementById("d-msg"),edDir?"Diretor atualizado.":"Diretor adicionado.",true);resetDir();return loadBase();})
    .catch(e=>flash(document.getElementById("d-msg"),"Erro: "+e.message,false)).finally(()=>this.disabled=false);
 };
 
