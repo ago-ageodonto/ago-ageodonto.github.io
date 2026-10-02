@@ -28,6 +28,23 @@ h1{font-family:var(--serif);font-size:clamp(28px,5.5vw,46px);font-weight:800;let
 .empty{max-width:560px;margin:12vh auto 0;text-align:center;background:var(--pn);border:1px solid var(--ln);border-radius:16px;padding:34px 30px}
 .empty h2{font-family:var(--serif);font-size:24px;font-weight:800;color:var(--ink);margin-bottom:10px}
 .empty p{color:var(--ink2);font-size:14px}
+.fsbtn{cursor:pointer;border:1px solid color-mix(in srgb,var(--ous) 45%,var(--ln))!important;color:var(--ous)!important;font-weight:700;font-family:inherit}
+.fsbtn:hover{background:var(--pn2)}
+.ticker{display:none;overflow:hidden;border:1px solid var(--ln);border-radius:12px;background:linear-gradient(180deg,#0f0b06,#141009);margin:18px 0 2px;position:relative}
+.ticker::before,.ticker::after{content:"";position:absolute;top:0;bottom:0;width:40px;z-index:2;pointer-events:none}
+.ticker::before{left:0;background:linear-gradient(90deg,#0f0b06,transparent)}
+.ticker::after{right:0;background:linear-gradient(270deg,#0f0b06,transparent)}
+.tklabel{position:absolute;left:0;top:0;bottom:0;z-index:3;display:flex;align-items:center;gap:6px;padding:0 14px 0 13px;background:linear-gradient(90deg,#15100a 70%,transparent);font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--vd)}
+.tklabel .lv{width:7px;height:7px;border-radius:50%;background:var(--vd);box-shadow:0 0 8px var(--vd);animation:pulse 1.6s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+.tick-track{display:inline-flex;white-space:nowrap;padding:11px 0 11px 150px;animation:tick 80s linear infinite;will-change:transform}
+.ticker:hover .tick-track{animation-play-state:paused}
+@keyframes tick{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.ti{display:inline-flex;align-items:center;gap:8px;padding:0 22px;font-size:13px;font-variant-numeric:tabular-nums;border-right:1px solid var(--ln)}
+.ti .tu{font-weight:700;color:var(--ink);letter-spacing:.01em}
+.ti .tv{color:var(--ink3)}
+.ti .tp{font-weight:800;font-family:var(--serif);color:var(--vd)}
+@media(prefers-reduced-motion:reduce){.tick-track{animation:none}}
 </style>
 <script>window.AGO_AUTH={audience:"praca",title:"Torre da sua praça",sub:"Digite a Senha AGO que a Direção Comercial te enviou."};</script>
 <script src="sbauth.js"></script>
@@ -56,10 +73,25 @@ function render(pr){
     return '<div class="card" style="--cc:'+farolCol(farol)+'"><div class="lbl">'+ind.lbl+'</div><div class="val">'+fmt(real,ind.fmt)+'</div><div class="meta">'+metaLine+'</div><div class="badge '+farolClass(farol)+'"><span class="dot"></span>'+(pct!=null?pctTxt(pct)+" da meta · ":"")+farolTxt(farol,ind.type)+'</div></div>';
   }).join("");
   app.innerHTML='<div class="eyebrow">Ageodonto · Torre da Praça</div><h1>'+pr.nome+'</h1>'+
-    '<div class="sub"><span class="chip">Competência <b>'+(M.mes||"")+'</b></span><span class="chip">'+(pr.ref||"")+'</span><span class="chip">dia <b>'+M.dia+"/"+M.dias+'</b> · projeção de fechamento</span></div>'+
+    '<div class="sub"><span class="chip">Competência <b>'+(M.mes||"")+'</b></span><span class="chip">'+(pr.ref||"")+'</span><span class="chip">dia <b>'+M.dia+"/"+M.dias+'</b> · projeção de fechamento</span><button class="chip fsbtn" onclick="toggleFS()">⛶ Tela cheia</button></div>'+
+    '<div class="ticker" id="tk"><div class="tklabel"><span class="lv"></span>Ao vivo · rede</div><div class="tick-track" id="tktrack"></div></div>'+
     '<div class="grid">'+cards+'</div>'+
     '<div class="foot"><b>Como ler.</b> <b>Realizado</b> = o que já entrou no mês. <b>Projeção</b> = estimativa de fechamento no ritmo atual para os indicadores que acumulam (faturamento, recompra, entrada, avaliações, 30+). <b>Conversão</b> e <b>ticket</b> são taxas. <b>Parcelamento</b> é teto — quanto menor, melhor. Farol: <span style="color:var(--vd)">verde no alvo</span> · <span style="color:var(--am)">amarelo atenção</span> · <span style="color:var(--vm)">vermelho abaixo</span>. Fonte: Giga, atualizado pela Direção Comercial. · <a onclick="agoLogout()">sair</a></div>';
   document.title="Torre — "+pr.nome+" · Ageodonto";
+  buildTicker(pr.nome);
+}
+function esc(s){return (s==null?"":""+s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function indLabel(k){return {fat:"Faturamento",recompra:"Recompra",entrada:"Entrada",aval:"Avaliações",conv:"Conversão",tk:"Ticket médio",d30:"30+"}[k]||k;}
+function toggleFS(){try{if(!document.fullscreenElement&&!document.webkitFullscreenElement){var el=document.documentElement;(el.requestFullscreen||el.webkitRequestFullscreen).call(el);}else{(document.exitFullscreen||document.webkitExitFullscreen).call(document);}}catch(e){}}
+function buildTicker(ownNome){
+  api("v_praca_motivacional?select=nome,ind,pct&order=pct.desc").then(function(rows){
+    rows=(rows||[]).filter(function(r){return r.nome&&r.nome!==ownNome&&r.pct!=null;});
+    if(!rows.length)return;
+    var items=rows.map(function(r){return '<span class="ti"><span class="tu">'+esc(r.nome)+'</span><span class="tv">'+indLabel(r.ind)+'</span><span class="tp">▲ '+r.pct+'%</span></span>';});
+    var tk=document.getElementById("tktrack");
+    if(tk){tk.innerHTML=items.join("")+items.join(""); tk.style.animationDuration=Math.max(45,Math.min(180,Math.round(items.length*2.4)))+"s";}
+    var box=document.getElementById("tk"); if(box)box.style.display="block";
+  }).catch(function(){});
 }
 function boot(){
   var slug=qp("u")||qp("p");
