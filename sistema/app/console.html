@@ -400,7 +400,7 @@ document.getElementById("n-comp").addEventListener("change",loadNota);
 document.getElementById("n-save").onclick=function(){
   var chave=document.getElementById("n-ind").value,dir=document.getElementById("n-dir").value,comp=document.getElementById("n-comp").value.trim(),iid=indId(chave);
   if(!dir)return flash(document.getElementById("n-msg"),"Escolha o avaliador.",false);
-  if(!/^\d{4}-\d{2}$/.test(comp))return flash(document.getElementById("n-msg"),"Competência AAAA-MM (ex.: 2026-09).",false);
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(comp))return flash(document.getElementById("n-msg"),"Escolha a data da análise.",false);
   var r=calcAll();
   var body=[{diretor_id:dir,indicador_id:iid,competencia:comp,dados:{funcs:r.funcs},nota:r.comb,obs:document.getElementById("n-obs").value.trim()||null}];
   this.disabled=true;
