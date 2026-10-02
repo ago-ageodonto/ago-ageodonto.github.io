@@ -100,7 +100,15 @@ h1{font-family:var(--serif);font-size:clamp(24px,4vw,36px);font-weight:800;lette
   <div class="panel" id="panel"></div>
   <div class="foot" id="foot">Verde = conforme · Vermelho = não conforme. Os lançamentos ficam gravados na base do sistema (Supabase).</div>
 </div>
-<script>window.AGO_AUTH={audience:"team",title:"Gestão Comercial AGO"};</script>
+<script>
+(function(){
+  var campo=/[?&]campo\b/.test(location.search);   // link direto do Anderson: ...checklist_anderson.html?campo=1
+  window.AGO_CAMPO=campo;
+  window.AGO_AUTH=campo
+    ? {audience:"anderson",title:"Checklist de Campo",sub:"Olá, Anderson. Digite sua senha de acesso.",pwLabel:"Senha"}
+    : {audience:"team",title:"Gestão Comercial AGO"};
+})();
+</script>
 <script src="sbauth.js"></script>
 <script>
 var SB_URL="https://pwbcehrfhspgipjhaedc.supabase.co";
@@ -170,7 +178,8 @@ var FR=[
  ]}
 ];
 
-var online=false,sel=0,cur={},obs={},curDK='';
+var ROLE=window.AGO_CAMPO?"anderson":"team";   // anderson = só preenche · team (Gregori) = abre no Acompanhamento
+var online=false,sel=(ROLE==="team"?99:0),cur={},obs={},curDK='';
 var $=function(id){return document.getElementById(id)};
 function pad(n){return (n<10?'0':'')+n}
 function today(){var d=new Date();return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())}
@@ -184,7 +193,7 @@ function setStatus(cls,txt){$('status').className='status '+cls;$('statusTxt').t
 
 function buildTabs(){
   var html=FR.map(function(f,i){return '<button class="tab'+(i===sel?' on':'')+'" data-i="'+i+'"><span class="d">'+esc(f.d)+'</span>'+esc(f.t)+'</button>'}).join('');
-  html+='<button class="tab own'+(sel===99?' on':'')+'" data-i="99"><span class="d">Gregori</span>📊 Acompanhamento</button>';
+  if(ROLE==="team") html+='<button class="tab own'+(sel===99?' on':'')+'" data-i="99"><span class="d">Gregori</span>📊 Acompanhamento</button>';
   $('tabs').innerHTML=html;
 }
 $('tabs').addEventListener('click',function(e){var b=e.target.closest('.tab');if(!b)return;sel=+b.dataset.i;buildTabs();render()});

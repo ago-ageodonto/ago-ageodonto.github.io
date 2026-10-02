@@ -10,7 +10,7 @@
   var SB="https://pwbcehrfhspgipjhaedc.supabase.co";
   var KEY="sb_publishable_mTx5xlUaUcLBM_YijXuCjg_vwCJ5v3x";
   var cfg=window.AGO_AUTH||{audience:"team"};
-  var EMAILS={team:"equipe@ageodonto.com.br",praca:"praca@ageodonto.com.br"};
+  var EMAILS={team:"equipe@ageodonto.com.br",praca:"praca@ageodonto.com.br",anderson:"anderson@ageodonto.com.br"};
   var email=cfg.email||EMAILS[cfg.audience]||EMAILS.team;
   var LSK="ago_sess_"+(cfg.audience||"team");
   var sess=null; try{sess=JSON.parse(localStorage.getItem(LSK)||"null");}catch(e){}
@@ -53,7 +53,7 @@
   function overlay(){
     var title=cfg.title||(cfg.audience==="praca"?"Torre da sua praça":"Gestão Comercial AGO");
     var sub=cfg.sub||(cfg.audience==="praca"?"Digite a Senha AGO que a Direção Comercial te enviou.":"Acesso restrito aos sócios. Digite a Senha Sócio.");
-    var pwl=cfg.audience==="praca"?"Senha AGO":"Senha Sócio";
+    var pwl=cfg.pwLabel||(cfg.audience==="praca"?"Senha AGO":(cfg.audience==="anderson"?"Senha":"Senha Sócio"));
     var css="position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;background:radial-gradient(120% 80% at 85% -10%,rgba(233,194,90,.10),transparent 60%),#0B0906;font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;padding:20px";
     var d=document.createElement("div"); d.id="ago-login"; d.setAttribute("style",css);
     d.innerHTML=''+
