@@ -48,10 +48,19 @@ select{background:var(--pn2);color:var(--ink);border:1px solid var(--ln);border-
 .fn .crit{font-size:11px;color:var(--ink3);margin-top:4px;line-height:1.5;border-left:2px solid var(--ln2);padding-left:9px}
 .empty{color:var(--ink3);font-size:13px;padding:26px;text-align:center;background:var(--pn);border:1px dashed var(--ln);border-radius:12px}
 .foot{margin-top:20px;font-size:11px;color:var(--ink3);line-height:1.6}
+.chip-pl{font-size:9.5px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;color:var(--ous);background:rgba(241,206,104,.12);border:1px solid color-mix(in srgb,var(--ous) 35%,var(--ln));border-radius:20px;padding:2px 9px;align-self:center}
+.plano{margin-top:12px;padding:13px 14px;border:1px solid color-mix(in srgb,var(--ous) 28%,var(--ln));border-radius:11px;background:linear-gradient(180deg,rgba(241,206,104,.05),transparent)}
+.plano .pl-h{display:flex;align-items:center;gap:7px;font-size:11px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--ous);margin-bottom:9px}
+.plano textarea{width:100%;background:var(--pg);color:var(--ink);border:1px solid var(--ln);border-radius:8px;padding:10px 12px;font:13.5px/1.55 var(--sans);min-height:92px;resize:vertical}
+.plano textarea:focus{outline:none;border-color:var(--gold-d)}
+.plano .pl-act{display:flex;align-items:center;gap:11px;margin-top:9px}
+.plano .pl-save{background:var(--grad);color:#241a06;border:none;border-radius:8px;padding:8px 16px;font:800 12.5px var(--sans);cursor:pointer}
+.plano .pl-save:disabled{opacity:.6;cursor:default}
+.plano .pl-msg{font-size:12px;font-weight:600}
 </style></head>
 <body>
 <div class="hd">
-  <div><h1>Dashboard do Avaliador</h1><div class="who" id="who">as notas das responsabilidades — não o resultado da praça</div></div>
+  <div><h1>Painel do Avaliador</h1><div class="who" id="who">notas das responsabilidades e plano de ação por indicador</div></div>
   <select id="sel"></select>
 </div>
 <div id="body"><div class="empty">Carregando…</div></div>
@@ -64,8 +73,10 @@ var SB_KEY="sb_publishable_mTx5xlUaUcLBM_YijXuCjg_vwCJ5v3x";
 var MES=["","Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
 function competLabel(c){ if(!c)return "—"; var p=(""+c).split("-"); if(p.length>=3) return p[2]+"/"+p[1]+"/"+p[0].slice(2); return (MES[+p[1]]||p[1])+"/"+p[0]; }
 function get(p){return fetch(SB_URL+"/rest/v1/"+p,{headers:{apikey:SB_KEY,Authorization:"Bearer "+SB_KEY}}).then(r=>r.json());}
+function write(p,body,prefer){return fetch(SB_URL+"/rest/v1/"+p,{method:"POST",headers:{apikey:SB_KEY,Authorization:"Bearer "+SB_KEY,"Content-Type":"application/json",Prefer:prefer||"return=minimal"},body:JSON.stringify(body)}).then(r=>{if(!r.ok)return r.text().then(t=>{throw new Error(t||r.status)});return r.text().then(t=>t?JSON.parse(t):[]);});}
+function esc(s){return (s==null?"":""+s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 function cls(n){return n==null?"na":n>=85?"g":n>=70?"a":"r";}
-var STATE={dirs:[]};
+var STATE={dirs:[]}, CUR_DIR=null;
 
 get("diretores?select=id,nome,clinicas(nome)&order=nome").then(dirs=>{
   STATE.dirs=dirs;
@@ -81,10 +92,12 @@ function load(dirId){
   var d=STATE.dirs.find(x=>x.id===dirId);
   document.getElementById("who").innerHTML='<b>'+d.nome+'</b> · '+((d.clinicas||{}).nome||'')+' — notas das responsabilidades (não o resultado da praça)';
   document.getElementById("body").innerHTML='<div class="empty">Carregando…</div>';
+  CUR_DIR=dirId;
   Promise.all([
-    get("apuracoes?diretor_id=eq."+dirId+"&select=competencia,nota,dados,obs,indicadores(chave,nome,ordem)&order=competencia"),
-    get("reunioes?diretor_id=eq."+dirId+"&select=id,data,resumo,video_url&order=data.desc")
-  ]).then(([apurs,reus])=>render(apurs,reus)).catch(e=>{document.getElementById("body").innerHTML='<div class="empty" style="color:var(--vm)">Erro ao ler dados.</div>';});
+    get("apuracoes?diretor_id=eq."+dirId+"&select=competencia,nota,dados,obs,indicador_id,indicadores(chave,nome,ordem)&order=competencia"),
+    get("reunioes?diretor_id=eq."+dirId+"&select=id,data,resumo,video_url&order=data.desc"),
+    get("planos_acao?diretor_id=eq."+dirId+"&select=indicador_id,texto").catch(function(){return [];})
+  ]).then(([apurs,reus,planos])=>render(apurs,reus,planos)).catch(e=>{document.getElementById("body").innerHTML='<div class="empty" style="color:var(--vm)">Erro ao ler dados.</div>';});
 }
 function reunioesHtml(reus){
   if(!reus||!reus.length)return '';
@@ -92,8 +105,9 @@ function reunioesHtml(reus){
   return '<div class="sec">Reuniões registradas <span style="font-size:11px;color:var(--ink3);font-weight:400">— histórico dos encontros</span></div><div class="box">'+rows+'</div>';
 }
 
-function render(apurs,reus){
+function render(apurs,reus,planos){
   reus=reus||[];
+  var planoMap={}; (planos||[]).forEach(function(p){planoMap[p.indicador_id]=p.texto||"";});
   var foot=document.getElementById("foot");
   if(!apurs||!apurs.length){
     document.getElementById("body").innerHTML='<div class="empty">Ainda não há notas lançadas para esta pessoa.<br>Lance no <b>Console → aba Notas por função</b> e as notas aparecem aqui, com o detalhe do que as define.</div>'+reunioesHtml(reus);
@@ -141,13 +155,28 @@ function render(apurs,reus){
         +(f.detail?'<div class="li">Você lançou: <b>'+f.detail+'</b></div>':'<div class="li" style="color:var(--ink3)">Sem dado lançado.</div>')
         +(f.crit?'<div class="crit">O que define a nota: '+f.crit+'</div>':'')+'</div>';
     }).join('');
-    H+='<div class="iblk"><div class="ihd" data-t><div class="lft"><h3>'+o.nome+'</h3><span class="cmp">'+competLabel(last.competencia)+'</span></div>'
+    var iid=last.indicador_id; var plano=planoMap[iid]||"";
+    H+='<div class="iblk"><div class="ihd" data-t><div class="lft"><h3>'+o.nome+'</h3><span class="cmp">'+competLabel(last.competencia)+'</span>'+(plano?'<span class="chip-pl">✓ plano</span>':'')+'</div>'
       +'<div class="rgt"><span class="nbig '+cls(last.nota)+'">'+(nota==null?"—":nota)+'</span><span class="chev">▸</span></div></div>'
       +'<div class="dl">'+(fnHtml||'<div class="fn" style="border:0;color:var(--ink3)">Sem funções detalhadas.</div>')
-      +(last.obs?'<div class="li" style="margin-top:10px;padding-top:10px;border-top:1px solid var(--ln)">Obs.: '+last.obs+'</div>':'')+'</div></div>';
+      +(last.obs?'<div class="li" style="margin-top:10px;padding-top:10px;border-top:1px solid var(--ln)">Obs.: '+esc(last.obs)+'</div>':'')
+      +'<div class="plano"><div class="pl-h">📋 Plano de ação</div><textarea data-pl="'+iid+'" placeholder="O que vamos fazer pra melhorar este indicador — passos, responsável, prazo…">'+esc(plano)+'</textarea><div class="pl-act"><button class="pl-save" data-save="'+iid+'">Salvar plano</button><span class="pl-msg" data-plmsg="'+iid+'"></span></div></div>'
+      +'</div></div>';
   });
   document.getElementById("body").innerHTML=H+reunioesHtml(reus);
   document.querySelectorAll(".ihd").forEach(h=>h.onclick=function(){this.parentElement.classList.toggle("open");});
-  foot.innerHTML='<b>Como ler:</b> cada indicador mostra a <b>nota</b> (média das funções, todas com peso igual). Clique para abrir e ver <b>o que você lançou</b> e <b>o que define a nota</b> em cada função. A evolução acompanha a nota análise a análise (pela data da análise). As notas vêm do que você lança no <b>Console → aba Notas por função</b>.';
+  document.querySelectorAll(".pl-save").forEach(function(b){b.onclick=function(){
+    var iid=b.dataset.save, ta=document.querySelector('textarea[data-pl="'+iid+'"]'), st=document.querySelector('[data-plmsg="'+iid+'"]');
+    if(!CUR_DIR||!ta)return;
+    b.disabled=true; if(st){st.textContent="salvando…";st.style.color="var(--ink3)";}
+    write("planos_acao?on_conflict=diretor_id,indicador_id",[{diretor_id:CUR_DIR,indicador_id:iid,texto:(ta.value.trim()||null),atualizado_em:new Date().toISOString()}],"resolution=merge-duplicates,return=minimal")
+     .then(function(){if(st){st.textContent="plano salvo ✓";st.style.color="var(--vd)";}
+       var lft=b.closest(".iblk").querySelector(".lft"), has=lft&&lft.querySelector(".chip-pl");
+       if(ta.value.trim()&&lft&&!has){var c=document.createElement("span");c.className="chip-pl";c.textContent="✓ plano";lft.appendChild(c);}
+       if(!ta.value.trim()&&has)has.remove();})
+     .catch(function(e){if(st){st.textContent="erro: "+e.message;st.style.color="var(--vm)";}})
+     .finally(function(){b.disabled=false;});
+  };});
+  foot.innerHTML='<b>Como ler:</b> cada indicador mostra a <b>nota</b> (média das funções, todas com peso igual). Clique para abrir e ver <b>o que você lançou</b> e <b>o que define a nota</b> em cada função. A evolução acompanha a nota análise a análise (pela data da análise). As notas vêm do que você lança no <b>Console → aba Notas por função</b>. Em cada indicador, abra e escreva o <b>plano de ação</b> — ele fica salvo e aparece aqui pra você apresentar.';
 }
 </script></body></html>
