@@ -1,0 +1,331 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Checklist de Campo — Anderson</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Spectral:wght@400;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap">
+<style>
+:root{
+  --pg:#0B0906; --pn:#141009; --pn2:#1A150C; --ln:#2A2213;
+  --ink:#F3ECDA; --ink2:#B6A883; --ink3:#7C7256;
+  --ous:#F1CE68; --gold-d:#B8862B; --vd:#5CC98A; --co:#E0796B; --cy:#46C6D6;
+  --grad:linear-gradient(100deg,#FBEDB4,#F1CE68 40%,#CFA23B 70%,#F7DE8C);
+  --serif:'Spectral',Georgia,serif; --sans:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--pg);color:var(--ink);font-family:var(--sans);line-height:1.5;-webkit-font-smoothing:antialiased;padding:clamp(16px,3vw,30px)}
+.wrap{max-width:1000px;margin:0 auto}
+.eyebrow{font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink3)}
+h1{font-family:var(--serif);font-size:clamp(24px,4vw,36px);font-weight:800;letter-spacing:-.01em;margin:5px 0 6px;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.lead{color:var(--ink2);font-size:13.5px;max-width:84ch}.lead b{color:var(--ink)}
+.bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:16px 0 2px}
+.status{font-size:11.5px;font-weight:600;padding:6px 12px;border-radius:999px;border:1px solid var(--ln);background:var(--pn);color:var(--ink2)}
+.status .dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:6px;vertical-align:middle;background:var(--ink3)}
+.status.ok .dot{background:var(--vd)} .status.ro .dot{background:var(--co)}
+.datefield{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--ink2)}
+.datefield input{font:600 13px var(--sans);background:var(--pn);color:var(--ink);border:1px solid var(--ln);border-radius:9px;padding:7px 10px}
+.cron{margin-top:16px;background:var(--pn);border:1px solid var(--ln);border-radius:13px;overflow:hidden}
+.cron table{width:100%;border-collapse:collapse;font-size:12.5px}
+.cron th,.cron td{padding:8px 12px;text-align:left;border-bottom:1px solid var(--ln)}
+.cron th{font-size:10.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--ink3);background:var(--pn2)}
+.cron td:first-child{font-weight:700;color:var(--ink);white-space:nowrap}
+.cron tr:last-child td{border-bottom:none}
+.cron .amb{color:var(--ous);font-weight:600}
+.tabs{display:flex;gap:7px;margin:24px 0 14px;flex-wrap:wrap}
+.tab{font:700 13px/1.15 var(--sans);padding:10px 15px;border-radius:11px;border:1px solid var(--ln);background:transparent;color:var(--ink2);cursor:pointer;text-align:left}
+.tab .d{font-size:10px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--ink3);display:block;margin-bottom:2px}
+.tab.on{background:var(--grad);color:#1a1206;border-color:transparent}
+.tab.on .d{color:#6b551d}
+.tab.own{border-color:color-mix(in srgb,var(--ous) 45%,var(--ln))}
+.panel{background:var(--pn);border:1px solid var(--ln);border-radius:14px;padding:6px 6px}
+.fitem{display:grid;grid-template-columns:16px 40px 1fr;gap:10px;align-items:start;padding:13px 15px;border-bottom:1px solid var(--ln)}
+.fitem:last-of-type{border-bottom:none}
+.idot{width:11px;height:11px;border-radius:50%;background:var(--ln);margin-top:7px}
+.idot.good{background:var(--vd);box-shadow:0 0 0 3px color-mix(in srgb,var(--vd) 20%,transparent)}
+.idot.bad{background:var(--co);box-shadow:0 0 0 3px color-mix(in srgb,var(--co) 20%,transparent)}
+.fitem .n{font-family:var(--serif);font-weight:800;font-size:14px;color:var(--ous);font-variant-numeric:tabular-nums;padding-top:3px}
+.fitem .q{font-size:13.5px;color:var(--ink);line-height:1.4;font-weight:500;margin-bottom:9px}
+.fitem.obs .q{color:var(--ink2);font-style:italic;margin-bottom:6px}
+.seg{display:inline-flex;gap:7px;margin-bottom:9px}
+.segbtn{font:700 12.5px var(--sans);padding:8px 16px;border-radius:9px;border:1px solid var(--ln);background:var(--pn2);color:var(--ink2);cursor:pointer}
+.segbtn.sel.good{background:color-mix(in srgb,var(--vd) 22%,var(--pn2));border-color:var(--vd);color:#dff7e8}
+.segbtn.sel.bad{background:color-mix(in srgb,var(--co) 22%,var(--pn2));border-color:var(--co);color:#ffe6e0}
+.obsrow textarea,.notearea{width:100%;font:500 12.5px var(--sans);background:var(--pn2);color:var(--ink2);border:1px dashed var(--ln);border-radius:9px;padding:8px 10px;min-height:40px;resize:vertical}
+.notearea{border-style:solid;color:var(--ink)}
+.obsrow textarea:focus,.notearea:focus{outline:none;border-color:color-mix(in srgb,var(--ous) 55%,var(--ln))}
+.saverow{display:flex;align-items:center;gap:14px;padding:15px;flex-wrap:wrap}
+.btn{font:700 13px var(--sans);border:none;border-radius:10px;padding:11px 22px;cursor:pointer;background:var(--grad);color:#1a1206}
+.btn:disabled{opacity:.45;cursor:default}
+.saved{font-size:12px;color:var(--vd);font-weight:600}
+.saved.err{color:var(--co)}
+.note{margin:2px 15px 12px;color:var(--ink3);font-size:11.5px;line-height:1.5}
+.dgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:11px;padding:14px}
+.card{background:var(--pn2);border:1px solid var(--ln);border-radius:12px;padding:14px 15px}
+.card .lbl{font-size:10.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--ink3);font-weight:700}
+.card .val{font-family:var(--serif);font-weight:800;font-size:26px;color:var(--ous);margin-top:4px;line-height:1}
+.card .sub{font-size:11px;color:var(--ink2);margin-top:5px}
+.card.gd .val{color:var(--vd)} .card.nps .val{color:var(--vd)}
+.confbar{height:9px;border-radius:6px;overflow:hidden;background:var(--co);display:flex;margin-top:9px}
+.confbar .g{background:var(--vd);height:100%}
+.dsec{padding:6px 15px 14px}
+.dsec h3{font-family:var(--serif);font-size:14px;color:var(--ink);margin:12px 0 8px;font-weight:700}
+.rec{display:grid;grid-template-columns:90px 1fr auto;gap:10px;align-items:center;padding:9px 0;border-bottom:1px solid var(--ln);font-size:12.5px}
+.rec:last-child{border-bottom:none}
+.rec .rd{color:var(--ink2);font-weight:600;font-variant-numeric:tabular-nums}
+.rec .rf{color:var(--ink)} .rec .rf b{color:var(--ous)}
+.rec .rc{font-size:11px;font-weight:700} .rec .rc .g{color:var(--vd)} .rec .rc .b{color:var(--co)}
+.notes textarea{width:100%;font:500 13px var(--sans);background:var(--pn2);color:var(--ink);border:1px solid var(--ln);border-radius:10px;padding:11px;min-height:70px}
+.noteitem{padding:9px 0;border-bottom:1px solid var(--ln);font-size:12.5px;color:var(--ink)}
+.noteitem .nd{font-size:10.5px;color:var(--ink3);font-weight:600;text-transform:uppercase;letter-spacing:.04em;margin-bottom:2px}
+.empty{padding:16px;color:var(--ink3);font-size:12.5px;text-align:center}
+.foot{margin:16px 2px 0;color:var(--ink3);font-size:11.5px;line-height:1.6}
+</style></head>
+<body>
+<div class="wrap">
+  <div class="eyebrow">Rede Ageodonto · Consultor Comercial de Campo</div>
+  <h1>Checklist de Campo — Anderson</h1>
+  <p class="lead">Piloto na <b>O.U. Indaial</b>. Cada item é <b>Conforme</b> ou <b>Não conforme</b>, com espaço para <b>observações</b>. Gravado no Supabase do sistema — o Gregori acompanha pela aba <b>Acompanhamento</b>.</p>
+  <div class="bar">
+    <div class="status" id="status"><span class="dot"></span><span id="statusTxt">conectando à base…</span></div>
+    <div class="datefield">Data do lançamento <input type="date" id="dt"></div>
+  </div>
+  <div class="cron"><table>
+    <thead><tr><th>Dia</th><th>Horário</th><th>Ambiente</th><th>Frente / Foco</th></tr></thead>
+    <tbody>
+      <tr><td>Terça</td><td>13:30–16:30</td><td class="amb">O.U. Indaial</td><td>Relacionamento + Checklist</td></tr>
+      <tr><td>Quarta</td><td>13:30–16:30</td><td class="amb">O.U. Indaial</td><td>Recepção, Tour/TSB + prospecção + Checklist</td></tr>
+      <tr><td>Quinta</td><td>13:30–16:30</td><td class="amb">O.U. Indaial</td><td>Acompanhamento do atendimento clínico</td></tr>
+      <tr><td>Sexta</td><td>quinzenal</td><td class="amb">Ageodonto</td><td>Rito com o Gregori — só nos dias de agenda</td></tr>
+      <tr><td>Sáb / Dom</td><td>quando houver</td><td class="amb">Comunidade</td><td>Eventos de comunidade / festas — prospecção + Checklist</td></tr>
+    </tbody>
+  </table></div>
+  <div class="tabs" id="tabs"></div>
+  <div class="panel" id="panel"></div>
+  <div class="foot" id="foot">Verde = conforme · Vermelho = não conforme. Os lançamentos ficam gravados na base do sistema (Supabase).</div>
+</div>
+<script>window.AGO_AUTH={audience:"team",title:"Gestão Comercial AGO"};</script>
+<script src="sbauth.js"></script>
+<script>
+var SB_URL="https://pwbcehrfhspgipjhaedc.supabase.co";
+var SB_KEY="sb_publishable_mTx5xlUaUcLBM_YijXuCjg_vwCJ5v3x";
+function get(p){return fetch(SB_URL+"/rest/v1/"+p,{headers:{apikey:SB_KEY,Authorization:"Bearer "+SB_KEY}}).then(function(r){if(!r.ok)throw new Error(r.status);return r.json();});}
+function write(p,body,prefer){return fetch(SB_URL+"/rest/v1/"+p,{method:"POST",headers:{apikey:SB_KEY,Authorization:"Bearer "+SB_KEY,"Content-Type":"application/json",Prefer:prefer||"return=minimal"},body:JSON.stringify(body)}).then(function(r){if(!r.ok)return r.text().then(function(t){throw new Error(t||r.status)});return r.text().then(function(t){return t?JSON.parse(t):[];});});}
+
+/* item = [num, pergunta] · "anota" = campo numérico/texto · perguntas com "Observações" viram texto livre */
+var FR=[
+ {key:'ter',d:'Terça · O.U. Indaial',t:'Relacionamento',fill:true,items:[
+   ['1.1','O colaborador estava de acordo com o Dress Code?'],
+   ['1.2','TV ligada e material abastecido?'],
+   ['1.3','A sala tinha café disponível para os pacientes?'],
+   ['1.4','Quantas avaliações atendidas hoje?','anota'],
+   ['1.4b','Dessas, quantas efetivaram?','anota'],
+   ['1.5','Os pacientes efetivados foram encaminhados para o 1º Agendamento?'],
+   ['1.6','Os pacientes não efetivados receberam o orçamento para levar para casa?'],
+   ['1.7','Limpeza, organização, temperatura e aroma OK?'],
+   ['1.8','Quantos casos de simulações financeiras foram realizados?','anota'],
+   ['1.9','Tivemos algum resgate vendido hoje? Se sim, quantos?','anota'],
+   ['1.10','Comunicação/engajamento Avaliador/Diretor Clínico × Relacionamento OK?'],
+   ['1.11','Quantas indicações o setor prospectou?','anota'],
+   ['1.12','Quantas avaliações no Google o setor prospectou?','anota'],
+   ['1.13','Observações e Plano de Ação']
+ ]},
+ {key:'qua',d:'Quarta · O.U. Indaial',t:'Recepção, Tour/TSB',fill:true,items:[
+   ['2.1','Os colaboradores da recepção estavam de acordo com o Dress Code?'],
+   ['2.1b','Os colaboradores ASB/TSB estavam de acordo com o Dress Code?'],
+   ['2.2','TVs ligadas com som e vídeos formatados?'],
+   ['2.3','Algum paciente foi chamado com atraso superior a 5 minutos? Se sim, quantos e quem?'],
+   ['2.4','Quantos Tours realizados?','anota'],
+   ['2.5','Registrado fotos durante o Tour? Detalhe quantos sim e quantos não!'],
+   ['2.6','Quantas indicações a recepção prospectou?','anota'],
+   ['2.6b','Quantas indicações a ASB/TSB prospectou?','anota'],
+   ['2.7','Recepção limpa, organizada e climatizada?'],
+   ['2.9','Quantas avaliações no Google a recepção prospectou?','anota'],
+   ['2.10','Quantos pacientes foram aplicados a pesquisa de satisfação?','anota'],
+   ['2.11','Observações e Plano de Ação']
+ ]},
+ {key:'qui',d:'Quinta · O.U. Indaial',t:'Atendimento Clínico',fill:true,items:[
+   ['3.1','O dentista estava de acordo com o Dress Code?'],
+   ['3.2','Postura do dentista no atendimento adequada? (educação, paciência, atencioso com as dúvidas)'],
+   ['3.3','O dentista ofereceu tratamentos para o paciente?'],
+   ['3.4','Quantas indicações o dentista prospectou?','anota'],
+   ['3.5','Quantas avaliações no Google o dentista prospectou?','anota'],
+   ['3.6','Paciente saiu da sala com Guia de atendimento?'],
+   ['3.7','Observações e Plano de Ação']
+ ]},
+ {key:'sab',d:'Sáb/Dom · Comunidade',t:'Eventos de Comunidade',fill:true,items:[
+   ['4.1','Onde foi o evento?','anota'],
+   ['4.2','Qual o objetivo com o evento?','anota'],
+   ['4.3','Qual o público-alvo buscado?','anota'],
+   ['4.4','Leads prospectados','anota'],
+   ['4.5','Participantes','anota'],
+   ['4.6','Projeção de resultado esperado','anota'],
+   ['4.7','Observações e Plano de Ação']
+ ]},
+ {key:'nps',d:'NPS · Cliente',t:'Pesquisa de Atendimento',fill:false,items:[
+   ['ID','Nome do paciente','text'],
+   ['FICHA','Nº da ficha','text'],
+   ['Q1','De 0 a 10, o quanto você recomendaria a nossa clínica a um amigo ou familiar?'],
+   ['Q2','De 0 a 10, o atendimento da recepção (acolhimento, agilidade, cordialidade)'],
+   ['Q3','A sua expectativa em relação ao seu tratamento até agora está sendo atendido?'],
+   ['Q4','De 0 a 10, o ambiente da clínica (limpeza, conforto, organização)'],
+   ['Q5','O que mais te marcou? O que podemos melhorar?'],
+   ['Q6','Indicaria alguém para fazer uma avaliação?']
+ ]}
+];
+
+var online=false,sel=0,cur={},obs={},curDK='';
+var $=function(id){return document.getElementById(id)};
+function pad(n){return (n<10?'0':'')+n}
+function today(){var d=new Date();return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())}
+function num(v){if(v==null)return 0;var m=String(v).replace(/\./g,'').replace(',','.').match(/-?\d+(\.\d+)?/);return m?parseFloat(m[0]):0}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+function isNote(q){return /Observações/.test(q)}
+
+$('dt').value=today();
+$('dt').addEventListener('change',function(){if(FR[sel]&&FR[sel].fill)render()});
+function setStatus(cls,txt){$('status').className='status '+cls;$('statusTxt').textContent=txt}
+
+function buildTabs(){
+  var html=FR.map(function(f,i){return '<button class="tab'+(i===sel?' on':'')+'" data-i="'+i+'"><span class="d">'+esc(f.d)+'</span>'+esc(f.t)+'</button>'}).join('');
+  html+='<button class="tab own'+(sel===99?' on':'')+'" data-i="99"><span class="d">Gregori</span>📊 Acompanhamento</button>';
+  $('tabs').innerHTML=html;
+}
+$('tabs').addEventListener('click',function(e){var b=e.target.closest('.tab');if(!b)return;sel=+b.dataset.i;buildTabs();render()});
+function render(){if(sel===99)return renderDash();var f=FR[sel];if(f.fill)return renderFill(f);return renderNps(f)}
+
+function itemHtml(it){
+  var n=it[0], q=it[1], mode=it[2];
+  if(mode==='anota'||mode==='text'||isNote(q)){
+    var nt=isNote(q);
+    return '<div class="fitem'+(nt?' obs':'')+'"><div class="idot"></div><div class="n">'+esc(n)+'</div><div><div class="q">'+esc(q)+'</div>'
+      +'<textarea class="notearea" data-note="'+esc(n)+'" placeholder="'+(nt?'Escreva aqui…':'Anotar…')+'">'+esc(cur[n]||'')+'</textarea></div></div>';
+  }
+  var v=cur[n], st=v==='c'?'good':(v==='n'?'bad':'');
+  return '<div class="fitem"><div class="idot '+st+'" data-dot="'+esc(n)+'"></div><div class="n">'+esc(n)+'</div><div>'
+    +'<div class="q">'+esc(q)+'</div>'
+    +'<div class="seg" data-n="'+esc(n)+'"><button class="segbtn'+(v==='c'?' sel good':'')+'" data-v="c">Conforme</button>'
+    +'<button class="segbtn'+(v==='n'?' sel bad':'')+'" data-v="n">Não conforme</button></div>'
+    +'<div class="obsrow"><textarea data-obs="'+esc(n)+'" placeholder="Observações…">'+esc(obs[n]||'')+'</textarea></div>'
+    +'</div></div>';
+}
+
+function renderFill(f){
+  var date=$('dt').value;curDK='ckand_'+date+'__'+f.key;
+  cur={};obs={};
+  var draft=null;
+  try{var raw=localStorage.getItem(curDK);if(raw){var dd=JSON.parse(raw);if(dd&&dd.ts&&(Date.now()-dd.ts)<864e5)draft=dd;else localStorage.removeItem(curDK);}}catch(e){}
+  if(draft){cur=draft.answers||{};obs=draft.obs||{};}
+  var p=$('panel');
+  function paint(msg){
+    p.innerHTML=f.items.map(itemHtml).join('')
+      +'<div class="saverow"><button class="btn" id="save"'+(online?'':' disabled')+'>Salvar lançamento</button><span class="saved" id="savedTxt"></span></div>'
+      +'<div class="note">Salva em <b>'+esc(f.t)+' · '+date+'</b>. O que você preenche fica guardado <b>por 24h</b> neste navegador mesmo sem salvar — pode pausar, observar a clínica e voltar depois sem perder nada.</div>';
+    bind(f);
+    if(msg){$('savedTxt').className='saved';$('savedTxt').textContent=msg;}
+  }
+  paint(draft?'rascunho não salvo recuperado':'');
+  if(online){
+    get('anderson_entries?data=eq.'+encodeURIComponent(date)+'&frente=eq.'+f.key+'&select=respostas,obs,salvo_em').then(function(rows){
+      if(!rows||!rows.length)return;var d=rows[0];var ts=d.salvo_em?Date.parse(d.salvo_em):0;
+      if(!draft||ts>draft.ts){var A=d.respostas||{},O=d.obs||{};cur={};obs={};f.items.forEach(function(it){var n=it[0];if(A[n]!=null)cur[n]=A[n];if(O[n]!=null)obs[n]=O[n];});paint(d.salvo_em?('último salvamento '+new Date(ts).toLocaleString('pt-BR')):'');}
+    }).catch(function(){});
+  }
+}
+function saveDraft(){try{localStorage.setItem(curDK,JSON.stringify({answers:cur,obs:obs,ts:Date.now()}));}catch(e){}}
+function bind(f){
+  var p=$('panel');
+  p.querySelectorAll('.seg').forEach(function(g){g.addEventListener('click',function(e){var b=e.target.closest('.segbtn');if(!b)return;var n=g.dataset.n;
+    g.querySelectorAll('.segbtn').forEach(function(x){x.className='segbtn'});
+    var dot=p.querySelector('[data-dot="'+n+'"]');
+    if(cur[n]===b.dataset.v){delete cur[n];if(dot)dot.className='idot';saveDraft();return}
+    cur[n]=b.dataset.v;b.classList.add('sel',b.dataset.v==='c'?'good':'bad');if(dot)dot.className='idot '+(b.dataset.v==='c'?'good':'bad');saveDraft();
+  })});
+  p.querySelectorAll('[data-obs]').forEach(function(el){el.addEventListener('input',function(){obs[el.dataset.obs]=el.value;saveDraft();})});
+  p.querySelectorAll('[data-note]').forEach(function(el){el.addEventListener('input',function(){cur[el.dataset.note]=el.value;saveDraft();})});
+  var sv=$('save');
+  if(sv)sv.addEventListener('click',function(){
+    var cln={};Object.keys(obs).forEach(function(k){if((obs[k]||'').trim())cln[k]=obs[k].trim()});
+    sv.disabled=true;$('savedTxt').className='saved';$('savedTxt').textContent='salvando…';
+    write('anderson_entries?on_conflict=data,frente',[{data:$('dt').value,frente:f.key,frente_nome:f.t,respostas:cur,obs:cln,salvo_em:new Date().toISOString()}],'resolution=merge-duplicates,return=minimal')
+     .then(function(){sv.disabled=false;$('savedTxt').textContent='✓ salvo '+new Date().toLocaleTimeString('pt-BR');try{localStorage.removeItem(curDK);}catch(e){}})
+     .catch(function(e){sv.disabled=false;$('savedTxt').className='saved err';$('savedTxt').textContent='erro ao salvar';});
+  });
+}
+
+/* NPS — uma resposta por paciente */
+function renderNps(f){
+  cur={};
+  var p=$('panel');
+  p.innerHTML='<div class="note" style="margin-top:12px">Aplicar pela <b>recepção</b>, presencial e rápido, na <b>saída</b> do paciente. Registre <b>uma resposta por paciente</b> — o NPS é calculado no Acompanhamento (promotores 9–10 − detratores 0–6 na Q1).</div>'
+    +f.items.map(function(it){var n=it[0],q=it[1];var txt=it[2]==='text';var aberta=!txt&&/marcou|melhorar|Indicaria/.test(q);var numeric=!txt&&!aberta;
+      var tag=aberta?'textarea':'input';var attrs=numeric?'inputmode="numeric" ':'';var ph=numeric?'0–10':'…';
+      return '<div class="fitem"><div class="idot"></div><div class="n">'+esc(n)+'</div><div><div class="q">'+esc(q)+'</div><div class="obsrow"><'
+        +tag+' data-n="'+esc(n)+'" '+attrs+'placeholder="'+ph+'"></'+tag+'></div></div></div>';
+    }).join('')
+    +'<div class="saverow"><button class="btn" id="save"'+(online?'':' disabled')+'>Registrar resposta</button><span class="saved" id="savedTxt"></span></div>';
+  p.querySelectorAll('[data-n]').forEach(function(el){el.addEventListener('input',function(){cur[el.dataset.n]=el.value})});
+  var sv=$('save');
+  if(sv)sv.onclick=function(){
+    if(cur.Q1==null||cur.Q1===''){$('savedTxt').className='saved err';$('savedTxt').textContent='informe ao menos a Q1 (0–10)';return}
+    var dados={};f.items.forEach(function(it){if(cur[it[0]]!=null&&cur[it[0]]!=='')dados[it[0]]=cur[it[0]]});
+    sv.disabled=true;$('savedTxt').className='saved';$('savedTxt').textContent='salvando…';
+    write('anderson_nps',[{data:$('dt').value,dados:dados,salvo_em:new Date().toISOString()}],'return=minimal')
+     .then(function(){cur={};renderNps(f);$('savedTxt').textContent='✓ resposta registrada'})
+     .catch(function(e){sv.disabled=false;$('savedTxt').className='saved err';$('savedTxt').textContent='erro ao salvar';});
+  };
+}
+
+/* Dashboard (Gregori) */
+function renderDash(){
+  var p=$('panel');p.innerHTML='<div class="empty">carregando dados…</div>';
+  var days=30,cut=Date.now()-days*864e5;
+  Promise.all([
+    get('anderson_entries?select=data,frente,frente_nome,respostas,obs,salvo_em').catch(function(){return[]}),
+    get('anderson_nps?select=dados,salvo_em').catch(function(){return[]}),
+    get('anderson_notas?select=texto,salvo_em&order=salvo_em.desc&limit=50').catch(function(){return[]})
+  ]).then(function(res){
+    var ents=(res[0]||[]).filter(Boolean).sort(function(a,b){return (Date.parse(b.salvo_em)||0)-(Date.parse(a.salvo_em)||0)});
+    var nps=(res[1]||[]).filter(Boolean);
+    var pnotes=(res[2]||[]).filter(Boolean);
+    var rec=ents.filter(function(e){return (Date.parse(e.salvo_em)||0)>=cut});
+    var pos=0,neg=0;
+    rec.forEach(function(e){var a=e.respostas||{};Object.keys(a).forEach(function(k){if(a[k]==='c')pos++;else if(a[k]==='n')neg++})});
+    var conf=pos+neg?Math.round(pos/(pos+neg)*100):null;
+    var q1=nps.map(function(r){return num((r.dados||{}).Q1)}).filter(function(v){return v>=0&&v<=10});
+    var promo=q1.filter(function(v){return v>=9}).length,detr=q1.filter(function(v){return v<=6}).length;
+    var score=q1.length?Math.round((promo-detr)/q1.length*100):null;
+    var uniq={};rec.forEach(function(e){uniq[e.data]=1});
+    var html='<div class="dgrid">'
+      +cardConf(conf,pos,neg)
+      +cardH('NPS',(score==null?'—':(score>0?'+':'')+score),q1.length+' respostas · '+promo+'P / '+detr+'D','nps')
+      +cardH('Dias lançados',Object.keys(uniq).length,'últimos '+days+' dias','')
+      +cardH('Lançamentos',rec.length,'no período','')
+      +'</div>';
+    var recent=ents.slice(0,16).map(function(e){var a=e.respostas||{};var p2=0,n2=0;
+      Object.keys(a).forEach(function(k){if(a[k]==='c')p2++;else if(a[k]==='n')n2++});
+      return '<div class="rec"><span class="rd">'+esc(e.data)+'</span><span class="rf"><b>'+esc(e.frente_nome||e.frente)+'</b></span>'
+        +'<span class="rc"><span class="g">'+p2+'✓</span> · <span class="b">'+n2+'✕</span></span></div>';
+    }).join('')||'<div class="empty">nenhum lançamento ainda</div>';
+    var notesHtml=pnotes.length?pnotes.map(function(n){return '<div class="noteitem"><div class="nd">'+esc(new Date(Date.parse(n.salvo_em)||Date.now()).toLocaleDateString('pt-BR'))+'</div>'+esc(n.texto)+'</div>'}).join(''):'<div class="empty" style="text-align:left">sem anotações ainda</div>';
+    p.innerHTML=html
+      +'<div class="dsec"><h3>Lançamentos recentes</h3>'+recent+'</div>'
+      +'<div class="dsec notes"><h3>Anotações de desenvolvimento (internas)</h3>'
+        +'<textarea id="noteBox" placeholder="Ex.: evoluiu na condução da recepção; travou no upsell — trabalhar no rito da próxima sexta…"></textarea>'
+        +'<div class="saverow" style="padding:10px 0"><button class="btn" id="noteSave">Salvar anotação</button><span class="saved" id="noteMsg"></span></div>'
+        +'<div>'+notesHtml+'</div></div>';
+    var ns=$('noteSave');
+    if(ns)ns.onclick=function(){var t=$('noteBox').value.trim();if(!t)return;ns.disabled=true;$('noteMsg').textContent='salvando…';
+      write('anderson_notas',[{texto:t,salvo_em:new Date().toISOString()}],'return=minimal').then(function(){renderDash()})
+       .catch(function(e){ns.disabled=false;$('noteMsg').className='saved err';$('noteMsg').textContent='erro ao salvar'})};
+  });
+}
+function cardH(lbl,val,sub,cls){return '<div class="card '+cls+'"><div class="lbl">'+esc(lbl)+'</div><div class="val">'+val+'</div>'+(sub?'<div class="sub">'+esc(sub)+'</div>':'')+'</div>'}
+function cardConf(conf,pos,neg){var g=conf==null?0:conf;
+  return '<div class="card gd"><div class="lbl">Conformidade</div><div class="val">'+(conf==null?'—':conf+'%')+'</div>'
+    +'<div class="confbar"><span class="g" style="width:'+g+'%"></span></div>'
+    +'<div class="sub">'+pos+' conformes · '+neg+' não conformes</div></div>';
+}
+
+/* boot */
+buildTabs();render();
+get('anderson_entries?select=frente&limit=1').then(function(){online=true;setStatus('ok','conectado — salvando na base do sistema');buildTabs();if(sel!==99)render();})
+ .catch(function(){online=false;setStatus('ro','base indisponível — rode o SQL anderson_checklist');});
+</script>
+</body></html>
