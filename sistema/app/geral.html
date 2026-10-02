@@ -8,9 +8,10 @@
 body{background:var(--pg);color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased;padding:clamp(14px,2vw,26px)}
 .hd{display:flex;align-items:baseline;justify-content:space-between;gap:14px;flex-wrap:wrap;border-bottom:1px solid var(--ln);padding-bottom:14px;margin-bottom:18px}
 .hd h1{font-family:var(--serif);font-size:20px;font-weight:800}
-.hd .cmp{font-size:12px;color:var(--ink2)}.hd .cmp b{color:var(--ous)}
+.hd .cmp{font-size:12px;color:var(--ink2);display:flex;align-items:center;gap:8px;flex-wrap:wrap}.hd .cmp b{color:var(--ous)}
+#selMes{background:var(--pn2);color:var(--ink);border:1px solid var(--ln2);border-radius:8px;padding:6px 10px;font:600 12.5px var(--sans);cursor:pointer}
+#selMes:focus{outline:none;border-color:var(--gold-d)}
 .sec{font-family:var(--serif);font-size:15px;font-weight:700;color:var(--ink);margin:24px 2px 12px}
-/* KPIs */
 .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px}
 .kpi{background:linear-gradient(180deg,var(--pn),var(--pg));border:1px solid var(--ln);border-radius:14px;padding:15px 16px;position:relative;overflow:hidden}
 .kpi::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:var(--grad);opacity:.7}
@@ -18,13 +19,11 @@ body{background:var(--pg);color:var(--ink);font-family:var(--sans);-webkit-font-
 .kpi .v{font-family:var(--serif);font-weight:800;font-size:32px;line-height:1;margin-top:8px}
 .kpi .s{font-size:11px;color:var(--ink2);margin-top:5px}
 .kpi .v.g{color:var(--vd)}.kpi .v.a{color:var(--am)}.kpi .v.r{color:var(--vm)}
-/* donut */
 .dwrap{display:flex;align-items:center;gap:18px;background:linear-gradient(180deg,var(--pn),var(--pg));border:1px solid var(--ln);border-radius:14px;padding:16px 18px;flex-wrap:wrap}
 .donut{--p:0;--c:var(--vd);width:120px;height:120px;border-radius:50%;flex:0 0 auto;background:conic-gradient(var(--c) calc(var(--p)*1%),var(--pn2) 0);display:flex;align-items:center;justify-content:center;position:relative}
 .donut::after{content:"";position:absolute;width:82px;height:82px;border-radius:50%;background:var(--pg)}
 .donut b{position:relative;font-family:var(--serif);font-size:24px;font-weight:800;z-index:1}
 .dwrap .dl{flex:1;min-width:180px}.dwrap .dl h3{font-family:var(--serif);font-size:16px;margin-bottom:4px}.dwrap .dl p{font-size:12.5px;color:var(--ink2);line-height:1.5}
-/* barras por indicador */
 .ind{background:linear-gradient(180deg,var(--pn),var(--pg));border:1px solid var(--ln);border-radius:14px;padding:14px 16px}
 .irow{display:grid;grid-template-columns:150px 1fr 92px;gap:12px;align-items:center;padding:8px 0;border-top:1px solid var(--ln2)}
 .irow:first-child{border-top:0}
@@ -40,7 +39,6 @@ body{background:var(--pg);color:var(--ink);font-family:var(--sans);-webkit-font-
 .leg span{display:flex;align-items:center;gap:5px}
 .leg i{width:11px;height:11px;border-radius:3px;display:inline-block}
 .leg i.g{background:var(--vd)}.leg i.a{background:var(--am)}.leg i.r{background:var(--vm)}
-/* ranking */
 .rk{background:linear-gradient(180deg,var(--pn),var(--pg));border:1px solid var(--ln);border-radius:14px;padding:14px 16px}
 .rkrow{display:grid;grid-template-columns:150px 1fr 46px;gap:12px;align-items:center;padding:7px 0;cursor:pointer;border-top:1px solid var(--ln2)}
 .rkrow:first-child{border-top:0}.rkrow:hover{background:color-mix(in srgb,var(--ous) 6%,transparent)}
@@ -53,7 +51,7 @@ body{background:var(--pg);color:var(--ink);font-family:var(--sans);-webkit-font-
 .empty{color:var(--ink3);font-size:13px;padding:24px;text-align:center}
 </style></head>
 <body>
-<div class="hd"><h1>Visão Geral da Rede</h1><div class="cmp">Competência: <b id="cmp">—</b> · <span id="qtd">—</span> · farol por <b>projeção</b></div></div>
+<div class="hd"><h1>Visão Geral da Rede</h1><div class="cmp">Mês: <select id="selMes"><option>—</option></select> · <span id="qtd">—</span> · farol por <b>projeção</b></div></div>
 <div id="body"><div class="empty">Carregando…</div></div>
 <script>window.AGO_AUTH={audience:"team",title:"Gestão Comercial AGO"};</script>
 <script src="sbauth.js"></script>
@@ -67,32 +65,25 @@ function abrir(id){ if(window.parent&&window.parent!==window&&window.parent.open
 function ratioOf(r){ var v=(r.projecao!=null?+r.projecao:+r.realizado); if(v==null||isNaN(v)||r.meta==null)return null; var m=+r.meta; if(!m)return null; return r.sentido==="teto"?(v?m/v:2):v/m; }
 function tier(r){ var x=ratioOf(r); if(x==null)return null; return x>=1?'g':x>=0.85?'a':'r'; }
 
-get("v_dashboard_diretor?select=*").then(rows=>{
+function renderData(rows){
+  var body=document.getElementById("body");
   var withData=rows.filter(r=>r.meta!=null&&r.realizado!=null);
-  if(!withData.length){document.getElementById("body").innerHTML='<div class="empty">Sem resultados lançados ainda. Lance no Console (aba ②) para ver os gráficos.</div>';return;}
-  document.getElementById("cmp").textContent=competLabel(rows[0].competencia);
-  // agrupa por unidade e por indicador
+  if(!withData.length){body.innerHTML='<div class="empty">Sem resultados lançados neste mês.</div>';document.getElementById("qtd").textContent="—";return;}
   var units={}; rows.forEach(r=>{(units[r.diretor_id]=units[r.diretor_id]||{nome:r.clinica||r.diretor,dir:r.diretor,rs:[]}).rs.push(r);});
   var unitArr=Object.keys(units).map(id=>({id:id,nome:units[id].nome,dir:units[id].dir,rs:units[id].rs}));
   document.getElementById("qtd").textContent=unitArr.length+" unidades";
-  // por indicador
   var indOrder=[]; var byInd={};
   rows.forEach(r=>{ if(!byInd[r.indicador_chave]){byInd[r.indicador_chave]={nome:r.indicador,ordem:r.indicador_ordem,g:0,a:0,r:0};indOrder.push(r.indicador_chave);} });
   withData.forEach(r=>{ var t=tier(r); if(t)byInd[r.indicador_chave][t]++; });
   indOrder.sort((x,y)=>byInd[x].ordem-byInd[y].ordem);
-  // overall
   var G=withData.filter(r=>tier(r)==='g').length, TOT=withData.filter(r=>tier(r)).length;
   var pctGeral=TOT?Math.round(G/TOT*100):0;
-  // unidades por nº no alvo
   var uAgg=unitArr.map(u=>{var wd=u.rs.filter(r=>r.meta!=null&&r.realizado!=null);var g=wd.filter(r=>tier(r)==='g').length;return {id:u.id,nome:u.nome,g:g,tot:wd.length};}).sort((a,b)=>(b.g/(b.tot||1))-(a.g/(a.tot||1))||b.g-a.g);
   var noAlvoUnidades=uAgg.filter(u=>u.tot&&u.g/u.tot>=0.75).length;
-  // melhor/pior indicador
   var indPct=indOrder.map(k=>{var o=byInd[k];var t=o.g+o.a+o.r;return {k:k,nome:o.nome,pct:t?o.g/t*100:0};});
-  var melhor=indPct.slice().sort((a,b)=>b.pct-a.pct)[0], pior=indPct.slice().sort((a,b)=>a.pct-b.pct)[0];
+  var melhor=indPct.slice().sort((a,b)=>b.pct-a.pct)[0]||{nome:'—',pct:0}, pior=indPct.slice().sort((a,b)=>a.pct-b.pct)[0]||{nome:'—',pct:0};
   var cls=p=>p>=75?'g':p>=50?'a':'r';
-
   var H='';
-  // donut + KPIs
   H+='<div class="dwrap"><div class="donut" style="--p:'+pctGeral+'"><b>'+pctGeral+'%</b></div>'
    +'<div class="dl"><h3>'+pctGeral+'% dos indicadores projetam bater a meta</h3><p>Considerando '+TOT+' medições (unidade × indicador) com dado no mês. <b>'+noAlvoUnidades+'</b> de '+unitArr.length+' unidades projetam bater ≥ 75% dos indicadores.</p></div></div>';
   H+='<div class="sec">Panorama</div><div class="kpis">'
@@ -101,8 +92,6 @@ get("v_dashboard_diretor?select=*").then(rows=>{
    +'<div class="kpi"><div class="l">Indicador mais forte</div><div class="v g" style="font-size:20px">'+Math.round(melhor.pct)+'%</div><div class="s">'+melhor.nome+'</div></div>'
    +'<div class="kpi"><div class="l">Indicador mais fraco</div><div class="v r" style="font-size:20px">'+Math.round(pior.pct)+'%</div><div class="s">'+pior.nome+'</div></div>'
    +'</div>';
-  // fix donut color var (conic uses --c literal)
-  // por indicador
   H+='<div class="sec">% de praças no alvo — por indicador</div><div class="ind">';
   indOrder.forEach(k=>{var o=byInd[k];var t=o.g+o.a+o.r;var pct=t?Math.round(o.g/t*100):0;
     var seg=(n,c,lbl)=>n?'<i class="'+c+'" style="flex:'+n+'" title="'+lbl+': '+n+'">'+(n)+'</i>':'';
@@ -111,7 +100,6 @@ get("v_dashboard_diretor?select=*").then(rows=>{
       +'<div class="ipct '+cls(pct)+'">'+pct+'%</div></div>';
   });
   H+='<div class="leg"><span><i class="g"></i>no alvo (proj ≥ meta)</span><span><i class="a"></i>atenção (85–99%)</span><span><i class="r"></i>fora (&lt;85%)</span></div></div>';
-  // ranking
   H+='<div class="sec">Ranking de unidades — indicadores no alvo</div><div class="rk">';
   uAgg.forEach(u=>{var pct=u.tot?Math.round(u.g/u.tot*100):0;
     H+='<div class="rkrow" onclick="abrir(\''+u.id+'\')"><div class="rku">'+u.nome+'</div>'
@@ -119,9 +107,34 @@ get("v_dashboard_diretor?select=*").then(rows=>{
       +'<div class="rkn">'+u.g+'/'+u.tot+'</div></div>';
   });
   H+='</div>';
-  document.getElementById("body").innerHTML=H;
-  // ajusta cor do donut conforme pct
+  body.innerHTML=H;
   var dc=pctGeral>=75?'var(--vd)':pctGeral>=50?'var(--am)':'var(--vm)';
   var dn=document.querySelector(".donut"); if(dn)dn.style.setProperty("--c",dc);
-}).catch(e=>{document.getElementById("body").innerHTML='<div class="empty" style="color:var(--vm)">Erro de conexão com o banco.</div>';});
+}
+
+function carregarMes(comp){
+  document.getElementById("body").innerHTML='<div class="empty">Carregando '+competLabel(comp)+'…</div>';
+  get("v_dashboard_diretor_mes?select=*&competencia=eq."+encodeURIComponent(comp)).then(rows=>{
+    if(!Array.isArray(rows)){throw new Error("resp");}
+    renderData(rows);
+  }).catch(e=>{document.getElementById("body").innerHTML='<div class="empty" style="color:var(--vm)">Erro ao carregar '+competLabel(comp)+'.</div>';});
+}
+
+// monta o seletor de meses a partir das competências disponíveis
+get("v_dashboard_diretor_mes?select=competencia&order=competencia.desc").then(rows=>{
+  var sel=document.getElementById("selMes");
+  if(!Array.isArray(rows)||!rows.length){
+    document.getElementById("body").innerHTML='<div class="empty">Sem meses disponíveis ainda. (Se acabou de criar a view <b>v_dashboard_diretor_mes</b>, recarregue.)</div>';
+    return;
+  }
+  var seen={},meses=[];
+  rows.forEach(r=>{ if(r.competencia&&!seen[r.competencia]){seen[r.competencia]=1;meses.push(r.competencia);} });
+  meses.sort().reverse(); // mais recente primeiro
+  sel.innerHTML=meses.map(c=>'<option value="'+c+'">'+competLabel(c)+'</option>').join("");
+  sel.value=meses[0];
+  sel.onchange=function(){carregarMes(sel.value);};
+  carregarMes(meses[0]);
+}).catch(e=>{
+  document.getElementById("body").innerHTML='<div class="empty" style="color:var(--vm)">Não consegui ler os meses. Rode o SQL da view <b>v_dashboard_diretor_mes</b> no Supabase e recarregue.</div>';
+});
 </script></body></html>
