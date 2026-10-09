@@ -96,6 +96,7 @@ var MES=["","Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agost
 function competLabel(c){ if(!c)return "—"; var p=(""+c).split("-"); if(p.length>=3) return p[2]+"/"+p[1]+"/"+p[0].slice(2); return (MES[+p[1]]||p[1])+"/"+p[0]; }
 function get(p){return fetch(SB_URL+"/rest/v1/"+p,{headers:{apikey:SB_KEY,Authorization:"Bearer "+SB_KEY}}).then(r=>r.json());}
 function write(p,body,prefer){return fetch(SB_URL+"/rest/v1/"+p,{method:"POST",headers:{apikey:SB_KEY,Authorization:"Bearer "+SB_KEY,"Content-Type":"application/json",Prefer:prefer||"return=minimal"},body:JSON.stringify(body)}).then(r=>{if(!r.ok)return r.text().then(t=>{throw new Error(t||r.status)});return r.text().then(t=>t?JSON.parse(t):[]);});}
+function del(p){return fetch(SB_URL+"/rest/v1/"+p,{method:"DELETE",headers:{apikey:SB_KEY,Authorization:"Bearer "+SB_KEY,Prefer:"return=minimal"}}).then(function(r){if(!r.ok)return r.text().then(function(t){throw new Error(t||r.status)});return true;});}
 function esc(s){return (s==null?"":""+s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 function cls(n){return n==null?"na":n>=85?"g":n>=70?"a":"r";}
 function statusTxt(n){return n==null?"sem nota":n>=85?"no alvo":n>=70?"atenção":"abaixo";}
@@ -182,8 +183,19 @@ function render(apurs,reus,planos){
     H+='</div>';
   }
 
-  document.getElementById("body").innerHTML=H+reunioesHtml(reus);
+  var delHtml='<div class="sec">Análises lançadas <span class="hint-s">— apague uma análise inteira (ex.: um teste)</span></div><div class="box">'
+    +compKeys.slice().reverse().map(function(c){return '<div class="evrow"><div class="evdt">'+competLabel(c)+'</div><div style="font-size:12px;color:var(--ink2)">média '+avg(comps[c])+' · '+comps[c].length+' indicador(es)</div><div style="text-align:right"><button class="delap" data-comp="'+esc(c)+'" style="background:none;border:1px solid var(--ln);color:var(--vm);border-radius:7px;padding:3px 11px;font-size:11px;font-weight:700;cursor:pointer">apagar</button></div></div>';}).join('')
+    +'</div>';
+  document.getElementById("body").innerHTML=H+delHtml+reunioesHtml(reus);
   document.querySelectorAll(".icard").forEach(function(b){b.onclick=function(){selectInd(b.dataset.k);};});
+  document.querySelectorAll(".delap").forEach(function(b){b.onclick=function(){
+    var comp=b.dataset.comp;
+    if(!confirm("Apagar a análise de "+competLabel(comp)+" desta pessoa?\n\nIsso remove TODAS as notas lançadas nessa data. Não dá pra desfazer."))return;
+    b.disabled=true; b.textContent="apagando…";
+    del("apuracoes?diretor_id=eq."+encodeURIComponent(CUR_DIR)+"&competencia=eq."+encodeURIComponent(comp))
+      .then(function(){ load(CUR_DIR); })
+      .catch(function(e){ alert("Erro ao apagar: "+e.message); b.disabled=false; b.textContent="apagar"; });
+  };});
   selectInd((pior&&pior.k)||indKeys[0]);
   foot.innerHTML='<b>Como ler:</b> o <b>donut</b> é a nota média da última análise. Cada <b>card</b> é um indicador — a nota, a barra e o status. Clique num card pra abrir as <b>funções que compõem a nota</b> e escrever o <b>plano de ação</b> daquele indicador (fica salvo e aparece aqui pra apresentar). As notas vêm do <b>Console → Notas por função</b>.';
 }
