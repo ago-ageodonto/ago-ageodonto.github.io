@@ -88,6 +88,17 @@ h1{font-family:var(--serif);font-size:clamp(24px,4vw,36px);font-weight:800;lette
 .rec .rd{color:var(--ink2);font-weight:600;font-variant-numeric:tabular-nums}
 .rec .rf{color:var(--ink)} .rec .rf b{color:var(--ous)}
 .rec .rc{font-size:11px;font-weight:700} .rec .rc .g{color:var(--vd)} .rec .rc .b{color:var(--co)}
+.recwrap{border-bottom:1px solid var(--ln)} .recwrap>.rec{border-bottom:none}
+.ldcaret{display:inline-block;width:11px;color:var(--ous);font-size:10px}
+.ldet{padding:4px 0 14px 10px;margin:0 0 2px 4px;border-left:2px solid var(--ln)}
+.ldet-in{display:flex;flex-direction:column;gap:8px}
+.ldrow{display:grid;grid-template-columns:42px 1fr;gap:9px;align-items:start;font-size:12.5px}
+.ldrow .ldn{color:var(--ink3);font-weight:700;font-variant-numeric:tabular-nums}
+.ldrow .ldq{color:var(--ink);line-height:1.35}
+.ldb{display:inline-block;margin-top:4px;font:700 10.5px/1 var(--sans);padding:3px 9px;border-radius:10px;border:1px solid currentColor}
+.ldb.gd{color:var(--vd)} .ldb.rd{color:var(--co)} .ldb.na{color:var(--ink3)}
+.ldnote{margin-top:5px;font-size:12px;color:var(--ink2);border:1px solid var(--ln);border-radius:7px;padding:6px 9px;line-height:1.4;white-space:pre-wrap}
+.ldempty{color:var(--ink3);font-size:12px;padding:8px}
 .notes textarea{width:100%;font:500 13px var(--sans);background:var(--pn2);color:var(--ink);border:1px solid var(--ln);border-radius:10px;padding:11px;min-height:70px}
 .noteitem{padding:9px 0;border-bottom:1px solid var(--ln);font-size:12.5px;color:var(--ink)}
 .noteitem .nd{font-size:10.5px;color:var(--ink3);font-weight:600;text-transform:uppercase;letter-spacing:.04em;margin-bottom:2px}
@@ -306,6 +317,19 @@ function renderNps(f){
   };
 }
 
+/* detalhe de um lançamento (abrir dia a dia) */
+function frItems(fk){for(var i=0;i<FR.length;i++){if(FR[i].key===fk)return FR[i].items||[];}return [];}
+function lancDetail(e){
+  var items=frItems(e.frente),a=e.respostas||{},o=e.obs||{};
+  if(!items.length)return '<div class="ldempty">Sem a definição desta frente para detalhar.</div>';
+  var out=items.map(function(it){var n=it[0],q=it[1],mode=it[2],v=a[n];
+    if(mode==='anota'||mode==='text'||isNote(q)){ if(v==null||(''+v).trim()==='')return ''; return '<div class="ldrow"><span class="ldn">'+esc(n)+'</span><div class="ldbody"><div class="ldq">'+esc(q)+'</div><div class="ldnote">'+esc(v)+'</div></div></div>'; }
+    var badge=v==='c'?'<span class="ldb gd">✓ Conforme</span>':(v==='n'?'<span class="ldb rd">✕ Não conforme</span>':'<span class="ldb na">— não avaliado</span>');
+    var ob=(o[n]&&(''+o[n]).trim())?'<div class="ldnote">obs: '+esc(o[n])+'</div>':'';
+    return '<div class="ldrow"><span class="ldn">'+esc(n)+'</span><div class="ldbody"><div class="ldq">'+esc(q)+'</div>'+badge+ob+'</div></div>';
+  }).join('');
+  return '<div class="ldet-in">'+out+'</div>';
+}
 /* Dashboard (Gregori) */
 function renderDash(){
   var p=$('panel');p.innerHTML='<div class="empty">carregando dados…</div>';
@@ -349,11 +373,12 @@ function renderDash(){
     }).join('');
     html+='<div class="dsec"><h3>Por setor <span style="font:400 11px/1 var(--sans);color:var(--ink3)">— clique pra filtrar os lançamentos abaixo</span></h3><div class="secgrid">'+secHtml+'</div></div>';
     var src=dashFilter?fset.filter(function(e){return e.frente===dashFilter;}):fset;
-    var recent=src.slice(0,40).map(function(e){var a=e.respostas||{};var p2=0,n2=0;
+    var recent=src.slice(0,40).map(function(e,i){var a=e.respostas||{};var p2=0,n2=0;
       Object.keys(a).forEach(function(k){if(a[k]==='c')p2++;else if(a[k]==='n')n2++});
-      return '<div class="rec"><span class="rd">'+esc((e.data||'').split('-').reverse().join('/'))+'</span><span class="rf"><b>'+esc(e.frente_nome||e.frente)+'</b></span>'
+      return '<div class="recwrap"><div class="rec" data-ld="'+i+'" style="cursor:pointer"><span class="rd"><span class="ldcaret" id="cr'+i+'">▸</span> '+esc((e.data||'').split('-').reverse().join('/'))+'</span><span class="rf"><b>'+esc(e.frente_nome||e.frente)+'</b></span>'
         +'<span class="rc"><span class="g">'+p2+'✓</span> · <span class="b">'+n2+'✕</span></span>'
-        +'<span class="recdel" title="excluir" data-d="'+esc(e.data)+'" data-f="'+esc(e.frente)+'">×</span></div>';
+        +'<span class="recdel" title="excluir" data-d="'+esc(e.data)+'" data-f="'+esc(e.frente)+'">×</span></div>'
+        +'<div class="ldet" id="ld'+i+'" hidden>'+lancDetail(e)+'</div></div>';
     }).join('')||'<div class="empty">nenhum lançamento'+(dashFilter?' neste setor':'')+' no período</div>';
     var ftag=dashFilter?' <span style="font:700 11px/1 var(--sans);color:var(--ous)">· '+FRLBL[dashFilter]+' <span id="secClr" style="cursor:pointer;text-decoration:underline">(todos)</span></span>':'';
     var notesHtml=pnotes.length?pnotes.map(function(n){return '<div class="noteitem"><div class="nd">'+esc(new Date(Date.parse(n.salvo_em)||Date.now()).toLocaleDateString('pt-BR'))+'</div>'+esc(n.texto)+'<span class="notedel" title="excluir" data-noteid="'+esc(n.id)+'">×</span></div>'}).join(''):'<div class="empty" style="text-align:left">sem anotações ainda</div>';
@@ -367,6 +392,7 @@ function renderDash(){
     var fc=$('fClr');if(fc)fc.onclick=function(){fAno=fMes=fDia="";renderDash();};
     var sc=document.getElementById('secClr');if(sc)sc.onclick=function(){dashFilter=null;renderDash();};
     p.querySelectorAll('.seccard').forEach(function(el){el.onclick=function(){var s=el.getAttribute('data-sec');dashFilter=(dashFilter===s)?null:s;renderDash();};});
+    p.querySelectorAll('.rec[data-ld]').forEach(function(el){el.addEventListener('click',function(ev){if(ev.target.closest('.recdel'))return;var i=el.getAttribute('data-ld');var dd=document.getElementById('ld'+i),cr=document.getElementById('cr'+i);if(dd){dd.hidden=!dd.hidden;if(cr)cr.textContent=dd.hidden?'▸':'▾';}});});
     p.querySelectorAll('.recdel').forEach(function(el){el.onclick=function(){var d=el.getAttribute('data-d'),f=el.getAttribute('data-f');
       if(!confirm('Excluir o lançamento de '+(FRLBL[f]||f)+' em '+(d||'').split('-').reverse().join('/')+'?'))return;
       el.textContent='…';del('anderson_entries?data=eq.'+encodeURIComponent(d)+'&frente=eq.'+encodeURIComponent(f)).then(function(){renderDash();}).catch(function(){el.textContent='×';alert('Erro ao excluir.');});};});
