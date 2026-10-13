@@ -308,9 +308,9 @@ var FUNCS={
     detail:v=>{if(v.n===""||v.n==null)return "";return v.n+" avaliações via interação (meta ≈4/mês)";}}
  ]},
  recompra:{label:"Recompra",funcs:[
-   {key:"altas",label:"Altas → geração de compra",inputs:[{k:"analisadas",label:"Altas analisadas"},{k:"compra",label:"Geraram alguma compra"}],
+   {key:"altas",label:"Altas analisadas × compra",inputs:[{k:"analisadas",label:"Altas analisadas"},{k:"compra",label:"Quantas compraram"}],
     nota:v=>{var N=v.analisadas||0;if(!N)return null;var C=Math.min(v.compra||0,N);return Math.round(C/N*100);},
-    detail:v=>{var N=v.analisadas||0;if(!N)return "";var C=Math.min(v.compra||0,N);return C+" de "+N+" altas geraram compra ("+Math.round(C/N*100)+"%)";}},
+    detail:v=>{var N=v.analisadas||0;if(!N)return "";var C=Math.min(v.compra||0,N);return C+" de "+N+" altas compraram ("+Math.round(C/N*100)+"%)";}},
    {key:"venda",label:"Venda nas altas + reavaliações (meta ≥70%)",inputs:[{k:"base",label:"Altas + reavaliações"},{k:"vendas",label:"Geraram venda nova"}],
     nota:v=>{var B=v.base||0;if(!B)return null;return Math.min(100,Math.round(((v.vendas||0)/B*100)/70*100));},
     detail:v=>{var B=v.base||0;if(!B)return "";var pct=Math.round((v.vendas||0)/B*100);return (v.vendas||0)+" de "+B+" com venda ("+pct+"%, meta 70%)";}},
@@ -346,7 +346,7 @@ var CRIT={
  "avaliacoes.equipe":"Avaliações trazidas por indicação da equipe (na cadeira). Meta 4/semana (≈16/mês). Nota = (nº ÷ 16). NEUTRO por ora — não entra na nota.",
  "avaliacoes.comentarios":"Os comentários nas redes estão sendo respondidos no período? Nota = (respondidos ÷ comentários). NEUTRO por ora — não entra na nota.",
  "avaliacoes.interacao":"Avaliações que vieram de interação da equipe com quem curtiu/seguiu (Insta/Face). Meta 1/semana (≈4/mês). Nota = (nº ÷ 4). NEUTRO por ora — não entra na nota.",
- "recompra.altas":"Das altas analisadas, quantas geraram alguma compra. Nota = (geraram compra ÷ altas analisadas). Modelo objetivo/auditável no lugar da meta de volume (30/mês), difícil de puxar do sistema.",
+ "recompra.altas":"Das altas analisadas, quantas compraram. Nota = (quantas compraram ÷ altas analisadas). Modelo objetivo/auditável no lugar da meta de volume (30/mês), difícil de puxar do sistema.",
  "recompra.venda":"Das altas + reavaliações, quantas geraram venda nova. Mínimo aceitável 70%. Nota = (%venda ÷ 70%).",
  "recompra.disparos":"Disparos (vídeos/áudios) do avaliador + relacionamento para clientes, para RECOMPRA (não resgate). Meta ≥30/mês (10 por reunião). Nota = (disparos ÷ 30). NEUTRO por ora — não entra na nota do indicador.",
  "recompra.protesista":"Existe ação/bonificação interna da equipe de protesistas para sustentar as altas? NEUTRO por enquanto — sem peso; marque de referência."
