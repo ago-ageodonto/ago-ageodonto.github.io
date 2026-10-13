@@ -43,7 +43,7 @@ var SB_KEY="sb_publishable_mTx5xlUaUcLBM_YijXuCjg_vwCJ5v3x";
 var MES=["","Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
 function competLabel(c){ if(!c)return "—"; var p=(""+c).split("-"); return (MES[+p[1]]||p[1])+"/"+p[0]; }
 function atg(r){ if(r.meta==null)return null; var v=(r.projecao!=null?+r.projecao:+r.realizado); if(v==null||isNaN(v))return null; return r.sentido==="teto"? v<=+r.meta : v>=+r.meta; }
-var ICON={faturamento:"F",recompra:"Rc",entrada:"E",avaliacoes:"Av",conversao:"Cv",ticket:"Tk",resgate30:"R30",parcelamento:"Pc"};
+var ICON={faturamento:"F",recompra:"Rc",entrada:"E",avaliacoes:"Av",conversao:"Cv",ticket:"Tk",resgate30:"Rg",parcelamento:"Pc"};
 function get(p){return fetch(SB_URL+"/rest/v1/"+p,{headers:{apikey:SB_KEY,Authorization:"Bearer "+SB_KEY}}).then(r=>r.json());}
 function abrir(id){ if(window.parent&&window.parent!==window&&window.parent.openDiretor)window.parent.openDiretor(id); else location.href="dashboard.html?diretor="+id; }
 

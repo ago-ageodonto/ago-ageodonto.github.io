@@ -236,15 +236,15 @@ var FUNCS={
     nota:v=>{if(!(v.analisados||v.acima||v.injust))return null;var A=v.acima||0,B=Math.min(v.injust||0,A);return Math.max(0,Math.round(100-5*(A-B)-10*B));},
     detail:v=>{var N=v.analisados||0,A=v.acima||0,B=Math.min(v.injust||0,A);return N?(A+" acima do teto de "+N+(B?(" · "+B+" sem justificativa"):"")):"";}}
  ]},
- resgate30:{label:"Resgate 30+",funcs:[
+ resgate30:{label:"Resgate",funcs:[
    {key:"contatos",label:"Contato registrado nos contratos de resgate",inputs:[
      {k:"analisados",label:"Contratos analisados"},{k:"sem",label:"Desses, sem contato registrado"}],
     nota:v=>{var N=v.analisados||0;if(!N)return null;var S=Math.min(v.sem||0,N);return Math.round((N-S)/N*100);},
     detail:v=>{var N=v.analisados||0;if(!N)return "";var S=Math.min(v.sem||0,N);return (N-S)+" de "+N+" com contato registrado ("+Math.round((N-S)/N*100)+"%)"+(S?(" · "+S+" sem contato"):"");}},
-   {key:"videos",label:"Vídeos do doutor p/ resgate (≥5)",inputs:[{k:"feitos",label:"Vídeos feitos"}],
-    nota:v=>{if(v.feitos===""||v.feitos==null)return null;return Math.min(100,Math.round((+v.feitos)/5*100));},
-    detail:v=>{if(v.feitos===""||v.feitos==null)return "";return v.feitos+" vídeos (meta 5)";}},
-   {key:"entusiasmo",label:"Entusiasmo / abordagem",inputs:[{k:"grau",label:"Avaliação",sel:[["bom","Bom"],["regular","Regular"],["ruim","Ruim"]]}],
+   {key:"videos",label:"Vídeos do doutor p/ resgate (≥2 por encontro)",inputs:[{k:"feitos",label:"Vídeos feitos"}],
+    nota:v=>{if(v.feitos===""||v.feitos==null)return null;return Math.min(100,Math.round((+v.feitos)/2*100));},
+    detail:v=>{if(v.feitos===""||v.feitos==null)return "";return v.feitos+" vídeos (meta 2 por encontro)";}},
+   {key:"entusiasmo",label:"Entusiasmo / abordagem",neutro:true,inputs:[{k:"grau",label:"Avaliação",sel:[["bom","Bom"],["regular","Regular"],["ruim","Ruim"]]}],
     nota:v=>v.grau==="bom"?100:v.grau==="regular"?50:v.grau==="ruim"?0:null,
     detail:v=>({bom:"Bom",regular:"Regular",ruim:"Ruim"})[v.grau]||""}
  ]},
@@ -325,8 +325,8 @@ var FUNCS={
 var CRIT={
  "parcelamento.conf":"Meta = manter cada contrato dentro do teto da praça. Cada contrato acima do teto tira 5; se o planejamento não justificar (prazo de recebimento incompatível com a entrega), tira 10 (o dobro).",
  "resgate30.contatos":"Dos contratos de resgate analisados, em quantos o contato estava registrado no sistema. Nota = (contratos com contato registrado ÷ contratos analisados). Mede o setor de forma objetiva e auditável, no lugar da média/dia autodeclarada. Cobrança conjunta (avaliador + relacionamento).",
- "resgate30.videos":"O doutor deve gravar ≥5 vídeos para pacientes de resgate no período. Nota = (vídeos feitos ÷ 5).",
- "resgate30.entusiasmo":"Qualidade da abordagem do relacionamento (tom/entusiasmo), monitorada via consultores/Marilda até ter CRM. Bom=100, Regular=50, Ruim=0.",
+ "resgate30.videos":"O doutor deve gravar ≥2 vídeos por encontro para pacientes de resgate. Nota = (vídeos feitos ÷ 2).",
+ "resgate30.entusiasmo":"Qualidade da abordagem do relacionamento (tom/entusiasmo), monitorada via consultores/Marilda até ter CRM. Bom=100, Regular=50, Ruim=0. NEUTRO por ora — não entra na nota do indicador até termos como acompanhar.",
  "ticket.ia":"Uso da ferramenta de IA nas avaliações. Meta ≥80% das avaliações. Nota = (uso% ÷ 80%).",
  "ticket.oferta":"Ofereceu ao paciente tudo que ele poderia comprar? Nota = (ofertas completas + metade das parciais) ÷ avaliações analisadas.",
  "ticket.esteticos":"Nos casos estéticos, usou foto + IA de antes-e-depois? Nota = (casos com antes-e-depois ÷ casos estéticos).",
