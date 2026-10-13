@@ -1114,15 +1114,17 @@ function _mrow(label,pf,pq,fmx,qmx,dot){
 }
 function mixDraw(){
   var yr=document.getElementById("mixYr").value, sc=document.getElementById("mixScope").value;
-  var d= sc==="__rede"?MIXTR.rede[yr]:(MIXTR.pracas[sc]?MIXTR.pracas[sc][yr]:null);
+  var cb=document.getElementById("mixCombo"); if(cb) cb.hidden=(sc!=="__combinar");
+  var d= sc==="__rede"?MIXTR.rede[yr]:(sc==="__combinar"?mixCombine(yr):(MIXTR.pracas[sc]?MIXTR.pracas[sc][yr]:null));
   var G=document.getElementById("mixGrp"), R=document.getElementById("mixRank"), P=document.getElementById("mixPay");
-  if(!d||!d.mix||!d.mix.tot_v){G.innerHTML='<div style="padding:16px;color:var(--ink3)">Sem dados para este escopo/ano.</div>';R.innerHTML="";P.innerHTML="";return;}
+  if(!d||!d.mix||!d.mix.tot_v){var _msg=(sc==="__combinar")?"Selecione as praças para somar (ou use um preset).":"Sem dados para este escopo/ano.";var _ci=document.getElementById("mixComboInfo"); if(_ci&&sc==="__combinar")_ci.innerHTML="Selecione as praças para somar.";G.innerHTML='<div style="padding:16px;color:var(--ink3)">'+_msg+'</div>';R.innerHTML="";P.innerHTML="";return;}
   var m=d.mix, pay=d.pay;
   // RESUMIDO — 4 grupos a partir do detalhe (Harmonização sai do Clínico)
   var bk={};
   m.rank.forEach(function(c){var b=/harmoniz|bichectom/i.test(c.n)?"Harmonização":(/alinhad|invisalign/i.test(c.n)?"Alinhadores":c.g); if(!bk[b])bk[b]={v:0,q:0}; bk[b].v+=c.v; bk[b].q+=c.q;});
   var order=["Reabilitação","Clínico geral","Ortodontia","Alinhadores","Harmonização"];
   var brows=order.filter(function(k){return bk[k];}).map(function(k){return {k:k,pf:bk[k].v/m.tot_v*100,pq:bk[k].q/m.tot_q*100};});
+  if(sc==="__combinar"){var _cg=bk["Clínico geral"]||{v:0},_n=document.querySelectorAll(".mixck:checked").length,_i=document.getElementById("mixComboInfo"); if(_i)_i.innerHTML=_n+" praça(s) somadas · <b style=\"color:var(--ou)\">Clínico geral = "+(_cg.v/m.tot_v*100).toFixed(1)+"%</b> do faturamento ("+_mmi(_cg.v)+" de "+_mmi(m.tot_v)+") · "+yr;}
   var gfmx=Math.max.apply(null,brows.map(function(r){return r.pf;}))||1, gqmx=Math.max.apply(null,brows.map(function(r){return r.pq;}))||1;
   G.innerHTML='<div style="padding:12px 14px">'+_mhead()+brows.map(function(r){return _mrow(_GLAB[r.k]||r.k,r.pf,r.pq,gfmx,gqmx,_GC[r.k]);}).join('')
     +'<div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--ln);font-size:11.5px;color:var(--ink2)">Faturamento total (venda): <b style="color:var(--ink)">'+_mmi(m.tot_v)+'</b> · <b style="color:var(--ink)">'+m.tot_q.toLocaleString("pt-BR")+'</b> itens</div></div>';
@@ -1135,8 +1137,27 @@ function mixDraw(){
   P.innerHTML='<div style="padding:12px 14px">'+PB.map(function(p){return '<div style="display:flex;align-items:center;gap:10px;margin:8px 0;font-size:12.5px"><div style="width:120px;color:var(--ink)">'+p[0]+'</div><div style="flex:1;background:var(--pn2);border-radius:5px;height:18px"><div style="width:'+(p[1]/pmx*100).toFixed(1)+'%;height:100%;background:'+p[2]+';border-radius:5px;opacity:.85"></div></div><div style="width:58px;text-align:right;font-weight:700;color:'+p[2]+'">'+_mp(p[1])+'</div></div>';}).join('')+'</div>';
 }
 (function(){var sc=document.getElementById("mixScope");if(!sc)return;
-  sc.innerHTML='<option value="__rede">Rede (grupo todo)</option>'+Object.keys(MIXTR.pracas).sort().map(function(n){return '<option value="'+n+'">'+n+'</option>';}).join('');
+  var PR=Object.keys(MIXTR.pracas).sort();
+  sc.innerHTML='<option value="__rede">Rede (grupo todo)</option><option value="__combinar">Combinar praças…</option>'+PR.map(function(n){return '<option value="'+n+'">'+n+'</option>';}).join('');
+  var combo=document.createElement('div'); combo.id='mixCombo'; combo.hidden=true;
+  combo.style.cssText='margin:12px 0 2px;padding:12px 14px;background:var(--pn);border:1px solid var(--ln);border-radius:12px';
+  var bc='font:600 12px/1 var(--sans);padding:7px 12px;border-radius:8px;border:1px solid var(--ln);background:transparent;color:var(--ink2);cursor:pointer';
+  combo.innerHTML='<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px"><button class="mcpre" data-pre="piloto" style="'+bc+'">Piloto 360°</button><button class="mcpre" data-pre="ms" style="'+bc+'">MS</button><button class="mcpre" data-pre="all" style="'+bc+'">Todas</button><button class="mcpre" data-pre="none" style="'+bc+'">Limpar</button></div><div id="mixComboInfo" style="font-size:12.5px;color:var(--ink2);margin-bottom:10px">Selecione as praças para somar.</div><div id="mixComboChecks" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:5px 14px">'+PR.map(function(n){return '<label style="font-size:12px;color:var(--ink);display:flex;align-items:center;gap:6px;cursor:pointer"><input type="checkbox" class="mixck" value="'+n.replace(/"/g,'&quot;')+'">'+n+'</label>';}).join('')+'</div>';
+  var ctl=document.querySelector('#t-mix .ctl'); if(ctl) ctl.insertAdjacentElement('afterend',combo);
+  var PRESETS={piloto:["Campo Grande","Campo Grande II","Três Lagoas","Naviraí","Nova Andradina","Dourados","Indaial","Timbó","Viamão","Teutônia","Capão da Canoa"],ms:["Campo Grande","Campo Grande II","Três Lagoas","Naviraí","Nova Andradina","Dourados"]};
+  combo.querySelectorAll('.mcpre').forEach(function(b){b.onclick=function(){var p=b.dataset.pre,set=p==="all"?PR:(p==="none"?[]:PRESETS[p]||[]),S={}; set.forEach(function(x){S[x]=1;}); combo.querySelectorAll('.mixck').forEach(function(c){c.checked=!!S[c.value];}); mixDraw();};});
+  combo.addEventListener('change',function(e){if(e.target&&e.target.classList&&e.target.classList.contains('mixck'))mixDraw();});
   document.getElementById("mixYr").onchange=mixDraw; sc.onchange=mixDraw;})();
+function mixCombine(yr){
+  var checks=[].slice.call(document.querySelectorAll('.mixck:checked')).map(function(c){return c.value;});
+  if(!checks.length) return null;
+  var agg={},tv=0,tq=0,pay={boleto:0,cartao:0,dinheiro:0,transf:0,cheque:0},payw=0;
+  checks.forEach(function(n){var node=MIXTR.pracas[n]&&MIXTR.pracas[n][yr]; if(!node||!node.mix)return; var m=node.mix; tv+=m.tot_v; tq+=m.tot_q; m.rank.forEach(function(c){if(!agg[c.n])agg[c.n]={n:c.n,g:c.g,q:0,v:0}; agg[c.n].q+=c.q; agg[c.n].v+=c.v;}); if(node.pay){payw+=m.tot_v;["boleto","cartao","dinheiro","transf","cheque"].forEach(function(k){pay[k]+=(node.pay[k]||0)*m.tot_v;});}});
+  if(!tv)return null;
+  if(payw)["boleto","cartao","dinheiro","transf","cheque"].forEach(function(k){pay[k]=pay[k]/payw;});
+  var rank=Object.keys(agg).map(function(k){var c=agg[k]; c.pf=c.v/tv*100; c.pq=c.q/tq*100; return c;}).sort(function(a,b){return b.v-a.v;});
+  return {mix:{tot_v:tv,tot_q:tq,rank:rank},pay:pay};
+}
 
 var MIXPAC={n:175,itens:1217,ipp:6.95,pracas:"Dourados + Timbó · ago/2026",rows:[
  {n:"Restauração",g:"Clínico geral",it:287,pac:83,ipp:3.46},
