@@ -308,13 +308,13 @@ var FUNCS={
     detail:v=>{if(v.n===""||v.n==null)return "";return v.n+" avaliações via interação (meta ≈4/mês)";}}
  ]},
  recompra:{label:"Recompra",funcs:[
-   {key:"altas",label:"Altas realizadas (meta ≥30/mês)",inputs:[{k:"n",label:"Altas no mês"}],
-    nota:v=>{if(v.n===""||v.n==null)return null;return Math.min(100,Math.round((+v.n)/30*100));},
-    detail:v=>{if(v.n===""||v.n==null)return "";return v.n+" altas (meta 30/mês)";}},
+   {key:"altas",label:"Altas → geração de compra",inputs:[{k:"analisadas",label:"Altas analisadas"},{k:"compra",label:"Geraram alguma compra"}],
+    nota:v=>{var N=v.analisadas||0;if(!N)return null;var C=Math.min(v.compra||0,N);return Math.round(C/N*100);},
+    detail:v=>{var N=v.analisadas||0;if(!N)return "";var C=Math.min(v.compra||0,N);return C+" de "+N+" altas geraram compra ("+Math.round(C/N*100)+"%)";}},
    {key:"venda",label:"Venda nas altas + reavaliações (meta ≥70%)",inputs:[{k:"base",label:"Altas + reavaliações"},{k:"vendas",label:"Geraram venda nova"}],
     nota:v=>{var B=v.base||0;if(!B)return null;return Math.min(100,Math.round(((v.vendas||0)/B*100)/70*100));},
     detail:v=>{var B=v.base||0;if(!B)return "";var pct=Math.round((v.vendas||0)/B*100);return (v.vendas||0)+" de "+B+" com venda ("+pct+"%, meta 70%)";}},
-   {key:"disparos",label:"Disparos de recompra — avaliador+relacionamento (meta ≥30/mês)",inputs:[{k:"n",label:"Disparos de recompra no mês"}],
+   {key:"disparos",label:"Disparos de recompra — avaliador+relacionamento (meta ≥30/mês)",neutro:true,inputs:[{k:"n",label:"Disparos de recompra no mês"}],
     nota:v=>{if(v.n===""||v.n==null)return null;return Math.min(100,Math.round((+v.n)/30*100));},
     detail:v=>{if(v.n===""||v.n==null)return "";return v.n+" disparos de recompra (meta 30/mês)";}},
    {key:"protesista",label:"Ação/bonificação da equipe de protesistas",neutro:true,inputs:[{k:"ativo",label:"Há ação/bonificação ativa?",sel:[["sim","Sim"],["nao","Não"]]}],
@@ -346,9 +346,9 @@ var CRIT={
  "avaliacoes.equipe":"Avaliações trazidas por indicação da equipe (na cadeira). Meta 4/semana (≈16/mês). Nota = (nº ÷ 16).",
  "avaliacoes.comentarios":"Os comentários nas redes estão sendo respondidos no período? Nota = (respondidos ÷ comentários).",
  "avaliacoes.interacao":"Avaliações que vieram de interação da equipe com quem curtiu/seguiu (Insta/Face). Meta 1/semana (≈4/mês). Nota = (nº ÷ 4).",
- "recompra.altas":"Quantidade de altas realizadas. Meta ≥30/mês (10 por reunião). Nota = (altas ÷ 30).",
+ "recompra.altas":"Das altas analisadas, quantas geraram alguma compra. Nota = (geraram compra ÷ altas analisadas). Modelo objetivo/auditável no lugar da meta de volume (30/mês), difícil de puxar do sistema.",
  "recompra.venda":"Das altas + reavaliações, quantas geraram venda nova. Mínimo aceitável 70%. Nota = (%venda ÷ 70%).",
- "recompra.disparos":"Disparos (vídeos/áudios) do avaliador + relacionamento para clientes, para RECOMPRA (não resgate). Meta ≥30/mês (10 por reunião). Nota = (disparos ÷ 30).",
+ "recompra.disparos":"Disparos (vídeos/áudios) do avaliador + relacionamento para clientes, para RECOMPRA (não resgate). Meta ≥30/mês (10 por reunião). Nota = (disparos ÷ 30). NEUTRO por ora — não entra na nota do indicador.",
  "recompra.protesista":"Existe ação/bonificação interna da equipe de protesistas para sustentar as altas? NEUTRO por enquanto — sem peso; marque de referência."
 };
 function indId(chave){var i=STATE.indicadores.find(x=>x.chave===chave);return i&&i.id;}
