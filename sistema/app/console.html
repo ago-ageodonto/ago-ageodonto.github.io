@@ -249,17 +249,18 @@ var FUNCS={
     detail:v=>({bom:"Bom",regular:"Regular",ruim:"Ruim"})[v.grau]||""}
  ]},
  ticket:{label:"Ticket médio",funcs:[
-   {key:"ia",label:"Uso da ferramenta de IA (meta ≥80%)",inputs:[{k:"uso",label:"% das avaliações que usaram"}],
-    nota:v=>{if(v.uso===""||v.uso==null)return null;return Math.min(100,Math.round((+v.uso)/80*100));},
-    detail:v=>{if(v.uso===""||v.uso==null)return "";return v.uso+"% usaram a ferramenta";}},
+   {key:"ia",label:"Uso da ferramenta de IA",inputs:[
+     {k:"analisados",label:"Contratos analisados"},{k:"usaram",label:"Usaram ferramenta de IA"}],
+    nota:v=>{var N=v.analisados||0;if(!N)return null;return Math.round((v.usaram||0)/N*100);},
+    detail:v=>{var N=v.analisados||0;return N?((v.usaram||0)+" de "+N+" usaram ferramenta de IA"):"";}},
    {key:"oferta",label:"Cobertura da oferta (ofertou tudo?)",inputs:[
      {k:"analisadas",label:"Avaliações analisadas"},{k:"completa",label:"Oferta completa"},{k:"parcial",label:"Oferta parcial"}],
     nota:v=>{var N=v.analisadas||0;if(!N)return null;return Math.round(((v.completa||0)+0.5*(v.parcial||0))/N*100);},
     detail:v=>{var N=v.analisadas||0;return N?((v.completa||0)+" completa / "+(v.parcial||0)+" parcial de "+N):"";}},
-   {key:"esteticos",label:"Foto + IA antes-e-depois (casos estéticos)",inputs:[
-     {k:"esteticos",label:"Casos estéticos"},{k:"comAD",label:"Com antes-e-depois"}],
-    nota:v=>{var E=v.esteticos||0;if(!E)return null;return Math.round((v.comAD||0)/E*100);},
-    detail:v=>{var E=v.esteticos||0;return E?((v.comAD||0)+" de "+E+" estéticos com antes-e-depois"):"";}}
+   {key:"esteticos",label:"Foto + IA antes-e-depois",inputs:[
+     {k:"analisados",label:"Contratos analisados"},{k:"comAD",label:"Usados para antes-e-depois"}],
+    nota:v=>{var N=v.analisados||0;if(!N)return null;return Math.round((v.comAD||0)/N*100);},
+    detail:v=>{var N=v.analisados||0;return N?((v.comAD||0)+" de "+N+" com antes-e-depois"):"";}}
  ]},
  conversao:{label:"Conversão",funcs:[
    {key:"gravacoes",label:"Envio de gravações de avaliações (≥3 por encontro)",inputs:[{k:"enviadas",label:"Gravações enviadas"}],
@@ -327,9 +328,9 @@ var CRIT={
  "resgate30.contatos":"Dos contratos de resgate analisados, em quantos o contato estava registrado no sistema. Nota = (contratos com contato registrado ÷ contratos analisados). Mede o setor de forma objetiva e auditável, no lugar da média/dia autodeclarada. Cobrança conjunta (avaliador + relacionamento).",
  "resgate30.videos":"O doutor deve gravar ≥2 vídeos por encontro para pacientes de resgate. Nota = (vídeos feitos ÷ 2). NEUTRO por ora — não entra na nota do indicador.",
  "resgate30.entusiasmo":"Qualidade da abordagem do relacionamento (tom/entusiasmo), monitorada via consultores/Marilda até ter CRM. Bom=100, Regular=50, Ruim=0. NEUTRO por ora — não entra na nota do indicador até termos como acompanhar.",
- "ticket.ia":"Uso da ferramenta de IA nas avaliações. Meta ≥80% das avaliações. Nota = (uso% ÷ 80%).",
+ "ticket.ia":"Dos contratos analisados, quantos usaram a ferramenta de IA. Nota = (usaram ÷ contratos analisados).",
  "ticket.oferta":"Ofereceu ao paciente tudo que ele poderia comprar? Nota = (ofertas completas + metade das parciais) ÷ avaliações analisadas.",
- "ticket.esteticos":"Nos casos estéticos, usou foto + IA de antes-e-depois? Nota = (casos com antes-e-depois ÷ casos estéticos).",
+ "ticket.esteticos":"Dos contratos analisados, quantos foram usados para antes-e-depois (foto + IA). Nota = (usados para antes-e-depois ÷ contratos analisados).",
  "conversao.gravacoes":"O avaliador deve te enviar ≥3 gravações de avaliações por encontro, para embasar a análise da venda. Nota = (gravações enviadas ÷ 3). É a única função com peso hoje.",
  "conversao.storytelling":"Como o avaliador conduz o storytelling da venda. Só fica assertivo com o Ovix Pro (em instalação). NEUTRO por enquanto — sem peso; marque de referência.",
  "conversao.negociacao":"Como é feita a negociação na hora do orçamento. Via Ovix Pro. NEUTRO por enquanto — sem peso.",
