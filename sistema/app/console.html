@@ -232,9 +232,9 @@ document.getElementById("d-add").onclick=function(){
 var FUNCS={
  parcelamento:{label:"Parcelamento médio",funcs:[
    {key:"conf",label:"Conformidade de parcelamento",inputs:[
-     {k:"analisados",label:"Contratos analisados"},{k:"acima",label:"Acima do teto"},{k:"injust",label:"Desses, sem justificativa"}],
-    nota:v=>{if(!(v.analisados||v.acima||v.injust))return null;var A=v.acima||0,B=Math.min(v.injust||0,A);return Math.max(0,Math.round(100-5*(A-B)-10*B));},
-    detail:v=>{var N=v.analisados||0,A=v.acima||0,B=Math.min(v.injust||0,A);return N?(A+" acima do teto de "+N+(B?(" · "+B+" sem justificativa"):"")):"";}}
+     {k:"analisados",label:"Contratos analisados"},{k:"acima",label:"Acima do teto"},{k:"justif",label:"Desses, justificados"}],
+    nota:v=>{if(!(v.analisados||v.acima||v.justif))return null;var A=v.acima||0,J=Math.min(v.justif||0,A);return Math.max(0,Math.round(100-5*J-10*(A-J)));},
+    detail:v=>{var N=v.analisados||0,A=v.acima||0,J=Math.min(v.justif||0,A);if(!N)return "";var falta=A-J;return A+" acima do teto de "+N+(A?(" · "+J+" justificado"+(J===1?"":"s")+(falta?(" · faltam "+falta):"")):"");}}
  ]},
  resgate30:{label:"Resgate",funcs:[
    {key:"contatos",label:"Contato registrado nos contratos de resgate",inputs:[
@@ -323,7 +323,7 @@ var FUNCS={
  ]}
 };
 var CRIT={
- "parcelamento.conf":"Meta = manter cada contrato dentro do teto da praça. Cada contrato acima do teto tira 5; se o planejamento não justificar (prazo de recebimento incompatível com a entrega), tira 10 (o dobro).",
+ "parcelamento.conf":"Meta = manter cada contrato dentro do teto da praça. Cada contrato acima do teto tira 10; ao justificar o planejamento (prazo de recebimento compatível com a entrega), a perda cai pra 5. Ou seja: quanto mais contratos acima do teto você justifica, melhor a nota.",
  "resgate30.contatos":"Dos contratos de resgate analisados, em quantos o contato estava registrado no sistema. Nota = (contratos com contato registrado ÷ contratos analisados). Mede o setor de forma objetiva e auditável, no lugar da média/dia autodeclarada. Cobrança conjunta (avaliador + relacionamento).",
  "resgate30.videos":"O doutor deve gravar ≥2 vídeos por encontro para pacientes de resgate. Nota = (vídeos feitos ÷ 2). NEUTRO por ora — não entra na nota do indicador.",
  "resgate30.entusiasmo":"Qualidade da abordagem do relacionamento (tom/entusiasmo), monitorada via consultores/Marilda até ter CRM. Bom=100, Regular=50, Ruim=0. NEUTRO por ora — não entra na nota do indicador até termos como acompanhar.",
