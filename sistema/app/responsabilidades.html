@@ -1,178 +1,192 @@
-<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><title>Responsabilidades — AGO</title>
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><title>Responsabilidades da RMR — AGO</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Spectral:wght@400;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap">
 <style>
 :root{
- --pg:#0B0906;--pn:#141009;--pn2:#1A150C;--ln:#2A2213;--ln2:#3A3018;
- --ink:#F3ECDA;--ink2:#B6A883;--ink3:#7C7256;
- --ous:#F1CE68;--gold-d:#B8862B;--vd:#5CC98A;--vm:#E0796B;--am:#E8B54D;
- --grad:linear-gradient(100deg,#FBEDB4,#F1CE68 40%,#CFA23B 70%,#F7DE8C);
+ --bg:#FFFFFF;--card:#FFFFFF;--soft:#F5F6F9;
+ --ink:#1B3A5C;--ink2:#43505E;--ink3:#8A94A0;--line:#E4E7EC;--line2:#EEF0F3;
+ --navy:#203E5E;--cream:#ECE4D3;
+ --gr:#1D7B4A;--gr-bg:#E4F1E9;--am:#B07D12;--am-bg:#F7EACB;--na:#8A94A0;--na-bg:#EEF0F3;
+ --red:#C14A3B;
  --serif:'Spectral',Georgia,serif;--sans:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;
 }
 *{box-sizing:border-box;margin:0;padding:0}
-body{background:radial-gradient(120% 80% at 85% -10%,rgba(233,194,90,.10),transparent 60%),var(--pg);color:var(--ink);font-family:var(--sans);line-height:1.5;-webkit-font-smoothing:antialiased;padding:clamp(14px,2.5vw,30px)}
-.wrap{max-width:1040px;margin:0 auto}
-.top{display:flex;align-items:center;justify-content:space-between;gap:18px;border-bottom:1px solid var(--ln);padding-bottom:16px;flex-wrap:wrap}
-.brand{display:flex;align-items:center;gap:14px}
-.brand img{height:50px;width:auto;filter:drop-shadow(0 2px 8px rgba(0,0,0,.4))}
-.brand .eyebrow{font-size:10.5px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--gold-d)}
-.brand h1{font-family:var(--serif);font-size:21px;font-weight:800;letter-spacing:-.01em;line-height:1.05}
-.meta{font-size:11.5px;color:var(--ink3);text-align:right}
-/* progress */
-.prog{display:flex;align-items:center;gap:14px;margin:20px 0 6px;flex-wrap:wrap}
-.pbar{flex:1;min-width:180px;height:9px;background:var(--pn2);border:1px solid var(--ln);border-radius:999px;overflow:hidden}
-.pbar i{display:block;height:100%;background:var(--grad);width:0;transition:width .3s}
-.pct{font-size:13px;font-weight:800;color:var(--ous)}
-.filters{display:flex;gap:6px;margin:14px 0 4px;flex-wrap:wrap}
-.flt{font-size:12px;font-weight:700;padding:7px 13px;border-radius:9px;border:1px solid var(--ln);background:var(--pn);color:var(--ink2);cursor:pointer}
-.flt.on{background:var(--grad);color:#241a06;border-color:transparent}
+body{background:var(--bg);color:var(--ink2);font-family:var(--sans);line-height:1.5;-webkit-font-smoothing:antialiased;padding:clamp(16px,3vw,40px)}
+.wrap{max-width:900px;margin:0 auto}
+/* header */
+.eyebrow{font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--ink3);display:flex;align-items:center;gap:8px}
+.eyebrow b{color:var(--ink);font-weight:800}
+.eyebrow .dot{width:6px;height:6px;border-radius:50%;background:var(--am)}
+h1{font-family:var(--serif);font-size:clamp(28px,5vw,40px);font-weight:800;color:var(--ink);letter-spacing:-.015em;margin:7px 0 6px}
+.subh{font-size:13px;color:var(--ink3)}.subh b{color:var(--ink2);font-weight:700}
+.rule{height:3px;background:var(--ink);border-radius:2px;margin:16px 0 0;max-width:120px}
+/* tiles */
+.tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:22px 0 6px}
+.tile{background:var(--card);border:1px solid var(--line);border-left:3px solid var(--na);border-radius:12px;padding:14px 16px}
+.tile .num{font-family:var(--serif);font-size:28px;font-weight:800;line-height:1}
+.tile .lbl{font-size:11px;color:var(--ink3);margin-top:5px;font-weight:600}
+.tile.g{border-left-color:var(--gr)}.tile.g .num{color:var(--gr)}
+.tile.a{border-left-color:var(--am)}.tile.a .num{color:var(--am)}
+.tile.n .num{color:var(--na)}
+.tile.t{border-left-color:var(--navy)}.tile.t .num{color:var(--ink)}
+@media(max-width:620px){.tiles{grid-template-columns:1fr 1fr}}
+.filters{display:flex;gap:7px;margin:16px 0 4px;flex-wrap:wrap}
+.flt{font-size:12px;font-weight:700;padding:7px 13px;border-radius:8px;border:1px solid var(--line);background:#fff;color:var(--ink2);cursor:pointer}
+.flt.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.hint{font-size:11.5px;color:var(--ink3);margin:6px 2px 0}
 /* section */
-.sec{margin:24px 0 8px}
-.sec-h{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;border-bottom:1px solid var(--ln);padding-bottom:9px;margin-bottom:4px}
-.sec-h .t{font-family:var(--serif);font-size:18px;font-weight:800}
-.sec-h .d{font-size:11.5px;color:var(--ink3)}
-.sec-h .n{margin-left:auto;font-size:11px;font-weight:700;color:var(--ink3)}
-/* item */
-.it{display:flex;gap:13px;padding:14px 4px;border-bottom:1px solid var(--ln2)}
-.it.done{opacity:.5}
-.ck{flex:0 0 auto;margin-top:2px}
-.ck input{appearance:none;-webkit-appearance:none;width:21px;height:21px;border:1.5px solid var(--gold-d);border-radius:6px;background:var(--pn2);cursor:pointer;position:relative}
-.ck input:checked{background:var(--grad);border-color:transparent}
-.ck input:checked::after{content:"✓";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#241a06;font-weight:800;font-size:13px}
-.ib{flex:1;min-width:0}
-.ir{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:3px}
-.tag{font-size:9.5px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;padding:2px 7px;border-radius:5px;background:var(--pn2);border:1px solid var(--ln);color:var(--ink2)}
-.code{font-size:11px;font-weight:800;color:var(--gold-d)}
-.it.done .ttl{text-decoration:line-through}
-.ttl{font-size:14.5px;font-weight:700;color:var(--ink)}
-.desc{font-size:13px;color:var(--ink2);margin-top:2px}
-.sub{font-size:11.5px;color:var(--ink3);margin-top:5px;display:flex;gap:12px;flex-wrap:wrap}
-.sub b{color:var(--ink2);font-weight:600}
-.badge{font-size:9.5px;font-weight:800;letter-spacing:.03em;text-transform:uppercase;padding:2px 8px;border-radius:999px}
-.b-over{background:rgba(224,121,107,.16);color:var(--vm);border:1px solid color-mix(in srgb,var(--vm) 40%,transparent)}
-.b-soon{background:rgba(232,181,77,.16);color:var(--am);border:1px solid color-mix(in srgb,var(--am) 40%,transparent)}
-.b-new{background:rgba(92,201,138,.14);color:var(--vd);border:1px solid color-mix(in srgb,var(--vd) 40%,transparent)}
-.foot{margin-top:26px;border-top:1px solid var(--ln);padding-top:14px;font-size:11px;color:var(--ink3);line-height:1.6}
-.reset{background:transparent;border:1px solid var(--ln);color:var(--ink3);border-radius:8px;padding:6px 12px;font-size:11px;font-weight:700;cursor:pointer;font-family:var(--sans)}
+.sec{margin:26px 0 6px}
+.sec-h{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.sec-h .t{font-family:var(--serif);font-size:20px;font-weight:800;color:var(--ink)}
+.sec-h .c{font-size:12px;color:var(--ink3);font-weight:600}
+/* card */
+.it{background:var(--card);border:1px solid var(--line);border-left:4px solid var(--na);border-radius:13px;padding:15px 17px;margin-bottom:12px}
+.it.s1{border-left-color:var(--am)}.it.s2{border-left-color:var(--gr)}
+.it-top{display:flex;align-items:flex-start;gap:11px;flex-wrap:wrap}
+.code{flex:0 0 auto;font-size:11px;font-weight:800;letter-spacing:.03em;color:var(--navy);background:var(--cream);border-radius:6px;padding:4px 9px;margin-top:1px}
+.ttlwrap{flex:1;min-width:200px}
+.tag{font-size:10px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:var(--ink3);margin-bottom:3px}
+.ttl{font-size:15px;font-weight:700;color:var(--ink);line-height:1.35}
+.it.s2 .ttl{color:var(--ink2)}
+.right{display:flex;align-items:center;gap:12px;margin-left:auto;flex-shrink:0}
+.badge{font-size:11px;font-weight:800;padding:5px 12px;border-radius:999px;cursor:pointer;border:1px solid transparent;white-space:nowrap;user-select:none}
+.badge.s0{background:var(--na-bg);color:#5A6470}.badge.s1{background:var(--am-bg);color:var(--am)}.badge.s2{background:var(--gr-bg);color:var(--gr)}
+.prazo{font-size:12px;color:var(--ink3);white-space:nowrap}.prazo.over{color:var(--red);font-weight:700}
+.upd{margin-top:12px;background:var(--soft);border-radius:9px;padding:11px 13px}
+.upd .ul{font-size:10px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:var(--ink3);margin-bottom:4px}
+.upd .ut{font-size:13px;color:var(--ink2);line-height:1.5}.upd .ut b{color:var(--ink);font-weight:700}
+.co{font-size:11.5px;color:var(--ink3);margin-top:9px}.co b{color:var(--ink2);font-weight:600}
+.foot{margin-top:28px;border-top:1px solid var(--line);padding-top:14px;font-size:11.5px;color:var(--ink3);line-height:1.7}
+.reset{background:#fff;border:1px solid var(--line);color:var(--ink3);border-radius:8px;padding:6px 12px;font-size:11px;font-weight:700;cursor:pointer;font-family:var(--sans)}
 </style></head>
 <body>
 <script>window.AGO_AUTH={audience:"team",title:"Gestão Comercial AGO"};</script>
 <script src="sbauth.js"></script>
 <div class="wrap">
- <div class="top">
-   <div class="brand">
-     <img src="../../materiais/ageodonto_logo.png" alt="AGO" onerror="this.style.display='none'">
-     <div><div class="eyebrow">Ageodonto · Gestão de Alta Performance</div>
-     <h1>Minhas Responsabilidades — Outubro 2026</h1></div>
-   </div>
-   <div class="meta">Gregori Scarpeta<br>Extraído das atas de outubro<br><span id="today"></span></div>
- </div>
+ <div class="eyebrow"><span class="dot"></span>Ageodonto <span style="color:var(--line)">·</span> Direção Comercial <span style="color:var(--line)">·</span> <b>Gregori</b></div>
+ <h1>Responsabilidades da RMR</h1>
+ <div class="subh">Outubro 2026 · atas <b>O.U. Indaial (13/10)</b>, <b>RMR Unidade (15/10)</b> e <b>AGO Latam (09/10)</b> · atualizado em <b>26/10/2026</b></div>
+ <div class="rule"></div>
 
- <div class="prog">
-   <span class="pct" id="pct">0%</span>
-   <div class="pbar"><i id="pbar"></i></div>
-   <span style="font-size:11.5px;color:var(--ink3)" id="count"></span>
+ <div class="tiles">
+   <div class="tile g"><div class="num" id="t-done">0</div><div class="lbl">Concluídas</div></div>
+   <div class="tile a"><div class="num" id="t-prog">0</div><div class="lbl">Em andamento</div></div>
+   <div class="tile n"><div class="num" id="t-todo">0</div><div class="lbl">Não iniciadas</div></div>
+   <div class="tile t"><div class="num" id="t-all">0</div><div class="lbl">Total de ações</div></div>
  </div>
  <div class="filters">
    <button class="flt on" data-f="all">Todas</button>
-   <button class="flt" data-f="open">Em aberto</button>
-   <button class="flt" data-f="over">Vencidas ⏰</button>
+   <button class="flt" data-f="todo">Não iniciadas</button>
+   <button class="flt" data-f="prog">Em andamento</button>
    <button class="flt" data-f="done">Concluídas</button>
+   <button class="flt" data-f="over">Vencidas</button>
  </div>
+ <div class="hint">Clique no selo de status pra alternar <b>Não iniciado → Em andamento → Concluído</b>. Fica salvo neste navegador.</div>
 
  <div id="list"></div>
 
  <div class="foot">
-   As caixinhas marcadas ficam salvas só neste navegador. · Fontes: <b>Pautas e Atas O.U. Indaial (13/10)</b> · <b>Ata RMR Unidade (15/10)</b> · <b>Ata nº 009 AGO Latam (09/10, rev. 13/10)</b>. Documentos confidenciais.<br>
-   <button class="reset" onclick="if(confirm('Desmarcar tudo?')){localStorage.removeItem(LS);render();}">Limpar marcações</button>
+   Fontes: Pautas e Atas O.U. Indaial (13/10) · Ata RMR Unidade (15/10) · Ata nº 009 AGO Latam (09/10, rev. 13/10). Documentos confidenciais.<br>
+   <button class="reset" onclick="if(confirm('Resetar todos os status para o inicial?')){localStorage.removeItem(LS);render();}">Resetar status</button>
  </div>
 </div>
 
 <script>
-var TODAY=new Date(2026,9,26); // 26/10/2026
-var LS="ago_resp_out2026";
+var TODAY=new Date(2026,9,26);
+var LS="ago_resp_out2026_v2";
 function state(){try{return JSON.parse(localStorage.getItem(LS)||"{}")}catch(e){return{}}}
 function save(s){try{localStorage.setItem(LS,JSON.stringify(s))}catch(e){}}
+var SL=["Não iniciado","Em andamento","Concluído"];
 
-// prazo: [ano,mes0,dia] p/ cálculo de vencido; null quando não datável
+// st: status inicial 0/1/2 · d:[a,m0,dia] prazo p/ vencido (ou null) · upd: atualização (ou "")
 var DATA=[
- {sec:"Oral Unic Indaial", secd:"Reunião 13/10 · pautas em aberto sob sua responsabilidade", items:[
-  {id:"ind35",code:"#35",tag:"Rádio / Indicação",ttl:"Comparativo data de pagamento × data de avaliação",desc:"Trazer na próxima RMR as duas visões na mesma tela — a leitura por data de avaliação subestima o retorno que entra depois via resgate/relacionamento.",co:"Cesar",prazo:"Próxima RMR",d:null},
-  {id:"ind39",code:"#39",tag:"Align / iTero",ttl:"Comarketing Align e scanner iTero",desc:"Cobrar a Paula (iTero: assinatura este mês, entrega em 5 dias — senão scanner sem custo na visita de 27/10) e consultar a estrutura de pagamento do comarketing × reforma tributária. Comarketing só entra no Q1/2027.",co:"Dr. Martín",prazo:"Scanner/lonas em outubro",d:[2026,9,31]},
-  {id:"ind41",code:"#41",tag:"Agência",ttl:"Déficit da agência (saída Kawana × performance)",desc:"Manter a atualização mensal do comparativo, agora focada em como fica a entrada com a nova estrutura de atendimento da agência.",co:"Dr. Martín",prazo:"Mensal até dezembro",d:null},
-  {id:"ind42",code:"#42",tag:"Atendimento",ttl:"Auditoria de tempo de resposta e comunicação",desc:"Fazer 4 agendas com a captação (Kethlen e Alexia) no próximo mês pra ajustar fluxos; marcar a reunião pendente com o Dr. Martín; atualizar nas RMRs.",co:"Dr. Martín",prazo:"Próxima RMR",d:null},
-  {id:"ind47",code:"#47",tag:"Produção",ttl:"Metas de produção p/ dentistas e Dr. Márcio",desc:"Formalizar as metas de produção na próxima RMR (adiado). A IA de produtividade — roll-out novembro — entra como base.",co:"Dra. Michele · Dr. Martín",prazo:"Próxima RMR",d:null},
-  {id:"ind48",code:"#48",tag:"Indicação",ttl:"Campanha de indicação e resgate de potenciais",desc:"Trazer resposta estruturada transformando a ação (campanha interna + café com pacientes potenciais) em estratégia constante, não evento isolado.",co:"—",prazo:"Próxima RMR",d:null},
-  {id:"ind52",code:"#52",tag:"IA · novo",ttl:"Automação da confirmação e do agendamento",desc:"Conduzir a automação com IA marcando direto na agenda; estabilização em 30–60 dias. Depende do Dr. Martín manter calendário e bloqueios atualizados.",co:"Dr. Martín",prazo:"30–60 dias",d:null,badge:"new"}
+ {sec:"Oral Unic Indaial", sub:"Reunião 13/10", items:[
+  {id:"ind35",code:"#35",tag:"Rádio / Indicação",ttl:"Comparativo data de pagamento × data de avaliação",st:1,prazo:"Próxima RMR",d:null,
+   upd:"Campanha \"indicação Sadi\" criada com o Dr. Martín; alteração de origens depende da franqueadora/Giga. Rádios: <b>R$ 54,3k investidos → R$ 226,8k em 10 pacientes</b> (mai–set). Falta trazer as duas visões na mesma tela — por data de avaliação a leitura subestima o que entra depois via resgate.",co:"Cesar"},
+  {id:"ind39",code:"#39",tag:"Align / iTero",ttl:"Comarketing Align e scanner iTero",st:1,prazo:"Scanner/lonas em outubro",d:[2026,9,31],
+   upd:"Comarketing confirmado só no <b>Q1/2027</b> (sem aporte em 2026). Paula garantiu assinatura do iTero este mês e entrega em 5 dias — senão leva um scanner sem custo na visita de <b>27/10</b>. Consultar a estrutura de pagamento do comarketing × reforma tributária.",co:"Dr. Martín"},
+  {id:"ind41",code:"#41",tag:"Agência",ttl:"Déficit da agência (saída Kawana × performance)",st:1,prazo:"Mensal até dezembro",d:null,
+   upd:"2º mês consecutivo de estabilidade no ROAS após a saída da Kawana. O que mudou foi a agência subdividir o atendimento em 3 praças (já normalizado). Manter a atualização mensal, focada na entrada da nova estrutura.",co:"Dr. Martín"},
+  {id:"ind42",code:"#42",tag:"Atendimento",ttl:"Auditoria de tempo de resposta e comunicação",st:1,prazo:"Próxima RMR",d:null,
+   upd:"IA instalada no acompanhamento; identificados furos e calibragem incorreta (disparos indevidos), já corrigidos com a Alexia e a Kethlen. Falta fazer as <b>4 agendas com a captação</b> e a reunião com o Dr. Martín.",co:"Dr. Martín"},
+  {id:"ind47",code:"#47",tag:"Produção",ttl:"Metas de produção p/ dentistas e Dr. Márcio",st:1,prazo:"Próxima RMR",d:null,
+   upd:"Reunião com o Gregori já realizada; Dra. Michele e Dr. Martín alinhados. Formalização das metas adiada para a próxima RMR; a IA de produtividade (roll-out novembro) entra como base.",co:"Dra. Michele · Dr. Martín"},
+  {id:"ind48",code:"#48",tag:"Indicação",ttl:"Campanha de indicação e resgate de potenciais",st:0,prazo:"Próxima RMR",d:null,
+   upd:"Dr. Carlos sugeriu campanha de resgate de potenciais em out/nov. Trazer resposta estruturada transformando a ação (campanha interna + café com pacientes) em estratégia constante, não evento isolado.",co:""},
+  {id:"ind52",code:"#52",tag:"IA · novo",ttl:"Automação da confirmação e do agendamento",st:0,prazo:"30–60 dias",d:null,
+   upd:"Novo (13/10). Proposta de automatizar com a IA marcando direto na agenda dos profissionais. Estabilização em 30–60 dias; depende do Dr. Martín manter calendário e bloqueios atualizados.",co:"Dr. Martín"}
  ]},
- {sec:"RMR Unidade", secd:"Mensal estratégica · 15/10 · Sede Blumenau — encaminhamentos", items:[
-  {id:"u01",code:"A.01",tag:"Rede",ttl:"Reestudar break-even e payback",desc:"Com as praças inauguradas nos últimos 2 anos, e atualizar a apresentação (Dr. Carlos quer payback 30m / break-even 6m).",co:"—",prazo:"16/10",d:[2026,9,16]},
-  {id:"u15",code:"A.15",tag:"Rede",ttl:"Conversar com o Marcos sobre o vesting",desc:"Detalhes do vesting e responsabilidades envolvidas.",co:"—",prazo:"16/10",d:[2026,9,16]},
-  {id:"u05",code:"A.05",tag:"Campo Grande 2",ttl:"Concluir análise da inadimplência + devolutiva",desc:"Score dos pacientes, planejamentos do Dr. Igor, isolar o legado; agendar a devolutiva com o Dr. Carlos.",co:"Alexandre",prazo:"19/10 · devolutiva até 27/10",d:[2026,9,27]},
-  {id:"u08",code:"A.08",tag:"Campo Grande 2",ttl:"Plano de ação para advertências",desc:"Conforme o levantamento de score, com validação do Dr. Carlos.",co:"Alexandre",prazo:"Semana de 19/10",d:[2026,9,24]},
-  {id:"u07",code:"A.07",tag:"Campo Grande 2",ttl:"Aproximar-se do Dr. Alexandre",desc:"Entender o resultado e enviar números com feedback, falando primeiro com o Patrick.",co:"—",prazo:"Próxima RMR",d:null},
-  {id:"u02",code:"A.02",tag:"Relacionamento",ttl:"Conversa conjunta com a Marilda",desc:"Inverter o modelo (80% execução / 20% educação) e cobrar os planos de ação das praças críticas.",co:"Tatiana",prazo:"Próxima RMR",d:null},
-  {id:"u03",code:"A.03",tag:"Relacionamento",ttl:"Reforçar as métricas de atendimento com a Marilda",desc:"A importância das métricas perante o grupo.",co:"—",prazo:"Próxima RMR",d:null},
-  {id:"u04",code:"A.04",tag:"Rede",ttl:"Estruturar como projeto o rollout DI + TomoDoc",desc:"Cronograma, prazos, pré-requisitos e pilotos de tomografia em nov/dez.",co:"Alexandre",prazo:"Próxima RMR",d:null},
-  {id:"u28",code:"A.28",tag:"Rede / Bento",ttl:"Bloqueio de agenda por categoria no Giga",desc:"Viabilizar o bloqueio por categoria obrigatória e extrair o relatório de bloqueios dos avaliadores para as RMRs.",co:"César Assmann",prazo:"Próxima RMR",d:null},
-  {id:"u18",code:"A.18",tag:"Viamão",ttl:"Reunião com Bruno e Vinícius — recompra",desc:"Estimular a recompra (case Garibaldi/Dourados).",co:"—",prazo:"Próxima RMR",d:null},
-  {id:"u20",code:"A.20",tag:"Teutônia",ttl:"Monitorar faturamento após as 17h",desc:"Comparar com praça de porte similar.",co:"—",prazo:"Próxima RMR",d:null},
-  {id:"u23",code:"A.23",tag:"Três Lagoas",ttl:"Ligação a 100% dos leads + meta 90 avaliações",desc:"Avaliações online divididas 50/50 entre as captadoras.",co:"Raíssa",prazo:"Próxima RMR",d:null},
-  {id:"u24",code:"A.24",tag:"Três Lagoas",ttl:"Analisar investimento em rádio e outdoor",desc:"E sua representação na mídia off.",co:"—",prazo:"Próxima RMR",d:null},
-  {id:"u25",code:"A.25",tag:"Passos",ttl:"Score dos pacientes + projeto Giga",desc:"Fornecer ao Marcos o score dos pacientes que entram e apresentar o projeto Giga com praça piloto.",co:"—",prazo:"Próxima RMR",d:null},
-  {id:"u26",code:"A.26",tag:"Passos",ttl:"Rito quinzenal de 1h com o Dr. Felipe",desc:"Com os indicadores em tela.",co:"Marcos",prazo:"Próxima RMR",d:null},
-  {id:"u30",code:"A.30",tag:"Bento Gonçalves",ttl:"Reunião sobre o marketing da praça",desc:"Incluir o marketing no acompanhamento (validação do Dr. Carlos).",co:"—",prazo:"Próxima RMR",d:null},
-  {id:"u22",code:"A.22",tag:"Agências",ttl:"Alinhar visão trimestral com o Pedro Hiago",desc:"Reorganizar o planejamento com as agências: auditoria de anúncios por praça e cobrança por ticket, leads e comparecimento.",co:"—",prazo:"Próxima RMR",d:null}
+ {sec:"RMR Unidade", sub:"15/10 · Sede Blumenau", items:[
+  {id:"u01",code:"A.01",tag:"Rede",ttl:"Reestudar break-even e payback e atualizar a apresentação",st:0,prazo:"16/10",d:[2026,9,16],
+   upd:"Com as praças inauguradas nos últimos 2 anos. Dr. Carlos quer payback de 30 meses e break-even de 6.",co:""},
+  {id:"u15",code:"A.15",tag:"Rede",ttl:"Conversar com o Marcos sobre o vesting",st:0,prazo:"16/10",d:[2026,9,16],upd:"",co:""},
+  {id:"u05",code:"A.05",tag:"Campo Grande 2",ttl:"Concluir a análise da inadimplência e fazer a devolutiva",st:1,prazo:"Devolutiva até 27/10",d:[2026,9,27],
+   upd:"Inadimplência ajustada de 8% p/ 15%. Alexandre e Gregori fecham a análise (score dos pacientes, planejamentos do Dr. Igor, isolar o legado) e agendam a devolutiva com o Dr. Carlos.",co:"Alexandre"},
+  {id:"u08",code:"A.08",tag:"Campo Grande 2",ttl:"Plano de ação para advertências (score)",st:0,prazo:"Semana de 19/10",d:[2026,9,24],upd:"Conforme o levantamento de score, com validação do Dr. Carlos.",co:"Alexandre"},
+  {id:"u07",code:"A.07",tag:"Campo Grande 2",ttl:"Aproximar-se do Dr. Alexandre",st:0,prazo:"Próxima RMR",d:null,upd:"Entender o resultado e enviar números com feedback, falando primeiro com o Patrick.",co:""},
+  {id:"u02",code:"A.02",tag:"Relacionamento",ttl:"Conversa conjunta com a Marilda",st:1,prazo:"Próxima RMR",d:null,
+   upd:"Gregori propôs inverter o modelo p/ 80% execução / 20% educação e pilotar o resgate 30+ pelo escritório — retorno negativo da Marilda, que também não trouxe plano para as praças críticas. Nova conversa conjunta com a Tatiana.",co:"Tatiana"},
+  {id:"u03",code:"A.03",tag:"Relacionamento",ttl:"Reforçar as métricas de atendimento com a Marilda",st:0,prazo:"Próxima RMR",d:null,upd:"A importância das métricas perante o grupo.",co:""},
+  {id:"u04",code:"A.04",tag:"Rede",ttl:"Estruturar como projeto o rollout DI + TomoDoc",st:1,prazo:"Próxima RMR",d:null,
+   upd:"18 clínicas no total (12 no DI, 6 no TomoDoc). O DI inicia tomografia em novembro, com divulgação oficial em janeiro. Pilotar em 2 clínicas em nov/dez — vira projeto com cronograma de rollout.",co:"Alexandre"},
+  {id:"u28",code:"A.28",tag:"Rede / Bento",ttl:"Bloqueio de agenda por categoria no Giga",st:0,prazo:"Próxima RMR",d:null,upd:"Viabilizar o bloqueio por categoria obrigatória e extrair o relatório de bloqueios dos avaliadores para as RMRs.",co:"César Assmann"},
+  {id:"u18",code:"A.18",tag:"Viamão",ttl:"Reunião com Bruno e Vinícius — recompra",st:0,prazo:"Próxima RMR",d:null,upd:"Estimular a recompra (case Garibaldi/Dourados).",co:""},
+  {id:"u20",code:"A.20",tag:"Teutônia",ttl:"Monitorar o faturamento após as 17h",st:0,prazo:"Próxima RMR",d:null,upd:"Comparar com praça de porte similar.",co:""},
+  {id:"u23",code:"A.23",tag:"Três Lagoas",ttl:"Ligação a 100% dos leads + meta de 90 avaliações",st:0,prazo:"Próxima RMR",d:null,upd:"Avaliações online divididas 50/50 entre as captadoras.",co:"Raíssa"},
+  {id:"u24",code:"A.24",tag:"Três Lagoas",ttl:"Analisar o investimento em rádio e outdoor",st:0,prazo:"Próxima RMR",d:null,upd:"E sua representação na mídia off.",co:""},
+  {id:"u25",code:"A.25",tag:"Passos",ttl:"Score dos pacientes + projeto Giga",st:0,prazo:"Próxima RMR",d:null,upd:"Fornecer ao Marcos o score dos pacientes que entram e apresentar o projeto Giga com praça piloto.",co:""},
+  {id:"u26",code:"A.26",tag:"Passos",ttl:"Rito quinzenal de 1h com o Dr. Felipe",st:0,prazo:"Próxima RMR",d:null,upd:"Com os indicadores em tela.",co:"Marcos"},
+  {id:"u30",code:"A.30",tag:"Bento Gonçalves",ttl:"Reunião sobre o marketing da praça",st:0,prazo:"Próxima RMR",d:null,upd:"Incluir o marketing no acompanhamento (validação do Dr. Carlos).",co:""},
+  {id:"u22",code:"A.22",tag:"Agências",ttl:"Alinhar a visão trimestral com o Pedro Hiago",st:0,prazo:"Próxima RMR",d:null,upd:"Reorganizar o planejamento com as agências: auditoria de anúncios por praça e cobrança por ticket, leads e comparecimento.",co:""}
  ]},
- {sec:"AGO Latam", secd:"Ata nº 009 · 09/10 (rev. 13/10) · projeto internacional", items:[
-  {id:"l08",code:"A.08",tag:"Uruguai · equipe",ttl:"Apoiar a validação final das entrevistas",desc:"Da equipe do Uruguai (recepção e captação).",co:"—",prazo:"25/10",d:[2026,9,25]},
-  {id:"l13",code:"A.13",tag:"Ciudad de la Costa",ttl:"Reunir com o dentista candidato",desc:"Candidato à unidade de Ciudad de la Costa.",co:"—",prazo:"16/10",d:[2026,9,16]},
-  {id:"l02",code:"A.02",tag:"Pessoas",ttl:"Precificar os custos pré-operacionais do profissional",desc:"Como base das penalidades por desistência do projeto internacional.",co:"—",prazo:"31/10",d:[2026,9,31]},
-  {id:"l14",code:"A.14",tag:"Rollout",ttl:"Definir com o Lucas o cronograma de rollout",desc:"Das próximas unidades.",co:"Lucas",prazo:"31/10",d:[2026,9,31]},
-  {id:"l22",code:"A.22",tag:"Marketing",ttl:"Definir as frações de investimento em mkt (Bookstart)",desc:"Reunião Thaís · Gregori · Gustavo. (Responsável formal: Thaís — você participa.)",co:"Thaís · Gustavo",prazo:"31/10",d:[2026,9,31]},
-  {id:"l17",code:"A.17",tag:"Societário",ttl:"Incluir a taxa de setup no cap table",desc:"No material de cap table e na proposta societária aos dentistas.",co:"—",prazo:"Próxima proposta",d:null},
-  {id:"l37",code:"A.37",tag:"BP Paraguai",ttl:"Entregar à Layana os dados do cliente oculto",desc:"Para o Plano de Negócios (BP) do Paraguai.",co:"Layana",prazo:"28/11",d:[2026,10,28]}
+ {sec:"AGO Latam", sub:"Ata 009 · 09/10 (rev. 13/10)", items:[
+  {id:"l08",code:"A.08",tag:"Uruguai · equipe",ttl:"Apoiar a validação final das entrevistas",st:1,prazo:"25/10",d:[2026,9,25],upd:"Da equipe do Uruguai (recepção e captação).",co:""},
+  {id:"l13",code:"A.13",tag:"Ciudad de la Costa",ttl:"Reunir com o dentista candidato",st:0,prazo:"16/10",d:[2026,9,16],upd:"Candidato à unidade de Ciudad de la Costa.",co:""},
+  {id:"l02",code:"A.02",tag:"Pessoas",ttl:"Precificar os custos pré-operacionais do profissional",st:0,prazo:"31/10",d:[2026,9,31],upd:"Como base das penalidades por desistência do projeto internacional.",co:""},
+  {id:"l14",code:"A.14",tag:"Rollout",ttl:"Definir com o Lucas o cronograma de rollout",st:0,prazo:"31/10",d:[2026,9,31],upd:"Das próximas unidades.",co:"Lucas"},
+  {id:"l22",code:"A.22",tag:"Marketing",ttl:"Definir as frações de investimento em mkt (Bookstart)",st:0,prazo:"31/10",d:[2026,9,31],upd:"Reunião Thaís · Gregori · Gustavo. Responsável formal: Thaís — você participa.",co:"Thaís · Gustavo"},
+  {id:"l17",code:"A.17",tag:"Societário",ttl:"Incluir a taxa de setup no cap table",st:0,prazo:"Próxima proposta",d:null,upd:"No material de cap table e na proposta societária aos dentistas.",co:""},
+  {id:"l37",code:"A.37",tag:"BP Paraguai",ttl:"Entregar à Layana os dados do cliente oculto",st:0,prazo:"28/11",d:[2026,10,28],upd:"Para o Plano de Negócios (BP) do Paraguai.",co:"Layana"}
  ]}
 ];
 
 var curF="all";
-function isOver(it){return it.d && (new Date(it.d[0],it.d[1],it.d[2])<TODAY);}
-function isSoon(it){if(!it.d)return false;var dd=new Date(it.d[0],it.d[1],it.d[2]);var diff=(dd-TODAY)/864e5;return diff>=0&&diff<=3;}
+function stOf(it){var s=state();return s[it.id]!==undefined?s[it.id]:it.st;}
+function isOver(it){return it.d&&(new Date(it.d[0],it.d[1],it.d[2])<TODAY);}
 
 function render(){
- var s=state(),list=document.getElementById("list");list.innerHTML="";
- var total=0,done=0,over=0;
+ var list=document.getElementById("list");list.innerHTML="";
+ var total=0,done=0,prog=0,todo=0;
  DATA.forEach(function(sec){
-  var rows="";
+  var rows="",shown=0,secDone=0;
   sec.items.forEach(function(it){
-   total++;var ck=!!s[it.id];if(ck)done++;var ov=isOver(it)&&!ck;if(ov)over++;
-   var show=curF==="all"||(curF==="open"&&!ck)||(curF==="done"&&ck)||(curF==="over"&&ov);
-   if(!show)return;
-   var badge="";
-   if(ck){}else if(ov)badge='<span class="badge b-over">Vencida</span>';
-   else if(isSoon(it))badge='<span class="badge b-soon">Vence já</span>';
-   else if(it.badge==="new")badge='<span class="badge b-new">Novo</span>';
-   rows+='<div class="it'+(ck?' done':'')+'">'
-    +'<label class="ck"><input type="checkbox" data-id="'+it.id+'"'+(ck?' checked':'')+'></label>'
-    +'<div class="ib"><div class="ir"><span class="code">'+it.code+'</span><span class="tag">'+it.tag+'</span>'+badge+'</div>'
-    +'<div class="ttl">'+it.ttl+'</div><div class="desc">'+it.desc+'</div>'
-    +'<div class="sub"><span><b>Prazo:</b> '+it.prazo+'</span>'+(it.co&&it.co!=="—"?'<span><b>Com:</b> '+it.co+'</span>':'')+'</div></div></div>';
+   total++;var st=stOf(it);if(st===2){done++;secDone++;}else if(st===1)prog++;else todo++;
+   var ov=isOver(it)&&st!==2;
+   var show=curF==="all"||(curF==="todo"&&st===0)||(curF==="prog"&&st===1)||(curF==="done"&&st===2)||(curF==="over"&&ov);
+   if(!show)return;shown++;
+   rows+='<div class="it s'+st+'">'
+    +'<div class="it-top"><span class="code">'+it.code+'</span>'
+    +'<div class="ttlwrap"><div class="tag">'+it.tag+'</div><div class="ttl">'+it.ttl+'</div></div>'
+    +'<div class="right"><span class="badge s'+st+'" data-id="'+it.id+'">'+SL[st]+'</span>'
+    +'<span class="prazo'+(ov?' over':'')+'">'+it.prazo+'</span></div></div>'
+    +(it.upd?'<div class="upd"><div class="ul">Atualização</div><div class="ut">'+it.upd+'</div></div>':'')
+    +(it.co?'<div class="co"><b>Com:</b> '+it.co+'</div>':'')
+    +'</div>';
   });
-  if(rows){
-   list.innerHTML+='<div class="sec"><div class="sec-h"><span class="t">'+sec.sec+'</span><span class="d">'+sec.secd+'</span><span class="n">'+sec.items.length+' itens</span></div>'+rows+'</div>';
+  if(shown){
+   list.innerHTML+='<div class="sec"><div class="sec-h"><span class="t">'+sec.sec+'</span><span class="c">'+sec.sub+' · '+secDone+' de '+sec.items.length+' concluídas</span></div>'+rows+'</div>';
   }
  });
- var p=total?Math.round(done/total*100):0;
- document.getElementById("pct").textContent=p+"%";
- document.getElementById("pbar").style.width=p+"%";
- document.getElementById("count").textContent=done+" de "+total+" concluídas · "+over+" vencidas";
- list.querySelectorAll('input[type=checkbox]').forEach(function(c){
-  c.onchange=function(){var st=state();if(c.checked)st[c.dataset.id]=1;else delete st[c.dataset.id];save(st);render();};
+ document.getElementById("t-done").textContent=done;
+ document.getElementById("t-prog").textContent=prog;
+ document.getElementById("t-todo").textContent=todo;
+ document.getElementById("t-all").textContent=total;
+ list.querySelectorAll(".badge").forEach(function(b){
+  b.onclick=function(){var s=state();var cur=s[b.dataset.id]!==undefined?s[b.dataset.id]:(DATA.flatMap(x=>x.items).find(i=>i.id===b.dataset.id).st);s[b.dataset.id]=(cur+1)%3;save(s);render();};
  });
 }
 document.querySelectorAll(".flt").forEach(function(b){b.onclick=function(){curF=b.dataset.f;document.querySelectorAll(".flt").forEach(function(x){x.classList.toggle("on",x===b)});render();};});
-document.getElementById("today").textContent="Hoje: 26/10/2026";
 render();
 </script>
 </body></html>
