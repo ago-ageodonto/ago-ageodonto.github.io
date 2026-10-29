@@ -598,9 +598,9 @@ function clusterView(){
   });
   var _cyi={"2023":1,"2024":3,"2025":5,"2026":7}[CLUCANCYR]||5;
   var CANCMAP={};(window.CANC||[]).forEach(function(r){var nm=r[0]==="Caçador OU"?"Caçador (Oral Unic)":r[0];CANCMAP[nm]=[r[_cyi],r[_cyi+1]];});
-  function band(fm){return fm<=350000?0:fm<=500000?1:fm<700000?2:fm<=850000?3:4;}
-  var LAB=["≤ R$ 350K","R$ 351–500K","R$ 501–699K","R$ 700–850K","> R$ 850K"];
-  var cl=[[],[],[],[],[]];
+  function band(fm){return fm<=300000?0:fm<=400000?1:fm<=500000?2:fm<=600000?3:fm<=700000?4:fm<=800000?5:fm<=900000?6:fm<=1000000?7:8;}
+  var LAB=["≤ R$ 300K","R$ 300–400K","R$ 400–500K","R$ 500–600K","R$ 600–700K","R$ 700–800K","R$ 800–900K","R$ 900K–1 mi","> R$ 1 mi"];
+  var cl=[[],[],[],[],[],[],[],[],[]];
   Object.keys(by).forEach(function(n){var o=by[n];if(!o.nf)return;o.nome=n;o.fatmed=o.allfat/o.nf;var cm=CANCMAP[n];o.cnc=cm?cm[0]:0;o.cbr=cm?cm[1]:0;cl[band(o.fatmed)].push(o);});
   function A(arr,f){return arr.reduce(function(s,o){return s+f(o);},0);}
   function cells(o,pd){var P='text-align:right;padding:'+(pd||"9px 8px")+';font-variant-numeric:tabular-nums';var fm=o.nf?o.allfat/o.nf:0;
