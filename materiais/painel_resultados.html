@@ -8,7 +8,7 @@
  </header>
  <nav id="grp">
    <button data-g="ago" class="gon">Clínicas Ageodonto<small id="agoCount">praças do grupo</small></button>
-   <button data-g="ou">Oral Unique<small>fora Ageodonto · em breve</small></button>
+   <button data-g="ou">Oral Unic<small>fora Ageodonto · em breve</small></button>
  </nav>
  <nav class="tabs" id="tabs">
    <button data-t="rede" class="on">Rede &amp; Evolução</button>
@@ -192,9 +192,9 @@
  </section>
  <section class="tab" id="t-ou" hidden>
    <div style="text-align:center;padding:48px 20px;background:var(--pn);border:1.5px dashed var(--ln);border-radius:16px">
-     <span class="eyebrow" style="display:block;color:var(--ink3);letter-spacing:.08em;text-transform:uppercase;font-size:11px;font-weight:800;margin-bottom:10px">Grupo Oral Unique · fora Ageodonto</span>
+     <span class="eyebrow" style="display:block;color:var(--ink3);letter-spacing:.08em;text-transform:uppercase;font-size:11px;font-weight:800;margin-bottom:10px">Grupo Oral Unic · fora Ageodonto</span>
      <div style="font-family:var(--serif);font-size:34px;font-weight:800;color:var(--ou);line-height:1.05;margin-bottom:14px">Bloco em construção</div>
-     <p style="max-width:620px;margin:0 auto 20px;font-size:14px;color:var(--ink2);line-height:1.6">Aqui vão entrar <b>todas as clínicas do grupo Oral Unique</b> — agora que temos acesso ao sistema delas — com a <b>mesma visão</b> que temos hoje para a Ageodonto: Rede &amp; Evolução, Ranking, Clusterização, Unidade no tempo, Comparar praças e Mix de Tratamentos. Assim dá pra <b>clusterizar e comparar os dois grupos lado a lado</b>, sem misturar as bases.</p>
+     <p style="max-width:620px;margin:0 auto 20px;font-size:14px;color:var(--ink2);line-height:1.6">Aqui vão entrar <b>todas as clínicas do grupo Oral Unic</b> — agora que temos acesso ao sistema delas — com a <b>mesma visão</b> que temos hoje para a Ageodonto: Rede &amp; Evolução, Ranking, Clusterização, Unidade no tempo, Comparar praças e Mix de Tratamentos. Assim dá pra <b>clusterizar e comparar os dois grupos lado a lado</b>, sem misturar as bases.</p>
      <div style="display:inline-flex;flex-wrap:wrap;gap:8px;justify-content:center;max-width:640px">
        <span style="border:1px solid var(--ln);border-radius:20px;padding:5px 13px;font-size:12px;color:var(--ink3)">Rede &amp; Evolução</span>
        <span style="border:1px solid var(--ln);border-radius:20px;padding:5px 13px;font-size:12px;color:var(--ink3)">Ranking</span>
@@ -203,7 +203,7 @@
        <span style="border:1px solid var(--ln);border-radius:20px;padding:5px 13px;font-size:12px;color:var(--ink3)">Comparar praças</span>
        <span style="border:1px solid var(--ln);border-radius:20px;padding:5px 13px;font-size:12px;color:var(--ink3)">Mix de Tratamentos</span>
      </div>
-     <p style="max-width:620px;margin:22px auto 0;font-size:12px;color:var(--ink3);line-height:1.6">🔒 Por enquanto, <b>todo o painel reflete apenas as clínicas Ageodonto</b> (40 praças). As bases dos dois grupos ficam separadas — este bloco é alimentado numa próxima fase, quando puxarmos os dados do grupo Oral Unique do sistema.</p>
+     <p style="max-width:620px;margin:22px auto 0;font-size:12px;color:var(--ink3);line-height:1.6">🔒 Por enquanto, <b>todo o painel reflete apenas as clínicas Ageodonto</b> (40 praças). As bases dos dois grupos ficam separadas — este bloco é alimentado numa próxima fase, quando puxarmos os dados do grupo Oral Unic do sistema.</p>
    </div>
  </section>
 <script type="ago/deferred">
@@ -734,7 +734,7 @@ document.getElementById("sub").textContent=MONTHS.length+" meses ("+YEARS.join("
 rede("ano-"+LAST);rank("ano-"+LAST);unidade(unis[0]);uniTrend();
 document.getElementById("cA").value=unis[0];document.getElementById("cB").value=(unis[1]||"—");cmp();
 
-/* ==== Seletor de GRUPO (Ageodonto × Oral Unique) ==== */
+/* ==== Seletor de GRUPO (Ageodonto × Oral Unic) ==== */
 (function(){
   var TABS=["rede","rank","clu","uni","cmp","mix","cap","cal","blk","capp","geo","inad","canc"];
   var ac=document.getElementById("agoCount");if(ac)ac.textContent=unis.length+" praças do grupo";
