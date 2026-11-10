@@ -1,0 +1,257 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><title>Reuniões e Dossiês — AGO</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Spectral:wght@400;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap">
+<style>
+:root{--pg:#0B0906;--pn:#141009;--pn2:#1A150C;--ln:#2A2213;--ln2:#3A3018;--ink:#F3ECDA;--ink2:#B6A883;--ink3:#7C7256;--ous:#F1CE68;--gold-d:#B8862B;--vd:#5CC98A;--vm:#E0796B;--am:#E8B54D;--grad:linear-gradient(100deg,#FBEDB4,#F1CE68 40%,#CFA23B 70%,#F7DE8C);--serif:'Spectral',Georgia,serif;--sans:'Inter',-apple-system,sans-serif;}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--pg);color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased;padding:clamp(12px,2vw,22px)}
+h1,h2,h3{font-family:var(--serif);margin:0}
+.top{border-bottom:1px solid var(--ln);padding-bottom:12px;margin-bottom:14px}
+.ey{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold-d);font-weight:700}
+.top h1{font-size:21px;margin-top:3px}
+.top p{font-size:12px;color:var(--ink3);margin-top:4px}
+.warn{display:none;font-size:12.5px;color:var(--am);background:color-mix(in srgb,var(--am) 12%,transparent);border:1px solid color-mix(in srgb,var(--am) 30%,transparent);border-radius:9px;padding:10px 13px;margin-bottom:14px;line-height:1.5}
+.warn.on{display:block}
+.layout{display:grid;grid-template-columns:290px 1fr;gap:16px;align-items:start}
+@media(max-width:780px){.layout{grid-template-columns:1fr}.rail.hide-m{display:none}.dossie.hide-m{display:none}}
+/* rail */
+.rail{background:var(--pn);border:1px solid var(--ln);border-radius:13px;padding:12px}
+.rail .srch{width:100%;background:var(--pn2);color:var(--ink);border:1px solid var(--ln);border-radius:8px;padding:9px 11px;font:13px var(--sans);margin-bottom:8px}
+.rail .srch:focus{outline:none;border-color:var(--gold-d)}
+.newbtn{width:100%;border:1px dashed var(--ln2);background:transparent;color:var(--ink2);border-radius:8px;padding:9px;font:700 12.5px var(--sans);cursor:pointer;margin-bottom:10px}
+.newbtn:hover{background:var(--pn2);color:var(--ink)}
+.ilist{display:flex;flex-direction:column;gap:3px;max-height:62vh;overflow-y:auto}
+.irow{display:flex;align-items:center;gap:9px;padding:9px 10px;border-radius:9px;cursor:pointer;border:1px solid transparent}
+.irow:hover{background:var(--pn2)}
+.irow.on{background:var(--grad);color:#241a06}
+.irow.on .in-t{color:#5a4410}.irow.on .badge{background:rgba(0,0,0,.18);color:#241a06}
+.irow .ic{font-size:16px;flex:0 0 auto}
+.irow .in{flex:1;min-width:0}
+.irow .in-n{font-size:13.5px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.irow .in-t{font-size:10px;color:var(--ink3);text-transform:uppercase;letter-spacing:.04em;font-weight:700}
+.badge{font-size:10.5px;font-weight:800;background:var(--vm);color:#2a120d;border-radius:20px;padding:1px 8px;flex:0 0 auto}
+/* dossiê */
+.dossie{background:var(--pn);border:1px solid var(--ln);border-radius:13px;padding:16px 18px;min-height:300px}
+.dhd{display:flex;align-items:flex-start;gap:12px;flex-wrap:wrap;border-bottom:1px solid var(--ln);padding-bottom:13px;margin-bottom:4px}
+.dhd .bk{display:none;font-size:12px;font-weight:700;color:var(--ink2);background:var(--pn2);border:1px solid var(--ln);border-radius:8px;padding:6px 10px;cursor:pointer}
+@media(max-width:780px){.dhd .bk{display:inline-block}}
+.dhd .dic{font-size:28px;line-height:1}
+.dhd .dt{flex:1;min-width:0}
+.dhd h2{font-size:20px;font-weight:800;color:var(--ous)}
+.dhd .dsub{font-size:11.5px;color:var(--ink3);text-transform:uppercase;letter-spacing:.04em;font-weight:700;margin-top:2px}
+.dhd .da{display:flex;gap:7px;flex-wrap:wrap}
+.minib{font-size:11.5px;font-weight:700;border-radius:8px;padding:7px 11px;cursor:pointer;border:1px solid var(--ln2);background:var(--pn2);color:var(--ink2)}
+.minib:hover{color:var(--ink)}
+.minib.pri{background:var(--grad);color:#241a06;border-color:transparent}
+.sec{margin-top:18px}
+.sec .st{font-family:var(--serif);font-size:14px;font-weight:700;display:flex;align-items:center;gap:7px;margin-bottom:9px}
+.sec .st .c{font-size:11px;color:var(--ink3);font-weight:400;font-family:var(--sans)}
+.item{display:flex;align-items:flex-start;gap:10px;background:var(--pn2);border:1px solid var(--ln);border-radius:10px;padding:10px 12px;margin-bottom:7px}
+.item.pend{border-left:3px solid var(--vm)}
+.item.dec{border-left:3px solid var(--vd)}
+.item.ind{border-left:3px solid var(--ous)}
+.item .tx{flex:1;min-width:0;font-size:13px;line-height:1.45}
+.item .meta{font-size:11px;color:var(--ink3);margin-top:3px}
+.item .meta b{color:var(--gold-d)}
+.item .meta .late{color:var(--vm);font-weight:700}
+.resolve{flex:0 0 auto;font-size:11px;font-weight:800;color:var(--vd);background:color-mix(in srgb,var(--vd) 14%,transparent);border:1px solid color-mix(in srgb,var(--vd) 35%,transparent);border-radius:7px;padding:5px 9px;cursor:pointer;white-space:nowrap}
+.resolve:hover{background:color-mix(in srgb,var(--vd) 24%,transparent)}
+.done{color:var(--ink3);text-decoration:line-through}
+.mtg{background:var(--pn2);border:1px solid var(--ln);border-radius:10px;padding:11px 13px;margin-bottom:7px}
+.mtg .mh{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.mtg .md{font-size:12px;color:var(--ink3);font-weight:600}
+.mtg .ma{font-size:13.5px;color:var(--ink);font-weight:600}
+.verbtn{margin-top:8px;font-size:11.5px;font-weight:700;color:var(--ous);background:none;border:none;cursor:pointer;padding:0}
+.trans{display:none;margin-top:9px;padding:11px 12px;background:var(--pg);border:1px solid var(--ln);border-radius:8px;font-size:12.5px;color:var(--ink2);line-height:1.6;white-space:pre-wrap;max-height:320px;overflow:auto}
+.trans.on{display:block}
+.empty{color:var(--ink3);font-size:13px;padding:14px 0}
+.emptybig{text-align:center;color:var(--ink3);font-size:13.5px;padding:60px 20px;line-height:1.6}
+/* form */
+.form{background:var(--pn2);border:1px solid var(--ln2);border-radius:11px;padding:14px;margin-top:12px;display:none}
+.form.on{display:block}
+.form h3{font-size:14px;margin-bottom:10px}
+.fg{display:grid;gap:10px;margin-bottom:10px}
+.fg.g2{grid-template-columns:1fr 1fr}.fg.g3{grid-template-columns:1fr 1fr 1fr}
+@media(max-width:620px){.fg.g2,.fg.g3{grid-template-columns:1fr}}
+label{display:block;font-size:10px;text-transform:uppercase;color:var(--ink3);font-weight:700;margin-bottom:5px;letter-spacing:.04em}
+input,select,textarea{width:100%;background:var(--pg);color:var(--ink);border:1px solid var(--ln);border-radius:7px;padding:9px;font:13.5px var(--sans)}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold-d)}
+textarea{min-height:90px;resize:vertical;line-height:1.5}
+.btn{border:1px solid transparent;border-radius:8px;padding:9px 16px;font:800 12.5px var(--sans);cursor:pointer;background:var(--grad);color:#241a06}
+.btn.ghost{background:transparent;color:var(--ink2);border-color:var(--ln2)}
+.msg{font-size:12px;margin-left:9px}.ok{color:var(--vd)}.err{color:var(--vm)}
+</style></head>
+<body>
+<div class="top">
+  <div class="ey">Gestão Comercial · Acompanhamento</div>
+  <h1>Reuniões e Dossiês</h1>
+  <p>Clique num nome → pendências abertas, decisões, indicadores e histórico. Antes de cada reunião você abre e já cobra o que ficou.</p>
+</div>
+<div class="warn" id="warn"></div>
+
+<div class="layout">
+  <aside class="rail" id="rail">
+    <input class="srch" id="srch" placeholder="Buscar interlocutor…">
+    <button class="newbtn" id="newbtn">+ Novo interlocutor</button>
+    <div class="ilist" id="ilist"><div class="empty">Carregando…</div></div>
+  </aside>
+  <main class="dossie" id="dossie">
+    <div class="emptybig">Selecione um interlocutor à esquerda<br>ou crie um novo para começar o dossiê.</div>
+  </main>
+</div>
+
+<script>window.AGO_AUTH={audience:"team",title:"Gestão Comercial AGO"};</script>
+<script src="sbauth.js"></script>
+<script>
+var SB_URL="https://pwbcehrfhspgipjhaedc.supabase.co";
+var SB_KEY="sb_publishable_mTx5xlUaUcLBM_YijXuCjg_vwCJ5v3x";
+var HEAD={apikey:SB_KEY,Authorization:"Bearer "+SB_KEY,"Content-Type":"application/json"};
+function api(path,opt){opt=opt||{};return fetch(SB_URL+"/rest/v1/"+path,{method:opt.method||"GET",headers:Object.assign({},HEAD,opt.headers||{}),body:opt.body?JSON.stringify(opt.body):undefined}).then(function(r){return r.text().then(function(t){if(!r.ok)throw Error(t||r.status);return t?JSON.parse(t):[];});});}
+function esc(s){return (s==null?"":""+s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function fmtData(d){return d?(""+d).split("T")[0].split("-").reverse().join("/"):"—";}
+function hoje(){return new Date().toISOString().slice(0,10);}
+
+var TIPOS={fornecedor:{ic:"🤝",l:"Fornecedor"},agencia:{ic:"📣",l:"Agência"},dentista:{ic:"🦷",l:"Dentista"},socio:{ic:"👔",l:"Sócio"}};
+function tipoIc(t){return (TIPOS[t]||TIPOS.fornecedor).ic;}
+function tipoL(t){return (TIPOS[t]||TIPOS.fornecedor).l;}
+
+var ITENS=[], MTGS=[], SEL=null, SEL_TIPO="fornecedor", TEM_TABELA=true, PEND_NOVO=null;
+
+function carregar(){
+  // reuniões (tabela existente) + itens do dossiê (tabela nova)
+  var p1=api("reunioes_fornecedor?select=fornecedor,data,assunto,transcricao,criado_em&order=data.desc").catch(function(){return [];});
+  var p2=api("dossie_itens?select=*&order=criado_em.desc").then(function(r){TEM_TABELA=true;return r;}).catch(function(e){TEM_TABELA=false;return [];});
+  return Promise.all([p1,p2]).then(function(res){
+    MTGS=res[0]||[]; ITENS=res[1]||[];
+    var w=document.getElementById("warn");
+    if(!TEM_TABELA){w.className="warn on";w.innerHTML="⚠️ Falta criar a tabela <b>dossie_itens</b> no Supabase (o Claude te passou o SQL — copiar, colar e rodar). As reuniões já aparecem; pendências/decisões/indicadores começam a funcionar depois disso.";}
+    else{w.className="warn";}
+    buildRail();
+  });
+}
+
+function interlocutores(){
+  var map={};
+  ITENS.forEach(function(it){ var k=it.interlocutor; if(!map[k])map[k]={nome:k,tipo:it.tipo||"fornecedor",pend:0}; if(it.tipo)map[k].tipo=it.tipo; if(it.categoria==="pendencia"&&it.status!=="resolvida")map[k].pend++; });
+  MTGS.forEach(function(m){ var k=m.fornecedor; if(k&&!map[k])map[k]={nome:k,tipo:"fornecedor",pend:0}; });
+  if(PEND_NOVO&&!map[PEND_NOVO.nome])map[PEND_NOVO.nome]={nome:PEND_NOVO.nome,tipo:PEND_NOVO.tipo,pend:0};
+  return Object.keys(map).map(function(k){return map[k];}).sort(function(a,b){return (b.pend-a.pend)||a.nome.localeCompare(b.nome);});
+}
+
+function buildRail(){
+  var q=(document.getElementById("srch").value||"").toLowerCase();
+  var arr=interlocutores().filter(function(i){return i.nome.toLowerCase().indexOf(q)>=0;});
+  var L=document.getElementById("ilist");
+  if(!arr.length){L.innerHTML='<div class="empty">Nenhum interlocutor ainda. Crie o primeiro.</div>';return;}
+  L.innerHTML=arr.map(function(i){
+    return '<div class="irow'+(i.nome===SEL?' on':'')+'" data-n="'+esc(i.nome)+'"><span class="ic">'+tipoIc(i.tipo)+'</span>'
+     +'<div class="in"><div class="in-n">'+esc(i.nome)+'</div><div class="in-t">'+tipoL(i.tipo)+'</div></div>'
+     +(i.pend?'<span class="badge">'+i.pend+'</span>':'')+'</div>';
+  }).join('');
+  L.querySelectorAll('.irow').forEach(function(r){r.onclick=function(){abrir(r.getAttribute('data-n'));};});
+}
+
+function abrir(nome){
+  SEL=nome; PEND_NOVO=null;
+  var it=ITENS.filter(function(x){return x.interlocutor===nome;});
+  SEL_TIPO=(it[0]&&it[0].tipo)||"fornecedor";
+  document.getElementById("rail").classList.add("hide-m");
+  buildRail(); renderDossie();
+}
+
+function renderDossie(){
+  var nome=SEL; var D=document.getElementById("dossie"); D.classList.remove("hide-m");
+  var it=ITENS.filter(function(x){return x.interlocutor===nome;});
+  var mt=MTGS.filter(function(x){return x.fornecedor===nome;});
+  var pend=it.filter(function(x){return x.categoria==="pendencia"&&x.status!=="resolvida";});
+  var pendOk=it.filter(function(x){return x.categoria==="pendencia"&&x.status==="resolvida";});
+  var dec=it.filter(function(x){return x.categoria==="decisao";});
+  var ind=it.filter(function(x){return x.categoria==="indicador";});
+  function itemHtml(x,cls){
+    var late=(x.prazo&&x.prazo<hoje())?' <span class="late">⚠ venceu '+fmtData(x.prazo)+'</span>':(x.prazo?' · <b>prazo</b> '+fmtData(x.prazo):'');
+    var meta=(x.dono?'<b>'+esc(x.dono)+'</b>':'')+(x.dono&&x.prazo?' ':'')+late;
+    return '<div class="item '+cls+'"><div class="tx">'+esc(x.texto)+(meta?'<div class="meta">'+meta+'</div>':'')+'</div>'
+      +(cls==="pend"?'<button class="resolve" data-id="'+x.id+'">✓ resolver</button>':'')+'</div>';
+  }
+  var H='<div class="dhd"><button class="bk" id="bk">‹ lista</button><div class="dic">'+tipoIc(SEL_TIPO)+'</div>'
+   +'<div class="dt"><h2>'+esc(nome)+'</h2><div class="dsub">'+tipoL(SEL_TIPO)+'</div></div>'
+   +'<div class="da"><button class="minib pri" id="addItem">+ Item</button><button class="minib" id="addMtg">+ Reunião</button></div></div>';
+
+  H+='<div class="form" id="formItem"><h3>Novo item no dossiê</h3>'
+   +'<div class="fg g3"><div><label>Categoria</label><select id="i-cat"><option value="pendencia">🔴 Pendência</option><option value="decisao">✅ Decisão</option><option value="indicador">📊 Indicador</option></select></div>'
+   +'<div><label>Dono (opcional)</label><input id="i-dono" placeholder="quem resolve"></div>'
+   +'<div><label>Prazo (opcional)</label><input id="i-prazo" type="date"></div></div>'
+   +'<div class="fg"><div><label>Texto</label><textarea id="i-texto" placeholder="o que ficou pendente / decidido / combinado" style="min-height:60px"></textarea></div></div>'
+   +'<button class="btn" id="i-save">Salvar item</button> <button class="btn ghost" data-close="formItem">Cancelar</button> <span class="msg" id="i-msg"></span></div>';
+
+  H+='<div class="form" id="formMtg"><h3>Registrar reunião</h3>'
+   +'<div class="fg g2"><div><label>Data</label><input id="m-data" type="date" value="'+hoje()+'"></div>'
+   +'<div><label>Assunto</label><input id="m-assunto" placeholder="tema da reunião"></div></div>'
+   +'<div class="fg"><div><label>Transcrição / anotações</label><textarea id="m-trans" placeholder="cole a transcrição aqui"></textarea></div></div>'
+   +'<button class="btn" id="m-save">Salvar reunião</button> <button class="btn ghost" data-close="formMtg">Cancelar</button> <span class="msg" id="m-msg"></span></div>';
+
+  H+='<div class="sec"><div class="st">🔴 Pendências abertas <span class="c">'+pend.length+'</span></div>'
+   +(pend.length?pend.map(function(x){return itemHtml(x,"pend");}).join(''):'<div class="empty">Nada em aberto. 👏</div>')+'</div>';
+  H+='<div class="sec"><div class="st">✅ Decisões <span class="c">'+dec.length+'</span></div>'
+   +(dec.length?dec.map(function(x){return itemHtml(x,"dec");}).join(''):'<div class="empty">—</div>')+'</div>';
+  H+='<div class="sec"><div class="st">📊 Indicadores combinados <span class="c">'+ind.length+'</span></div>'
+   +(ind.length?ind.map(function(x){return itemHtml(x,"ind");}).join(''):'<div class="empty">—</div>')+'</div>';
+
+  H+='<div class="sec"><div class="st">🗂️ Histórico <span class="c">'+mt.length+' reuniõe(s)</span></div>';
+  if(mt.length)H+=mt.map(function(m,i){
+    var tr=m.transcricao?'<button class="verbtn" data-tr="'+i+'">ver transcrição ▾</button><div class="trans" id="dtr'+i+'">'+esc(m.transcricao)+'</div>':'';
+    return '<div class="mtg"><div class="mh"><span class="ma">'+esc(m.assunto||"Reunião")+'</span><span class="md">'+fmtData(m.data)+'</span></div>'+tr+'</div>';
+  }).join('');
+  else H+='<div class="empty">Sem reuniões registradas.</div>';
+  if(pendOk.length)H+='<div style="margin-top:10px"><div class="st" style="font-size:12px;color:var(--ink3)">Pendências resolvidas</div>'+pendOk.map(function(x){return '<div class="item" style="opacity:.6"><div class="tx done">'+esc(x.texto)+'</div></div>';}).join('')+'</div>';
+  H+='</div>';
+
+  D.innerHTML=H;
+  // binds
+  var bk=document.getElementById("bk"); if(bk)bk.onclick=function(){SEL=null;document.getElementById("rail").classList.remove("hide-m");D.classList.add("hide-m");buildRail();};
+  document.getElementById("addItem").onclick=function(){toggleForm("formItem");};
+  document.getElementById("addMtg").onclick=function(){toggleForm("formMtg");};
+  D.querySelectorAll('[data-close]').forEach(function(b){b.onclick=function(){document.getElementById(b.getAttribute('data-close')).classList.remove('on');};});
+  D.querySelectorAll('.verbtn').forEach(function(b){b.onclick=function(){var d=document.getElementById('dtr'+b.getAttribute('data-tr'));d.classList.toggle('on');b.textContent=d.classList.contains('on')?'ocultar ▴':'ver transcrição ▾';};});
+  D.querySelectorAll('.resolve').forEach(function(b){b.onclick=function(){resolver(b.getAttribute('data-id'));};});
+  document.getElementById("i-save").onclick=salvarItem;
+  document.getElementById("m-save").onclick=salvarMtg;
+}
+function toggleForm(id){var f=document.getElementById(id);["formItem","formMtg"].forEach(function(x){if(x!==id)document.getElementById(x).classList.remove('on');});f.classList.toggle('on');}
+
+function salvarItem(){
+  if(!TEM_TABELA){return flash("i-msg","Rode o SQL da tabela dossie_itens primeiro.",false);}
+  var texto=document.getElementById("i-texto").value.trim();
+  if(!texto)return flash("i-msg","Escreva o texto.",false);
+  var body={interlocutor:SEL,tipo:SEL_TIPO,categoria:document.getElementById("i-cat").value,texto:texto,dono:document.getElementById("i-dono").value.trim()||null,prazo:document.getElementById("i-prazo").value||null,status:"aberta"};
+  api("dossie_itens",{method:"POST",headers:{Prefer:"return=representation"},body:body}).then(function(r){
+    if(Array.isArray(r)&&r[0])ITENS.unshift(r[0]);
+    renderDossie();buildRail();
+  }).catch(function(e){flash("i-msg","Erro: "+e.message,false);});
+}
+function salvarMtg(){
+  var body={fornecedor:SEL,data:document.getElementById("m-data").value||null,assunto:document.getElementById("m-assunto").value.trim()||null,transcricao:document.getElementById("m-trans").value.trim()||null,criado_por:"Gregori"};
+  api("reunioes_fornecedor",{method:"POST",headers:{Prefer:"return=representation"},body:body}).then(function(r){
+    var row=(Array.isArray(r)&&r[0])?r[0]:body; MTGS.unshift(row); renderDossie();
+  }).catch(function(e){flash("m-msg","Erro: "+e.message,false);});
+}
+function resolver(id){
+  api("dossie_itens?id=eq."+id,{method:"PATCH",headers:{Prefer:"return=minimal"},body:{status:"resolvida",resolvido_em:new Date().toISOString()}}).then(function(){
+    var it=ITENS.find(function(x){return x.id==id;}); if(it){it.status="resolvida";it.resolvido_em=new Date().toISOString();}
+    renderDossie();buildRail();
+  }).catch(function(e){alert("Erro ao resolver: "+e.message);});
+}
+function flash(id,m,ok){var e=document.getElementById(id);if(!e)return;e.textContent=m;e.className="msg "+(ok?"ok":"err");setTimeout(function(){e.textContent="";},4000);}
+
+document.getElementById("srch").addEventListener("input",buildRail);
+document.getElementById("newbtn").onclick=function(){
+  var nome=prompt("Nome do interlocutor:"); if(!nome)return; nome=nome.trim(); if(!nome)return;
+  var t=prompt("Tipo — digite: fornecedor, agencia, dentista ou socio","fornecedor"); t=(t||"fornecedor").trim().toLowerCase(); if(!TIPOS[t])t="fornecedor";
+  PEND_NOVO={nome:nome,tipo:t}; SEL=nome; SEL_TIPO=t;
+  document.getElementById("rail").classList.add("hide-m"); buildRail(); renderDossie();
+};
+
+carregar();
+</script>
+</body></html>

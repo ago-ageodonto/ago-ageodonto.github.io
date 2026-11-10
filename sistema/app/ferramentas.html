@@ -85,8 +85,8 @@ var TOOLS=[
    {v:"local",l:"Infraestrutura inicial"}
   ],
   pend:"<b>2 pendências:</b> Simone — usuário teste do Giga + SLA (venceu 09/11) · Alexandre — custos de IA/hardware.",
-  dossie:"fornec",
-  plat:null
+  dossie:"dossies",
+  plats:[{l:"Dourados ↗",u:"https://nexus-ai-oralunic-dourados.getter.ai/"},{l:"Carlos Barbosa ↗",u:"https://nexus-ai-oralunic-carlos-barbosa.getter.ai/"}]
  },
  {
   ic:"🎧", nome:"Ovix Pro", oq:"IA que escuta e pontua os atendimentos (avaliação, reavaliação, relacionamento).",
@@ -96,7 +96,7 @@ var TOOLS=[
    {v:"R$ 900",l:"setup (uma vez)"},
    {v:"3 regras",l:"aval · reaval · relac.",wide:true}
   ],
-  plat:null
+  plat:"https://app.ouvixpro.ai/dashboard/oralunic/rede"
  }
 ];
 
@@ -106,7 +106,8 @@ function card(t){
  if(t.macro) acts+='<a class="btn pri" href="'+t.macro+'" target="_blank" rel="noreferrer">Abrir leitura macro ↗</a>';
  if(t.dossie) acts+='<button class="btn pri" onclick="abrirDossie(\''+t.dossie+'\')">Ver dossiê →</button>';
  if(t.plat) acts+='<a class="btn sec" href="'+t.plat+'" target="_blank" rel="noreferrer">Abrir plataforma ↗</a>';
- else if(!t.macro) acts+='<span class="btn dis">sem leitura macro ainda</span>';
+ if(t.plats) acts+=t.plats.map(function(p){return '<a class="btn sec" href="'+p.u+'" target="_blank" rel="noreferrer">'+p.l+'</a>';}).join('');
+ if(!t.macro && !t.dossie && !t.plat && !t.plats) acts+='<span class="btn dis">sem leitura macro ainda</span>';
  return '<div class="card">'
   +'<div class="ch"><div class="ci">'+t.ic+'</div><div class="ct"><h2>'+t.nome+'</h2><div class="wm">'+t.oq+'</div></div><div class="st '+t.st.c+'">'+t.st.t+'</div></div>'
   +'<div class="per">'+t.per+'</div>'
