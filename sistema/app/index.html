@@ -55,6 +55,8 @@ iframe{flex:1;width:100%;border:0;background:var(--pg)}
     <div class="grp">Panorama</div>
     <button class="nav on" data-v="torre.html" data-nav="torre" data-ic="🗼" data-t="Torre de Controle" data-bc="Panorama · rede vs metas"><span class="i">🗼</span> Torre de Controle</button>
     <button class="nav" data-v="../../materiais/painel_resultados.html" data-nav="painel" data-ic="📊" data-t="Painel de Resultados" data-bc="Panorama · apontamentos da rede"><span class="i">📊</span> Painel de Resultados</button>
+    <div class="grp">Ferramentas</div>
+    <button class="nav" data-v="ferramentas.html" data-nav="ferramentas" data-ic="🧰" data-t="Nossas Ferramentas" data-bc="Ferramentas · visão macro das plataformas"><span class="i">🧰</span> Ferramentas</button>
     <div class="grp">Acompanhamento Sócio</div>
     <button class="nav" data-v="rede.html" data-nav="rede" data-ic="🏙️" data-t="Rede" data-bc="Acompanhamento Sócio · farol por unidade"><span class="i">🏙️</span> Rede</button>
     <button class="nav" data-v="geral.html" data-nav="geral" data-ic="📈" data-t="Visão Geral" data-bc="Acompanhamento Sócio · analytics da rede"><span class="i">📈</span> Visão Geral</button>
@@ -105,6 +107,7 @@ function activate(btn){
 }
 document.querySelectorAll(".nav[data-nav]").forEach(function(b){b.onclick=function(){activate(b)}});
 function setNav(key){var b=document.querySelector('.nav[data-nav="'+key+'"]');if(b)activate(b);}
+window.setNav=setNav;
 // hook chamado pela tela Rede/Visão Geral quando clica numa unidade
 window.openDiretor=function(id){frame.src=withCB("dashboard.html?diretor="+encodeURIComponent(id));document.querySelectorAll(".nav").forEach(function(b){b.classList.remove("on")});document.getElementById("h-ic").textContent="👤";document.getElementById("h-ttl").textContent="Dashboard do Diretor";document.getElementById("h-bc").textContent="Acompanhamento · unidade selecionada";};
 // mobile menu

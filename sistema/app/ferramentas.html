@@ -1,0 +1,121 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><title>Ferramentas — AGO</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Spectral:wght@400;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap">
+<style>
+:root{--pg:#0B0906;--pn:#141009;--pn2:#1A150C;--ln:#2A2213;--ln2:#3A3018;--ink:#F3ECDA;--ink2:#B6A883;--ink3:#7C7256;--ous:#F1CE68;--gold-d:#B8862B;--vd:#5CC98A;--vm:#E0796B;--am:#E8B54D;--grad:linear-gradient(100deg,#FBEDB4,#F1CE68 40%,#CFA23B 70%,#F7DE8C);--serif:'Spectral',Georgia,serif;--sans:'Inter',-apple-system,sans-serif;}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--pg);color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased;padding:clamp(14px,2vw,26px)}
+.hd{border-bottom:1px solid var(--ln);padding-bottom:14px;margin-bottom:6px}
+.hd h1{font-family:var(--serif);font-size:20px;font-weight:800}
+.hd p{font-size:12.5px;color:var(--ink2);margin-top:5px;line-height:1.5;max-width:720px}
+.hd p b{color:var(--ous)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:16px;margin-top:18px}
+.card{background:linear-gradient(180deg,var(--pn),var(--pg));border:1px solid var(--ln);border-radius:16px;padding:17px 18px;display:flex;flex-direction:column;position:relative;overflow:hidden}
+.card::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:var(--grad);opacity:.7}
+.ch{display:flex;align-items:flex-start;gap:12px;margin-bottom:4px}
+.ci{font-size:26px;flex:0 0 auto;line-height:1}
+.ct{flex:1;min-width:0}
+.ct h2{font-family:var(--serif);font-size:17px;font-weight:800;line-height:1.1}
+.ct .wm{font-size:11.5px;color:var(--ink3);margin-top:3px;line-height:1.4}
+.st{font-size:9.5px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;padding:3px 9px;border-radius:999px;flex:0 0 auto;white-space:nowrap;align-self:flex-start}
+.st.g{color:#0c2a19;background:var(--vd)} .st.a{color:#2a1e05;background:var(--am)} .st.n{color:var(--ink);background:var(--pn2);border:1px solid var(--ln2)}
+.per{font-size:10.5px;color:var(--ink3);margin:11px 0 3px;font-weight:600;letter-spacing:.03em;text-transform:uppercase}
+.kp{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:4px}
+.kp .k{background:var(--pn2);border:1px solid var(--ln);border-radius:10px;padding:9px 11px}
+.kp .k.wide{grid-column:1/-1}
+.kp .v{font-family:var(--serif);font-size:20px;font-weight:800;line-height:1}
+.kp .v.g{color:var(--vd)}.kp .v.a{color:var(--am)}.kp .v.r{color:var(--vm)}
+.kp .l{font-size:10px;color:var(--ink2);margin-top:4px;font-weight:600}
+.pend{margin-top:12px;font-size:11.5px;color:var(--am);background:color-mix(in srgb,var(--am) 12%,transparent);border:1px solid color-mix(in srgb,var(--am) 30%,transparent);border-radius:9px;padding:8px 11px;line-height:1.45}
+.pend b{color:var(--ink)}
+.acts{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+.btn{font-size:11.5px;font-weight:700;text-decoration:none;border-radius:8px;padding:8px 13px;display:inline-flex;align-items:center;gap:6px;transition:.12s;cursor:pointer}
+.btn.pri{background:var(--grad);color:#241a06}
+.btn.pri:hover{filter:brightness(1.07)}
+.btn.sec{background:transparent;color:var(--ink2);border:1px solid var(--ln2)}
+.btn.sec:hover{background:var(--pn2);color:var(--ink)}
+.btn.dis{background:transparent;color:var(--ink3);border:1px dashed var(--ln2);cursor:default}
+.foot{margin-top:22px;font-size:11px;color:var(--ink3);line-height:1.6;border-top:1px solid var(--ln);padding-top:14px}
+</style></head>
+<body>
+<div class="hd">
+  <h1>🧰 Nossas Ferramentas</h1>
+  <p>As plataformas atualizam o <b>detalhe</b> lá dentro delas; aqui fica a <b>visão macro</b> que você analisa — os poucos números que importam, com o farol e o link pra abrir o detalhe. Cada ferramenta é atualizada aqui no fechamento de cada período.</p>
+</div>
+
+<div class="grid" id="grid"></div>
+
+<div class="foot">Visão macro curada · os valores são o fechamento de cada ferramenta no período indicado no card · "abrir leitura macro" = o material detalhado · "abrir plataforma" = o sistema de origem (atualizado por eles).</div>
+
+<script>
+var TOOLS=[
+ {
+  ic:"📍", nome:"Impulse Maps", oq:"Google & mídia paga da rede (Google Ads + Meta + Perfil no Google).",
+  st:{c:"g",t:"forte"}, per:"Fechamento outubro/2026 · 30 unidades",
+  kpis:[
+   {v:"11,7x",c:"g",l:"ROAS da rede"},
+   {v:"R$ 708 mil",l:"Vendas no mês"},
+   {v:"104",l:"Contratos"},
+   {v:"R$ 59,4 mil",l:"Investimento"},
+   {v:"25.399",l:"Visualizações Google",wide:true}
+  ],
+  macro:"https://claude.ai/artifact/Y9VTk9AmBeho65a2EZ9hCD",
+  plat:"https://dash.impulsemaps.com.br/dashboard/rede"
+ },
+ {
+  ic:"💬", nome:"Captação IA", oq:"Agendamento × comparecimento da IA de atendimento (CRM DigiOdonto).",
+  st:{c:"a",t:"atenção"}, per:"Novembro/2026 · parcial (01–10) · 23 unidades",
+  kpis:[
+   {v:"2.526",l:"Leads do período"},
+   {v:"15%",c:"a",l:"Agendamento (rede)"},
+   {v:"30%",c:"a",l:"Comparec. (piso)"},
+   {v:"374",l:"Agendamentos"}
+  ],
+  macro:"https://claude.ai/artifact/WJdWF9MAkfsQAGBNMLmugV",
+  plat:"https://crm.digiodonto.tech/"
+ },
+ {
+  ic:"🎥", nome:"Getter", oq:"IA nas câmeras: mede tempo produtivo × ocioso do dentista.",
+  st:{c:"a",t:"em alinhamento"}, per:"Reunião 03/11/2026 · piloto",
+  kpis:[
+   {v:"2 → 5",l:"Clínicas (expansão)"},
+   {v:"56%",c:"a",l:"Produtivo (dia piloto)"},
+   {v:"~70%",l:"do dado via agenda Giga"},
+   {v:"local",l:"Infraestrutura inicial"}
+  ],
+  pend:"<b>2 pendências:</b> Simone — usuário teste do Giga + SLA (venceu 09/11) · Alexandre — custos de IA/hardware.",
+  dossie:"fornec",
+  plat:null
+ },
+ {
+  ic:"🎧", nome:"Ovix Pro", oq:"IA que escuta e pontua os atendimentos (avaliação, reavaliação, relacionamento).",
+  st:{c:"n",t:"em implantação"}, per:"Rollout com Thaís · início 03/11/2026",
+  kpis:[
+   {v:"R$ 500",l:"por clínica / mês"},
+   {v:"R$ 900",l:"setup (uma vez)"},
+   {v:"3 regras",l:"aval · reaval · relac.",wide:true}
+  ],
+  plat:null
+ }
+];
+
+function card(t){
+ var kp=t.kpis.map(function(k){return '<div class="k'+(k.wide?' wide':'')+'"><div class="v'+(k.c?' '+k.c:'')+'">'+k.v+'</div><div class="l">'+k.l+'</div></div>';}).join('');
+ var acts='';
+ if(t.macro) acts+='<a class="btn pri" href="'+t.macro+'" target="_blank" rel="noreferrer">Abrir leitura macro ↗</a>';
+ if(t.dossie) acts+='<button class="btn pri" onclick="abrirDossie(\''+t.dossie+'\')">Ver dossiê →</button>';
+ if(t.plat) acts+='<a class="btn sec" href="'+t.plat+'" target="_blank" rel="noreferrer">Abrir plataforma ↗</a>';
+ else if(!t.macro) acts+='<span class="btn dis">sem leitura macro ainda</span>';
+ return '<div class="card">'
+  +'<div class="ch"><div class="ci">'+t.ic+'</div><div class="ct"><h2>'+t.nome+'</h2><div class="wm">'+t.oq+'</div></div><div class="st '+t.st.c+'">'+t.st.t+'</div></div>'
+  +'<div class="per">'+t.per+'</div>'
+  +'<div class="kp">'+kp+'</div>'
+  +(t.pend?'<div class="pend">'+t.pend+'</div>':'')
+  +'<div class="acts">'+acts+'</div>'
+  +'</div>';
+}
+document.getElementById("grid").innerHTML=TOOLS.map(card).join('');
+function abrirDossie(key){ if(window.parent&&window.parent!==window&&window.parent.setNav)window.parent.setNav(key); else location.href="fornecedores.html"; }
+</script>
+</body></html>
