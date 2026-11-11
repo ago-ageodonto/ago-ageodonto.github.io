@@ -19,6 +19,7 @@
    <button data-t="mix">Mix de Tratamentos</button>
    <button data-t="inad">Inadimplência</button>
    <button data-t="canc">Cancelamentos</button>
+   <button data-t="score">Score (Serasa)</button>
    <button data-t="cap">Captadoras</button>
    <button data-t="cal">Mapa de Calor</button>
    <button data-t="blk">Faturamento por Bloco</button>
@@ -190,6 +191,7 @@
    <span class="eyebrow" style="display:block;margin:22px 0 8px">Cruzamento: cancelamento × inadimplência (quem cancela também não recebe?)</span>
    <div id="cancCross" style="background:var(--pn);border:1px solid var(--ln);border-radius:12px;padding:16px 16px 10px"></div>
  </section>
+ <section class="tab" id="t-score" hidden><div id="scoreBox"></div></section>
  <section class="tab" id="t-ou" hidden>
    <div style="text-align:center;padding:48px 20px;background:var(--pn);border:1.5px dashed var(--ln);border-radius:16px">
      <span class="eyebrow" style="display:block;color:var(--ink3);letter-spacing:.08em;text-transform:uppercase;font-size:11px;font-weight:800;margin-bottom:10px">Grupo Oral Unic · fora Ageodonto</span>
@@ -725,10 +727,81 @@ function clusterView(){
   H+='<div style="margin-top:16px;background:var(--panel);border-left:4px solid var(--azul);border-radius:0 10px 10px 0;padding:13px 16px;font-size:12.5px;color:var(--ink-2);line-height:1.5"><b style="color:var(--ink)">Custo por categoria de despesa:</b> use os botões acima (Dentistas, Dental, Lab. Externo, Folha, Franqueadora, Mídia…) para comparar o custo de cada categoria entre unidades e faixas — base: despesa detalhada jan–jul/26 de <b>35 unidades</b> (média mensal no período selecionado). Produção (implantes/protocolos/endo/restaurações) das 7 praças MS + Montevidéu está na aba <b>Mix por R$ 100 mil</b>.</div>';
   box.innerHTML=H;
 }
+/* ==== Score de crédito (Serasa / CREDNET) no prontuário — varredura por unidade ==== */
+var SCORE=[
+ {n:"Teutônia",u:1,v:"nome",cob:100,neg:null},
+ {n:"Campo Grande",u:1,v:"nome",cob:91,neg:null},
+ {n:"Naviraí",u:1,v:"nome",cob:91,neg:null},
+ {n:"Campo Grande II",u:1,v:"nome",cob:89,neg:48},
+ {n:"Montenegro",u:1,v:"nome",cob:86,neg:null},
+ {n:"Osório",u:1,v:"nome",cob:51,neg:null},
+ {n:"Nova Prata",u:1,v:"nome",cob:37,neg:null},
+ {n:"Três Lagoas",u:1,v:"nome",cob:31,neg:null},
+ {n:"Flores da Cunha",u:1,v:"aberto",cob:null,neg:null,nt:"salvo com outros nomes"},
+ {n:"Guaíba",u:1,v:"aberto",cob:null,neg:null,nt:"salvo com outros nomes"},
+ {n:"Tapejara",u:1,v:"aberto",cob:null,neg:null,nt:"salvo com outros nomes"},
+ {n:"Caçador (Oral Unic)",u:1,v:"aberto",cob:null,neg:null,nt:"salvo com outros nomes"},
+ {n:"Tubarão",u:0,v:"aberto"},
+ {n:"Timbó",u:0,v:"aberto"},
+ {n:"Carlos Barbosa",u:0,v:"aberto"},
+ {n:"Capão da Canoa",u:0,v:"aberto"},
+ {n:"Veranópolis",u:0,v:"aberto"},
+ {n:"Nova Andradina",u:0,v:"aberto"},
+ {n:"Guaporé",u:0,v:"aberto"},
+ {n:"Indaial",u:0,v:"amostra"},
+ {n:"Bento Gonçalves",u:0,v:"amostra"},
+ {n:"Passos",u:0,v:"amostra"},
+ {n:"Lajeado",u:0,v:"amostra"},
+ {n:"Dourados",u:0,v:"amostra"},
+ {n:"Garibaldi",u:0,v:"amostra"},
+ {n:"Petrolina",u:0,v:"amostra"},
+ {n:"Videira",u:0,v:"amostra"},
+ {n:"Alvorada",u:0,v:"amostra"},
+ {n:"São Bernardo do Campo",u:0,v:"amostra"},
+ {n:"Serafina Corrêa",u:0,v:"amostra"},
+ {n:"Tramandaí",u:0,v:"amostra"},
+ {n:"Encantado",u:0,v:"amostra"},
+ {n:"Vacaria",u:0,v:"amostra"},
+ {n:"Viamão",u:0,v:"amostra"},
+ {n:"São Francisco do Sul",u:0,v:"amostra"},
+ {n:"São Joaquim",u:0,v:"amostra"}
+];
+function scoreDraw(){
+  var box=document.getElementById("scoreBox"); if(!box)return;
+  var vlab={nome:"por nome (SERASA)",aberto:"conteúdo aberto",amostra:"amostra s/ laudo"};
+  var S=SCORE.slice().sort(function(a,b){
+    if(a.u!==b.u)return b.u-a.u;
+    if(a.u){var ca=(a.cob==null?-1:a.cob),cb=(b.cob==null?-1:b.cob);if(ca!==cb)return cb-ca;return a.n.localeCompare(b.n);}
+    var va=(a.v==="aberto"?0:1),vb=(b.v==="aberto"?0:1);if(va!==vb)return va-vb;return a.n.localeCompare(b.n);
+  });
+  var usam=SCORE.filter(function(o){return o.u;}).length;
+  var conf=SCORE.filter(function(o){return o.v==="aberto";}).length;
+  var card=function(l,v,s,ac){return '<div style="background:var(--pn);border:1px solid var(--ln);border-radius:12px;padding:13px 15px;flex:1;min-width:150px"><div style="font-size:10.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-3)">'+l+'</div><div style="font-family:var(--serif);font-size:26px;font-weight:700;color:'+(ac||'var(--ink)')+';margin:3px 0 2px;line-height:1.05">'+v+'</div><div style="font-size:11.5px;color:var(--ink-2)">'+s+'</div></div>';};
+  var rows=S.map(function(o){
+    var chip=o.u?'<span style="display:inline-block;padding:2px 9px;border-radius:20px;font-size:11px;font-weight:700;background:color-mix(in srgb,var(--ou) 20%,transparent);color:var(--ou)">Sim</span>':'<span style="display:inline-block;padding:2px 9px;border-radius:20px;font-size:11px;font-weight:600;background:var(--pn2);color:var(--ink-3)">Não</span>';
+    var cob=(o.u&&o.cob!=null)?'<div style="display:flex;align-items:center;gap:8px;justify-content:flex-end"><div style="width:68px;height:7px;border-radius:4px;background:var(--pn2)"><div style="width:'+o.cob+'%;height:100%;border-radius:4px;background:var(--ou)"></div></div><b style="color:var(--ink);font-variant-numeric:tabular-nums;min-width:30px;text-align:right">'+o.cob+'%</b></div>':(o.u?'<span style="color:var(--ink-3);font-size:11px">'+(o.nt||'—')+'</span>':'<span style="color:var(--ink-3)">—</span>');
+    var neg=(o.neg!=null)?'<b style="color:#E0796B;font-variant-numeric:tabular-nums">'+o.neg+'%</b>':(o.u?'<span style="color:var(--ink-3);font-size:11px">a levantar</span>':'<span style="color:var(--ink-3)">—</span>');
+    var vcol=o.u?'var(--ink-2)':'var(--ink-3)';
+    return '<tr style="border-top:1px solid var(--ln)"><td style="text-align:left;padding:9px 8px;font-weight:600;color:var(--ink);white-space:nowrap">'+o.n+'</td><td style="padding:9px 8px;text-align:center">'+chip+'</td><td style="padding:9px 8px;font-size:11.5px;color:'+vcol+'">'+vlab[o.v]+'</td><td style="padding:9px 8px;text-align:right">'+cob+'</td><td style="padding:9px 8px;text-align:right">'+neg+'</td></tr>';
+  }).join('');
+  var th='font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:#fff;padding:8px';
+  box.innerHTML=
+    '<span class="eyebrow" style="display:block;margin-bottom:6px">Score de crédito (Serasa / CREDNET) no prontuário · varredura por unidade</span>'
+   +'<p style="font-size:13px;color:var(--ink-2);margin:0 0 14px;line-height:1.55">Varredura feita <b>abrindo os documentos</b> do prontuário (Documentos → laudo CREDNET), não só filtrando pelo nome — várias praças salvam o laudo com <b>outro nome</b> (CPF, "laudo"). Mostra quais unidades <b>consultam Serasa</b> antes de fechar, a cobertura na amostra e o % de pacientes negativados.</p>'
+   +'<div style="display:flex;gap:12px;flex-wrap:wrap;margin:0 0 16px">'
+   +card("Usam Serasa",usam+" / "+SCORE.length,"praças mapeadas no Giga","var(--ou)")
+   +card("Conferidas abrindo doc",conf+"","laudo lido no conteúdo (não só nome)")
+   +card("Negativados · Campo Grande II","48%","685 laudos · R$ 5,25 mi na base","#E0796B")
+   +'</div>'
+   +'<div class="tblwrap"><table style="width:100%;border-collapse:collapse"><thead><tr>'
+   +'<th style="'+th+';text-align:left">Praça</th><th style="'+th+';text-align:center">Usa Serasa</th><th style="'+th+';text-align:left">Verificação</th><th style="'+th+';text-align:right">Cobertura (amostra)</th><th style="'+th+';text-align:right">% Negativados</th>'
+   +'</tr></thead><tbody>'+rows+'</tbody></table></div>'
+   +'<p class="note" style="margin-top:14px;line-height:1.7"><b>Como ler.</b> <b>Verificação</b> — "por nome": o laudo está salvo como SERASA (amostra de 35 fichas). "conteúdo aberto": abrimos os documentos e confirmamos o laudo CREDNET mesmo salvo com outro nome. "amostra s/ laudo": fichas sem laudo de crédito nos anexos. <b>Cobertura</b> = % das fichas da amostra com laudo (consistência do uso). <b>% Negativados</b> está calculado na base cheia só para Campo Grande II (48%); as demais que usam ficam <i>a levantar</i> praça a praça.</p>';
+}
 document.querySelectorAll("#tabs button").forEach(b=>b.onclick=()=>{
   document.querySelectorAll("#tabs button").forEach(x=>x.classList.remove("on"));b.classList.add("on");
-  ["rede","rank","clu","uni","cmp","mix","cap","cal","blk","capp","geo","inad","canc"].forEach(t=>document.getElementById("t-"+t).hidden=(t!==b.dataset.t));
-  if(b.dataset.t==="cmp")cmp();if(b.dataset.t==="mix")mixDraw();if(b.dataset.t==="uni")uniTrend();if(b.dataset.t==="cal")heatDraw();if(b.dataset.t==="blk")blocoDraw();if(b.dataset.t==="capp"&&window.capRender)capRender();if(b.dataset.t==="clu")clusterView();if(b.dataset.t==="geo")geoView();if(b.dataset.t==="inad"&&window.inadDraw)inadDraw();if(b.dataset.t==="canc"&&window.cancDraw)cancDraw();
+  ["rede","rank","clu","uni","cmp","mix","cap","cal","blk","capp","geo","inad","canc","score"].forEach(t=>document.getElementById("t-"+t).hidden=(t!==b.dataset.t));
+  if(b.dataset.t==="cmp")cmp();if(b.dataset.t==="mix")mixDraw();if(b.dataset.t==="uni")uniTrend();if(b.dataset.t==="cal")heatDraw();if(b.dataset.t==="blk")blocoDraw();if(b.dataset.t==="capp"&&window.capRender)capRender();if(b.dataset.t==="clu")clusterView();if(b.dataset.t==="geo")geoView();if(b.dataset.t==="inad"&&window.inadDraw)inadDraw();if(b.dataset.t==="canc"&&window.cancDraw)cancDraw();if(b.dataset.t==="score")scoreDraw();
 });
 document.getElementById("sub").textContent=MONTHS.length+" meses ("+YEARS.join(" + ")+") · "+unis.length+" unidades · consolidado, ranking, por unidade e comparativo";
 rede("ano-"+LAST);rank("ano-"+LAST);unidade(unis[0]);uniTrend();
@@ -736,7 +809,7 @@ document.getElementById("cA").value=unis[0];document.getElementById("cB").value=
 
 /* ==== Seletor de GRUPO (Ageodonto × Oral Unic) ==== */
 (function(){
-  var TABS=["rede","rank","clu","uni","cmp","mix","cap","cal","blk","capp","geo","inad","canc"];
+  var TABS=["rede","rank","clu","uni","cmp","mix","cap","cal","blk","capp","geo","inad","canc","score"];
   var ac=document.getElementById("agoCount");if(ac)ac.textContent=unis.length+" praças do grupo";
   function showAgo(){
     document.getElementById("tabs").hidden=false;
