@@ -729,18 +729,18 @@ function clusterView(){
 }
 /* ==== Score de crédito (Serasa / CREDNET) no prontuário — varredura por unidade ==== */
 var SCORE=[
- {n:"Teutônia",u:1,v:"nome",cob:100,neg:null},
- {n:"Campo Grande",u:1,v:"nome",cob:91,neg:null},
- {n:"Naviraí",u:1,v:"nome",cob:91,neg:null},
- {n:"Campo Grande II",u:1,v:"nome",cob:89,neg:48},
- {n:"Montenegro",u:1,v:"nome",cob:86,neg:null},
- {n:"Osório",u:1,v:"nome",cob:51,neg:null},
- {n:"Nova Prata",u:1,v:"nome",cob:37,neg:null},
- {n:"Três Lagoas",u:1,v:"nome",cob:31,neg:null},
- {n:"Flores da Cunha",u:1,v:"aberto",cob:null,neg:null,nt:"salvo com outros nomes"},
- {n:"Guaíba",u:1,v:"aberto",cob:null,neg:null,nt:"salvo com outros nomes"},
- {n:"Tapejara",u:1,v:"aberto",cob:null,neg:null,nt:"salvo com outros nomes"},
- {n:"Caçador (Oral Unic)",u:1,v:"aberto",cob:null,neg:null,nt:"salvo com outros nomes"},
+ {n:"Caçador (Oral Unic)",u:1,v:"aberto",bir:"SPC",cob:20,neg:80,laud:148,nt:"laudo s/ nome fixo"},
+ {n:"Nova Prata",u:1,v:"nome",bir:"SPC",cob:75,neg:78,laud:295},
+ {n:"Guaíba",u:1,v:"aberto",bir:"SPC",cob:31,neg:60,laud:65,nt:"parte salva como imagem"},
+ {n:"Osório",u:1,v:"nome",bir:"Serasa",cob:27,neg:49,laud:133},
+ {n:"Campo Grande",u:1,v:"nome",bir:"Serasa",cob:41,neg:49,laud:228},
+ {n:"Campo Grande II",u:1,v:"nome",bir:"Serasa",cob:93,neg:42,laud:411,nt:"2026 (base cheia: 48%)"},
+ {n:"Três Lagoas",u:1,v:"nome",bir:"Serasa",cob:38,neg:38,laud:164},
+ {n:"Tapejara",u:1,v:"aberto",bir:"Serasa",cob:4,neg:32,laud:22,nt:"laudo em imagem · cobertura subestimada"},
+ {n:"Naviraí",u:1,v:"aberto",bir:"Boa Vista",cob:90,neg:27,laud:357,nt:"salvo como 'cpf'/'SCORE'"},
+ {n:"Montenegro",u:1,v:"nome",bir:"Serasa",cob:84,neg:25,laud:362},
+ {n:"Teutônia",u:1,v:"nome",bir:"Serasa",cob:71,neg:22,laud:170},
+ {n:"Flores da Cunha",u:1,v:"aberto",bir:"Serasa",cob:72,neg:21,laud:423,nt:"salvo como 'PESQUISA DE CRÉDITO'"},
  {n:"Tubarão",u:0,v:"aberto"},
  {n:"Timbó",u:0,v:"aberto"},
  {n:"Carlos Barbosa",u:0,v:"aberto"},
@@ -771,7 +771,7 @@ function scoreDraw(){
   var vlab={nome:"por nome (SERASA)",aberto:"conteúdo aberto",amostra:"amostra s/ laudo"};
   var S=SCORE.slice().sort(function(a,b){
     if(a.u!==b.u)return b.u-a.u;
-    if(a.u){var ca=(a.cob==null?-1:a.cob),cb=(b.cob==null?-1:b.cob);if(ca!==cb)return cb-ca;return a.n.localeCompare(b.n);}
+    if(a.u){var na=(a.neg==null?-1:a.neg),nb=(b.neg==null?-1:b.neg);if(na!==nb)return nb-na;return a.n.localeCompare(b.n);}
     var va=(a.v==="aberto"?0:1),vb=(b.v==="aberto"?0:1);if(va!==vb)return va-vb;return a.n.localeCompare(b.n);
   });
   var usam=SCORE.filter(function(o){return o.u;}).length;
@@ -782,21 +782,24 @@ function scoreDraw(){
     var cob=(o.u&&o.cob!=null)?'<div style="display:flex;align-items:center;gap:8px;justify-content:flex-end"><div style="width:68px;height:7px;border-radius:4px;background:var(--pn2)"><div style="width:'+o.cob+'%;height:100%;border-radius:4px;background:var(--ou)"></div></div><b style="color:var(--ink);font-variant-numeric:tabular-nums;min-width:30px;text-align:right">'+o.cob+'%</b></div>':(o.u?'<span style="color:var(--ink-3);font-size:11px">'+(o.nt||'—')+'</span>':'<span style="color:var(--ink-3)">—</span>');
     var neg=(o.neg!=null)?'<b style="color:#E0796B;font-variant-numeric:tabular-nums">'+o.neg+'%</b>':(o.u?'<span style="color:var(--ink-3);font-size:11px">a levantar</span>':'<span style="color:var(--ink-3)">—</span>');
     var vcol=o.u?'var(--ink-2)':'var(--ink-3)';
-    return '<tr style="border-top:1px solid var(--ln)"><td style="text-align:left;padding:9px 8px;font-weight:600;color:var(--ink);white-space:nowrap">'+o.n+'</td><td style="padding:9px 8px;text-align:center">'+chip+'</td><td style="padding:9px 8px;font-size:11.5px;color:'+vcol+'">'+vlab[o.v]+'</td><td style="padding:9px 8px;text-align:right">'+cob+'</td><td style="padding:9px 8px;text-align:right">'+neg+'</td></tr>';
+    var bcolor={"Serasa":"var(--ou)","SPC":"#C98A3B","Boa Vista":"#6E8FB0"};
+    var bir=o.bir?'<span style="display:inline-block;padding:1px 8px;border-radius:20px;font-size:10.5px;font-weight:700;background:color-mix(in srgb,'+(bcolor[o.bir]||'var(--ink-3)')+' 16%,transparent);color:'+(bcolor[o.bir]||'var(--ink-2)')+'">'+o.bir+'</span>':'<span style="color:var(--ink-3)">—</span>';
+    var lsub=o.laud?'<div style="font-size:10px;color:var(--ink-3)">'+o.laud+' laudos</div>':'';
+    return '<tr style="border-top:1px solid var(--ln)"><td style="text-align:left;padding:9px 8px;font-weight:600;color:var(--ink);white-space:nowrap">'+o.n+lsub+'</td><td style="padding:9px 8px;text-align:center">'+chip+'</td><td style="padding:9px 8px;text-align:center">'+bir+'</td><td style="padding:9px 8px;font-size:11.5px;color:'+vcol+'">'+vlab[o.v]+'</td><td style="padding:9px 8px;text-align:right">'+cob+'</td><td style="padding:9px 8px;text-align:right">'+neg+'</td></tr>';
   }).join('');
   var th='font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:#fff;padding:8px';
   box.innerHTML=
     '<span class="eyebrow" style="display:block;margin-bottom:6px">Score de crédito (Serasa / CREDNET) no prontuário · varredura por unidade</span>'
-   +'<p style="font-size:13px;color:var(--ink-2);margin:0 0 14px;line-height:1.55">Varredura feita <b>abrindo os documentos</b> do prontuário (Documentos → laudo CREDNET), não só filtrando pelo nome — várias praças salvam o laudo com <b>outro nome</b> (CPF, "laudo"). Mostra quais unidades <b>consultam Serasa</b> antes de fechar, a cobertura na amostra e o % de pacientes negativados.</p>'
+   +'<p style="font-size:13px;color:var(--ink-2);margin:0 0 14px;line-height:1.55">Varredura feita <b>abrindo os documentos</b> de todos os fechados (censo jan–nov/26), lendo o conteúdo do laudo — não só o nome. Três birôs em uso: <b>Serasa/CREDNET</b>, <b>SPC MixMais</b> e <b>Boa Vista/Acerta</b>. Mostra quais unidades <b>consultam crédito</b> antes de fechar, a cobertura e o <b>% de negativados</b> entre os laudos lidos.</p>'
    +'<div style="display:flex;gap:12px;flex-wrap:wrap;margin:0 0 16px">'
-   +card("Usam Serasa",usam+" / "+SCORE.length,"praças mapeadas no Giga","var(--ou)")
-   +card("Conferidas abrindo doc",conf+"","laudo lido no conteúdo (não só nome)")
-   +card("Negativados · Campo Grande II","48%","685 laudos · R$ 5,25 mi na base","#E0796B")
+   +card("Consultam crédito",usam+" / "+SCORE.length,"praças mapeadas · Serasa, SPC e Boa Vista","var(--ou)")
+   +card("Laudos lidos","2.778","censo jan–nov/26 · 11 praças + CG2")
+   +card("Negativados · média rede","40%","1.121 de 2.778 laudos lidos","#E0796B")
    +'</div>'
    +'<div class="tblwrap"><table style="width:100%;border-collapse:collapse"><thead><tr>'
-   +'<th style="'+th+';text-align:left">Praça</th><th style="'+th+';text-align:center">Usa Serasa</th><th style="'+th+';text-align:left">Verificação</th><th style="'+th+';text-align:right">Cobertura (amostra)</th><th style="'+th+';text-align:right">% Negativados</th>'
+   +'<th style="'+th+';text-align:left">Praça</th><th style="'+th+';text-align:center">Consulta crédito</th><th style="'+th+';text-align:center">Birô</th><th style="'+th+';text-align:left">Verificação</th><th style="'+th+';text-align:right">Cobertura</th><th style="'+th+';text-align:right">% Negativados</th>'
    +'</tr></thead><tbody>'+rows+'</tbody></table></div>'
-   +'<p class="note" style="margin-top:14px;line-height:1.7"><b>Como ler.</b> <b>Verificação</b> — "por nome": o laudo está salvo como SERASA (amostra de 35 fichas). "conteúdo aberto": abrimos os documentos e confirmamos o laudo CREDNET mesmo salvo com outro nome. "amostra s/ laudo": fichas sem laudo de crédito nos anexos. <b>Cobertura</b> = % das fichas da amostra com laudo (consistência do uso). <b>% Negativados</b> está calculado na base cheia só para Campo Grande II (48%); as demais que usam ficam <i>a levantar</i> praça a praça.</p>';
+   +'<p class="note" style="margin-top:14px;line-height:1.7"><b>Como ler.</b> <b>Cobertura</b> = % dos fechados da praça com laudo legível nos anexos. <b>% Negativados</b> = pacientes com restrição entre os laudos lidos. <b>Padrão:</b> as praças de <b>SPC</b> (Caçador 80%, Nova Prata 78%, Guaíba 60%) negativam muito mais que as de <b>Serasa</b> (21–49%) e a de <b>Boa Vista</b> (Naviraí 27%) — provável efeito de perfil de público/região. <b>Ressalvas de cobertura:</b> Tapejara e parte do Guaíba salvam o laudo como <b>imagem</b> (não lida automaticamente), então a cobertura real é maior que a mostrada — o % negativados vale sobre a amostra lida. CG2 = base 2026; histórico completo (mai/25–out/26) dá 48% em 685 laudos.</p>';
 }
 document.querySelectorAll("#tabs button").forEach(b=>b.onclick=()=>{
   document.querySelectorAll("#tabs button").forEach(x=>x.classList.remove("on"));b.classList.add("on");
