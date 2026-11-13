@@ -91,11 +91,11 @@
  </section>
 
  <section class="tab" id="t-capp" hidden>
-  <div class="cap-eyebrow">Capacidade Produtiva · Tempo do avaliador (9 T's) · Maio–Agosto 2026</div>
+  <div class="cap-eyebrow">Capacidade Produtiva · Tempo do avaliador (9 T's) · Maio–Outubro 2026</div>
   <p class="cap-lead">Quanto cada praça consegue trazer de avaliação — no padrão de <b>30 min</b>. Arraste o medidor para simular outro tempo e ver a capacidade e a ociosidade se moverem juntas.</p>
   <section class="ctrl">
     <div class="cgrp"><span class="lbl">Período</span>
-      <div class="seg" id="cp-seg"><button data-m="05">Maio</button><button data-m="06">Junho</button><button data-m="07">Julho</button><button data-m="08">Agosto</button><button data-m="avg" class="on">Média</button></div></div>
+      <div class="seg" id="cp-seg"><button data-m="05">Maio</button><button data-m="06">Junho</button><button data-m="07">Julho</button><button data-m="08">Agosto</button><button data-m="09">Setembro</button><button data-m="10">Outubro</button><button data-m="avg" class="on">Média</button></div></div>
     <div class="cgrp"><span class="lbl">Praça</span><select id="cp-selpr"></select></div>
     <div class="cgrp grow"><span class="lbl">Tempo de avaliação <em id="cp-tval">30 min</em> <span class="hint">← manda no cálculo (padrão 30)</span></span>
       <input type="range" id="cp-slider" min="15" max="45" step="5" value="30">
@@ -109,7 +109,7 @@
       <th data-k="pot" class="c">Potencial</th><th data-k="meta" class="c">Meta</th><th data-k="delta" class="c">Δ</th><th data-k="ocio" class="c">Ociosidade</th>
     </tr></thead><tbody></tbody></table></div>
   </section>
-  <p class="cap-foot">Capacidade no padrão 30 min · Planejamento não desconta da disponibilidade · Ociosidade = não comparecimento · Dourados congelado até set/26 · Julho é o mês completo (35 praças) — Maio/Junho parciais</p>
+  <p class="cap-foot">Capacidade no padrão 30 min · Planejamento não desconta da disponibilidade · Ociosidade = não comparecimento · Dourados congelado até set/26 · Julho é o mês completo (35 praças) — Maio/Junho parciais · <b>Set/Out = 1º passe automático do Giga por avaliador (23 praças) a revisar; Naviraí validada</b></p>
 </section>
 
 <section class="tab" id="t-mix" hidden>
@@ -1114,7 +1114,7 @@ try{heatDraw();}catch(e){}
 (function(){
 const DATA=window.__AGO.DATA;let MES="avg",T=30,SEL="Campo Grande 1",SORT="delta";
 const D=n=>Math.round(n*10)/10, F=n=>(Math.round(n*10)/10).toFixed(1);
-const flagged=r=>Math.max.apply(null,r.T.filter((_,i)=>i!==2))>18;  // T3(avaliação) não conta; só flag se algum outro T for absurdo (>18d)
+const flagged=r=>r.revisar===true||Math.max.apply(null,r.T.filter((_,i)=>i!==2))>18;  // revisar=1º passe (fica fora da Média); T3(avaliação) não conta; ou algum outro T absurdo (>18d)
 function calcM(pr,mm,t){const P=DATA[pr];if(!P)return null;const r=P.m[mm];if(!r)return null;
   const deMin=(r.de||0)*570;
   const capDisp=r.base-r.fer-r.desvio-deMin;
@@ -1150,7 +1150,7 @@ function row(label,val,cls,barPct,color,neg,tip){
     `<span class="wv">${neg?'−':''}${F(Math.abs(val))}<em>d</em></span></div>`;
 }
 function detail(){
-  const c=calc(SEL,T);if(!c){document.getElementById("cp-detail").innerHTML=`<div class="dhead"><div><h2>${SEL}</h2><span class="dsub">${MES==="avg"?"média":(MES==="05"?"maio":MES==="06"?"junho":MES==="07"?"julho":"agosto")}</span></div></div><p style="padding:26px 8px;color:var(--ink3);font-size:13.5px">Esta praça não tem dados deste mês. <b>Julho</b> é o mês completo (35 praças); maio e junho estão parciais — selecione <b>Julho</b> ou <b>Média</b>.</p>`;return;}
+  const c=calc(SEL,T);if(!c){document.getElementById("cp-detail").innerHTML=`<div class="dhead"><div><h2>${SEL}</h2><span class="dsub">${MES==="avg"?"média":({"05":"maio","06":"junho","07":"julho","08":"agosto","09":"setembro","10":"outubro"}[MES]||MES)}</span></div></div><p style="padding:26px 8px;color:var(--ink3);font-size:13.5px">Esta praça não tem dados deste mês. <b>Julho</b> é o mês completo (35 praças); maio e junho estão parciais — selecione <b>Julho</b> ou <b>Média</b>.</p>`;return;}
   const r0=DATA[SEL],mx=c.base||1;
   const emb=c.cad<30||c.pct15>=35;
   const pTip=c.pmot.length?"Pessoal: "+c.pmot.map(m=>`${m[0]} (${m[1]}d)`).join(" · "):"";
@@ -1178,7 +1178,7 @@ function detail(){
         `<span class="wv oci">${F(oc)}<em>d</em></span></div>`;
   document.getElementById("cp-detail").innerHTML=`
     <div class="dhead"><div><h2>${SEL}${c.frozen?' <span class="tag">congelado</span>':''}${c.flag?' <span class="tag warn">dado a revisar</span>':''}</h2>
-      <span class="dsub">${MES==="avg"?"média dos meses":(MES==="05"?"maio":(MES==="06"?"junho":"julho"))}</span></div>
+      <span class="dsub">${MES==="avg"?"média dos meses":({"05":"maio","06":"junho","07":"julho","08":"agosto","09":"setembro","10":"outubro"}[MES]||MES)}</span></div>
       <div class="cadbox ${emb?'emb':''}"><span>Cadência real <i class="diag">diagnóstico</i></span><b>${c.cadm?'marcada '+c.cad+' → real '+c.cadm+' min':c.cad+' min'}</b><em>${c.cadm?'como é marcada → como acontece (com buracos) — ':''}${emb?'embola '+c.pct15+'% — não entra no cálculo':'agenda no padrão'}</em></div>
     </div>
     <div class="wf">${rows}</div>
