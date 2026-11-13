@@ -113,17 +113,17 @@
 </section>
 
 <section class="tab" id="t-mix" hidden>
-   <div class="ctl"><span class="lbl">Ano</span><select id="mixYr"><option>2026</option><option>2025</option></select><span class="lbl" style="margin-left:8px">Escopo</span><select id="mixScope"></select><span class="hint" style="font-size:10.5px;color:var(--ink3)">venda dos serviços (base pagamento) · 2026 é YTD</span></div>
+   <div class="ctl"><span class="lbl">Ano</span><select id="mixYr"><option>2026</option><option>2025</option></select><span class="lbl" style="margin-left:8px">Escopo</span><select id="mixScope"></select><span class="lbl" style="margin-left:8px">Mês</span><select id="mixMes"></select><span class="hint" style="font-size:10.5px;color:var(--ink3)">venda dos serviços (base pagamento) · 2026 é YTD · mês = 2026</span></div>
    <div class="mixlens" style="display:flex;gap:6px;margin:12px 0 2px"><button class="mlx on" data-lens="item" style="font:600 12.5px/1 var(--sans);padding:8px 14px;border-radius:8px;border:1px solid var(--ln);background:var(--grad);color:#1a1206;cursor:pointer">Por item</button><button class="mlx" data-lens="pac" style="font:600 12.5px/1 var(--sans);padding:8px 14px;border-radius:8px;border:1px solid var(--ln);background:transparent;color:var(--ink2);cursor:pointer">Por paciente</button></div>
    <div id="mixByItem">
    <div class="mixleg" style="display:flex;gap:16px;align-items:center;flex-wrap:wrap;margin:10px 0 2px;font-size:11.5px;color:var(--ink2)"><span><i style="display:inline-block;width:11px;height:11px;border-radius:2px;background:var(--ou);margin-right:5px;vertical-align:-1px"></i>% Faturamento</span><span><i style="display:inline-block;width:11px;height:11px;border-radius:2px;background:#2E9CB0;margin-right:5px;vertical-align:-1px"></i>% Quantitativo</span><span style="color:var(--ink3)">cada métrica na sua própria escala</span></div>
-   <div class="sec-t" style="font-family:var(--serif);font-size:14px;color:var(--ou);margin:16px 0 10px;text-transform:uppercase;letter-spacing:.05em">Resumido — por grupo</div>
+   <div class="sec-t" id="mixT1" style="font-family:var(--serif);font-size:14px;color:var(--ou);margin:16px 0 10px;text-transform:uppercase;letter-spacing:.05em">Resumido — por grupo</div>
    <div class="panel" style="background:var(--pn);border:1px solid var(--ln);border-radius:12px" id="mixGrp"></div>
-   <div class="sec-t" style="font-family:var(--serif);font-size:14px;color:var(--ou);margin:18px 0 10px;text-transform:uppercase;letter-spacing:.05em">Detalhado — por tratamento</div>
+   <div class="sec-t" id="mixT2" style="font-family:var(--serif);font-size:14px;color:var(--ou);margin:18px 0 10px;text-transform:uppercase;letter-spacing:.05em">Detalhado — por tratamento</div>
    <div class="panel" style="background:var(--pn);border:1px solid var(--ln);border-radius:12px" id="mixRank"></div>
-   <div class="sec-t" style="font-family:var(--serif);font-size:14px;color:var(--ou);margin:18px 0 10px;text-transform:uppercase;letter-spacing:.05em">Forma de pagamento</div>
+   <div class="sec-t" id="mixT3" style="font-family:var(--serif);font-size:14px;color:var(--ou);margin:18px 0 10px;text-transform:uppercase;letter-spacing:.05em">Forma de pagamento</div>
    <div class="panel" style="background:var(--pn);border:1px solid var(--ln);border-radius:12px" id="mixPay"></div>
-   <p class="note" style="font-size:12px;color:var(--ink2);margin-top:14px;line-height:1.6"><b style="color:var(--ou)">Leitura.</b> Dois olhares sobre o mesmo dado: o <b>Resumido</b> junta tudo em blocos (Reabilitação, Geral/clínico, Ortodontia fixo, Alinhadores/Invisalign, Harmonização); o <b>Detalhado</b> abre tratamento a tratamento. Em cada linha, a barra <b style="color:var(--ou)">dourada</b> é o peso no <b>faturamento</b> e a <b style="color:#2E9CB0">azul</b> o peso na <b>quantidade</b> — por isso <b>Reabilitação</b> aparece pequena em quantidade e gigante em faturamento (ticket alto), e o <b>Clínico geral</b> ao contrário (muito volume, valor menor). Pagamento concentrado em <b>boleto</b> = espaço pra migrar perfil de risco pro cartão. Fonte: Giga · Ticket Médio por Data de Pagamento (venda) + Caixa Mensal (pagamento).</p>
+   <p class="note" id="mixNote" style="font-size:12px;color:var(--ink2);margin-top:14px;line-height:1.6"><b style="color:var(--ou)">Leitura.</b> Dois olhares sobre o mesmo dado: o <b>Resumido</b> junta tudo em blocos (Reabilitação, Geral/clínico, Ortodontia fixo, Alinhadores/Invisalign, Harmonização); o <b>Detalhado</b> abre tratamento a tratamento. Em cada linha, a barra <b style="color:var(--ou)">dourada</b> é o peso no <b>faturamento</b> e a <b style="color:#2E9CB0">azul</b> o peso na <b>quantidade</b> — por isso <b>Reabilitação</b> aparece pequena em quantidade e gigante em faturamento (ticket alto), e o <b>Clínico geral</b> ao contrário (muito volume, valor menor). Pagamento concentrado em <b>boleto</b> = espaço pra migrar perfil de risco pro cartão. Fonte: Giga · Ticket Médio por Data de Pagamento (venda) + Caixa Mensal (pagamento).</p>
    </div>
    <div id="mixByPac" hidden>
      <div class="kpis" id="mixPacKpi"></div>
@@ -1225,6 +1225,38 @@ window.capRender=render;
 })();
 
 var MIXTR=window.__AGO.MIXTR;
+var MIXM=window.__AGO.MIXM||{};
+var _ESP=["CLÍNICO GERAL","PRÓTESE DENTÁRIA","IMPLANTODONTIA","ORTODONTIA","ENDODONTIA","PERIODONTIA","CIRURGIA"];
+var _ESPC={"CLÍNICO GERAL":"#4C86C6","PRÓTESE DENTÁRIA":"var(--co)","IMPLANTODONTIA":"var(--ou)","ORTODONTIA":"#14B8A6","ENDODONTIA":"#9B6FC7","PERIODONTIA":"#C8766A","CIRURGIA":"#8A94A6"};
+var _ESPL={"CLÍNICO GERAL":"Clínico geral","PRÓTESE DENTÁRIA":"Prótese dentária","IMPLANTODONTIA":"Implantodontia","ORTODONTIA":"Ortodontia","ENDODONTIA":"Endodontia","PERIODONTIA":"Periodontia","CIRURGIA":"Cirurgia"};
+var _MN=["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov"];
+var _mixNoteHTML=null;
+function _mixMonthData(sc,mi){
+  var agg={},trend=[];
+  function addFrom(node){var L=node.labels,Q=node.q,V=node.v;for(var i=0;i<L.length;i++){var e=L[i];if(!agg[e])agg[e]={q:0,v:0};agg[e].q+=(Q[i]&&Q[i][mi])||0;agg[e].v+=(V[i]&&V[i][mi])||0;for(var mm=0;mm<node.meses.length;mm++){trend[mm]=(trend[mm]||0)+((V[i]&&V[i][mm])||0);}}}
+  if(sc==="__rede"){Object.keys(MIXM).forEach(function(n){addFrom(MIXM[n]);});}
+  else if(sc==="__combinar"){[].slice.call(document.querySelectorAll('.mixck:checked')).map(function(c){return c.value;}).forEach(function(n){if(MIXM[n])addFrom(MIXM[n]);});}
+  else {if(MIXM[sc])addFrom(MIXM[sc]);}
+  var tv=0,tq=0;Object.keys(agg).forEach(function(e){tv+=agg[e].v;tq+=agg[e].q;});
+  return {agg:agg,tv:tv,tq:tq,trend:trend};
+}
+function mixDrawMonth(sc,mi){
+  var cb=document.getElementById("mixCombo"); if(cb) cb.hidden=(sc!=="__combinar");
+  var G=document.getElementById("mixGrp"),R=document.getElementById("mixRank"),P=document.getElementById("mixPay");
+  var T1=document.getElementById("mixT1"),T2=document.getElementById("mixT2"),T3=document.getElementById("mixT3"),NT=document.getElementById("mixNote");
+  if(T1)T1.textContent="Mix por especialidade — "+_MN[mi]+"/26";
+  if(T2)T2.textContent="Faturamento mês a mês (escopo)";
+  if(T3)T3.style.display="none"; if(P)P.style.display="none";
+  var d=_mixMonthData(sc,mi);
+  if(!d.tv){var _m=(sc==="__combinar")?"Selecione as praças para somar.":"Sem dados para este mês/escopo.";var _ci=document.getElementById("mixComboInfo");if(_ci&&sc==="__combinar")_ci.innerHTML="Selecione as praças para somar.";G.innerHTML='<div style="padding:16px;color:var(--ink3)">'+_m+'</div>';R.innerHTML="";return;}
+  if(sc==="__combinar"){var _n=document.querySelectorAll(".mixck:checked").length,_i=document.getElementById("mixComboInfo");if(_i)_i.innerHTML=_n+" praça(s) somadas · "+_MN[mi]+"/26 · <b style=\"color:var(--ou)\">"+_mmi(d.tv)+"</b>";}
+  var rows=_ESP.filter(function(e){return d.agg[e];}).map(function(e){return {k:e,pf:d.agg[e].v/d.tv*100,pq:d.agg[e].q/d.tq*100};}).sort(function(a,b){return b.pf-a.pf;});
+  var fmx=Math.max.apply(null,rows.map(function(r){return r.pf;}))||1,qmx=Math.max.apply(null,rows.map(function(r){return r.pq;}))||1;
+  G.innerHTML='<div style="padding:12px 14px">'+_mhead()+rows.map(function(r){return _mrow(_ESPL[r.k]||r.k,r.pf,r.pq,fmx,qmx,_ESPC[r.k]);}).join('')+'<div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--ln);font-size:11.5px;color:var(--ink2)">Faturamento do mês: <b style="color:var(--ink)">'+_mmi(d.tv)+'</b> · <b style="color:var(--ink)">'+d.tq.toLocaleString("pt-BR")+'</b> itens</div></div>';
+  var tr=d.trend,tmx=Math.max.apply(null,tr)||1;
+  R.innerHTML='<div style="padding:14px"><div style="display:flex;align-items:flex-end;gap:6px;height:150px">'+tr.map(function(x,ix){var h=Math.max(Math.round(x/tmx*120),2);var lab=x>=1e6?((x/1e6).toFixed(1).replace(".",",")+"mi"):(Math.round(x/1e3)+"k");return '<div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:4px"><div style="font-size:9px;color:var(--ink3)">'+lab+'</div><div style="width:100%;background:'+(ix===mi?"var(--ou)":"var(--pn2)")+';border-radius:4px 4px 0 0;height:'+h+'px"></div><div style="font-size:9.5px;color:'+(ix===mi?"var(--ou)":"var(--ink3)")+';font-weight:'+(ix===mi?"700":"400")+'">'+_MN[ix]+'</div></div>';}).join('')+'</div></div>';
+  if(NT)NT.innerHTML='<b style="color:var(--ou)">Leitura.</b> Mix do mês por <b>especialidade</b>: a barra <b style="color:var(--ou)">dourada</b> é o peso no <b>faturamento</b>, a <b style="color:#2E9CB0">azul</b> o peso na <b>quantidade</b>. Abaixo, o <b>faturamento mês a mês</b> do escopo com o mês selecionado destacado — pra ler sazonalidade e tendência. Forma de pagamento fica só na visão anual. Fonte: Giga · Vendas por Tratamento (base pagamento) · 2026.';
+}
 function _mp(x){return (x==null?0:x).toFixed(1).replace(".",",")+"%";}
 function _mmi(v){return "R$ "+(v/1e6).toFixed(1).replace(".",",")+" mi";}
 var _GC={"Clínico geral":"#4C86C6","Reabilitação":"var(--ou)","Ortodontia":"var(--co)","Alinhadores":"#14B8A6","Harmonização":"#9B6FC7"};
@@ -1239,6 +1271,12 @@ function _mrow(label,pf,pq,fmx,qmx,dot){
 }
 function mixDraw(){
   var yr=document.getElementById("mixYr").value, sc=document.getElementById("mixScope").value;
+  var mEl=document.getElementById("mixMes"), mi=mEl?mEl.value:"";
+  if(mi!==""){ return mixDrawMonth(sc, +mi); }
+  var _T1=document.getElementById("mixT1"),_T2=document.getElementById("mixT2"),_T3=document.getElementById("mixT3"),_P=document.getElementById("mixPay"),_NT=document.getElementById("mixNote");
+  if(_T1)_T1.textContent="Resumido — por grupo"; if(_T2)_T2.textContent="Detalhado — por tratamento";
+  if(_T3)_T3.style.display=""; if(_P)_P.style.display="";
+  if(_NT&&_mixNoteHTML!=null)_NT.innerHTML=_mixNoteHTML;
   var cb=document.getElementById("mixCombo"); if(cb) cb.hidden=(sc!=="__combinar");
   var d= sc==="__rede"?MIXTR.rede[yr]:(sc==="__combinar"?mixCombine(yr):(MIXTR.pracas[sc]?MIXTR.pracas[sc][yr]:null));
   var G=document.getElementById("mixGrp"), R=document.getElementById("mixRank"), P=document.getElementById("mixPay");
@@ -1272,6 +1310,9 @@ function mixDraw(){
   var PRESETS={piloto:["Campo Grande","Campo Grande II","Três Lagoas","Naviraí","Nova Andradina","Dourados","Indaial","Timbó","Viamão","Teutônia","Capão da Canoa"],ms:["Campo Grande","Campo Grande II","Três Lagoas","Naviraí","Nova Andradina","Dourados"]};
   combo.querySelectorAll('.mcpre').forEach(function(b){b.onclick=function(){var p=b.dataset.pre,set=p==="all"?PR:(p==="none"?[]:PRESETS[p]||[]),S={}; set.forEach(function(x){S[x]=1;}); combo.querySelectorAll('.mixck').forEach(function(c){c.checked=!!S[c.value];}); mixDraw();};});
   combo.addEventListener('change',function(e){if(e.target&&e.target.classList&&e.target.classList.contains('mixck'))mixDraw();});
+  var _nt=document.getElementById("mixNote"); if(_nt)_mixNoteHTML=_nt.innerHTML;
+  var mEl=document.getElementById("mixMes");
+  if(mEl){ mEl.innerHTML='<option value="">Ano inteiro</option>'+_MN.map(function(m,i){return '<option value="'+i+'">'+m+'/26</option>';}).join(''); mEl.onchange=mixDraw; }
   document.getElementById("mixYr").onchange=mixDraw; sc.onchange=mixDraw;})();
 function mixCombine(yr){
   var checks=[].slice.call(document.querySelectorAll('.mixck:checked')).map(function(c){return c.value;});
