@@ -249,9 +249,9 @@ var FUNCS={
  ]},
  ticket:{label:"Ticket médio",funcs:[
    {key:"ia",label:"Uso da ferramenta de IA",inputs:[
-     {k:"analisados",label:"Contratos analisados"},{k:"usaram",label:"Usaram ferramenta de IA"}],
+     {k:"analisados",label:"Avaliações analisadas"},{k:"usaram",label:"Contratos que usaram a ferramenta de IA"}],
     nota:v=>{var N=v.analisados||0;if(!N)return null;return Math.round((v.usaram||0)/N*100);},
-    detail:v=>{var N=v.analisados||0;return N?((v.usaram||0)+" de "+N+" usaram ferramenta de IA"):"";}},
+    detail:v=>{var N=v.analisados||0;return N?((v.usaram||0)+" de "+N+" avaliações com contrato usando a ferramenta de IA ("+Math.round((v.usaram||0)/N*100)+"%)"):"";}},
    {key:"oferta",label:"Cobertura da oferta (ofertou tudo?)",neutro:true,inputs:[
      {k:"analisadas",label:"Avaliações analisadas"},{k:"completa",label:"Oferta completa"},{k:"parcial",label:"Oferta parcial"}],
     nota:v=>{var N=v.analisadas||0;if(!N)return null;return Math.round(((v.completa||0)+0.5*(v.parcial||0))/N*100);},
@@ -358,7 +358,7 @@ var CRIT={
  "resgate30.contatos":"Começa em 100. Para cada contato de resgate em atraso, −10 pontos. Nota = max(0, 100 − 10 × contatos em atraso). Único input: a quantidade de contatos em atraso ('em atraso' = sem registro OU data de retorno já vencida sem novo contato). Cobrança conjunta (avaliador + relacionamento).",
  "resgate30.videos":"O doutor deve gravar ≥2 vídeos por encontro para pacientes de resgate. Nota = (vídeos feitos ÷ 2). NEUTRO por ora — não entra na nota do indicador.",
  "resgate30.entusiasmo":"Qualidade da abordagem do relacionamento (tom/entusiasmo), monitorada via consultores/Marilda até ter CRM. Bom=100, Regular=50, Ruim=0. NEUTRO por ora — não entra na nota do indicador até termos como acompanhar.",
- "ticket.ia":"Dos contratos analisados, quantos usaram a ferramenta de IA. Nota = (usaram ÷ contratos analisados).",
+ "ticket.ia":"Das avaliações analisadas, em quantas o contrato usou a ferramenta de IA. Dois inputs: avaliações analisadas × contratos que usaram a IA. Nota = (contratos com IA ÷ avaliações analisadas) × 100.",
  "ticket.oferta":"Ofereceu ao paciente tudo que ele poderia comprar? Nota = (ofertas completas + metade das parciais) ÷ avaliações analisadas. NEUTRO por enquanto — sem peso; marque de referência.",
  "ticket.esteticos":"Dos contratos analisados, quantos foram usados para antes-e-depois (foto + IA). Nota = (usados para antes-e-depois ÷ contratos analisados). NEUTRO por enquanto — sem peso; marque de referência.",
  "conversao.gravacoes":"O avaliador deve te enviar ≥3 gravações de avaliações por encontro, para embasar a análise da venda. Nota = (gravações enviadas ÷ 3).",
