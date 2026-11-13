@@ -237,10 +237,9 @@ var FUNCS={
     detail:v=>{var N=v.analisados||0,A=v.acima||0,J=Math.min(v.justif||0,A);if(!N)return "";var falta=A-J;return A+" acima do teto de "+N+(A?(" · "+J+" justificado"+(J===1?"":"s")+(falta?(" · faltam "+falta):"")):"");}}
  ]},
  resgate30:{label:"Resgate",funcs:[
-   {key:"contatos",label:"Contatos de resgate atrasados em sistema",inputs:[
-     {k:"analisados",label:"Contratos de resgate analisados"},{k:"atrasados",label:"Contatos atrasados"}],
+   {key:"contatos",label:"Contatos de resgate em atraso",inputs:[{k:"atrasados",label:"Contatos em atraso"}],
     nota:v=>{if(v.atrasados===""||v.atrasados==null)return null;return Math.max(0,Math.round(100-10*(+v.atrasados)));},
-    detail:v=>{if(v.atrasados===""||v.atrasados==null)return "";var A=+v.atrasados,N=v.analisados||0;return A+" contato(s) atrasado(s)"+(N?(" de "+N+" analisados"):"")+" · −10 cada";}},
+    detail:v=>{if(v.atrasados===""||v.atrasados==null)return "";return (+v.atrasados)+" contato(s) em atraso · −10 cada (começa em 100)";}},
    {key:"videos",label:"Vídeos do doutor p/ resgate (≥2 por encontro)",neutro:true,inputs:[{k:"feitos",label:"Vídeos feitos"}],
     nota:v=>{if(v.feitos===""||v.feitos==null)return null;return Math.min(100,Math.round((+v.feitos)/2*100));},
     detail:v=>{if(v.feitos===""||v.feitos==null)return "";return v.feitos+" vídeos (meta 2 por encontro)";}},
@@ -331,7 +330,7 @@ var FUNCS={
 };
 var CRIT={
  "parcelamento.conf":"Meta = manter cada contrato dentro do teto da praça. Cada contrato acima do teto tira 10; ao justificar o planejamento (prazo de recebimento compatível com a entrega), a perda cai pra 5. Ou seja: quanto mais contratos acima do teto você justifica, melhor a nota.",
- "resgate30.contatos":"Quantidade de contatos de resgate atrasados em sistema ('atrasado' = sem registro OU com data de retorno já vencida sem novo contato). Nota = 100 − 10 × (contatos atrasados). 0 atrasados = 100; cada atrasado tira 10 pontos. Cobrança conjunta (avaliador + relacionamento).",
+ "resgate30.contatos":"Começa em 100. Para cada contato de resgate em atraso, −10 pontos. Nota = max(0, 100 − 10 × contatos em atraso). Único input: a quantidade de contatos em atraso ('em atraso' = sem registro OU data de retorno já vencida sem novo contato). Cobrança conjunta (avaliador + relacionamento).",
  "resgate30.videos":"O doutor deve gravar ≥2 vídeos por encontro para pacientes de resgate. Nota = (vídeos feitos ÷ 2). NEUTRO por ora — não entra na nota do indicador.",
  "resgate30.entusiasmo":"Qualidade da abordagem do relacionamento (tom/entusiasmo), monitorada via consultores/Marilda até ter CRM. Bom=100, Regular=50, Ruim=0. NEUTRO por ora — não entra na nota do indicador até termos como acompanhar.",
  "ticket.ia":"Dos contratos analisados, quantos usaram a ferramenta de IA. Nota = (usaram ÷ contratos analisados).",
