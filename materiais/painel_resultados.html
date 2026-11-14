@@ -742,20 +742,20 @@ var SCORE=[
  {n:"Teutônia",u:1,v:"nome",bir:"Serasa",cob:71,neg:22,laud:170},
  {n:"Flores da Cunha",u:1,v:"aberto",bir:"Serasa",cob:72,neg:21,laud:423,nt:"salvo como 'PESQUISA DE CRÉDITO'"},
  /* SPC / SCPC — relatório da conta do birô traz restrito/não → % negativado real (base = CPFs consultados na conta) */
- {n:"Bento Gonçalves",u:1,v:"aberto",bir:"SPC",neg:34,laud:11237,nt:"conta SPC 2019–26"},
- {n:"Passos",u:1,v:"aberto",bir:"SPC",neg:39,laud:6172,nt:"conta SCPC 2022–26"},
- {n:"Videira",u:1,v:"aberto",bir:"SPC",neg:31,laud:5978,nt:"conta SPC"},
- {n:"Timbó",u:1,v:"aberto",bir:"SPC",neg:31,laud:4873,nt:"conta SPC 2022–26"},
- {n:"Garibaldi",u:1,v:"aberto",bir:"SPC",neg:30,laud:4203,nt:"conta SPC 2022–26"},
- {n:"São Joaquim",u:1,v:"aberto",bir:"SPC",neg:42,laud:956,nt:"conta SPC 2026"},
- {n:"São Francisco do Sul",u:1,v:"aberto",bir:"SPC",neg:52,laud:946,nt:"conta SPC 2025–26"},
- {n:"Encantado",u:1,v:"aberto",bir:"SPC",neg:34,laud:349,nt:"conta SCPC 2024–26"},
+ {n:"Bento Gonçalves",u:1,v:"enviado",bir:"SPC",neg:34,laud:11237,nt:"conta SPC 2019–26"},
+ {n:"Passos",u:1,v:"enviado",bir:"SPC",neg:39,laud:6172,nt:"conta SCPC 2022–26"},
+ {n:"Videira",u:1,v:"enviado",bir:"SPC",neg:31,laud:5978,nt:"conta SPC"},
+ {n:"Timbó",u:1,v:"enviado",bir:"SPC",neg:31,laud:4873,nt:"conta SPC 2022–26"},
+ {n:"Garibaldi",u:1,v:"enviado",bir:"SPC",neg:30,laud:4203,nt:"conta SPC 2022–26"},
+ {n:"São Joaquim",u:1,v:"enviado",bir:"SPC",neg:42,laud:956,nt:"conta SPC 2026"},
+ {n:"São Francisco do Sul",u:1,v:"enviado",bir:"SPC",neg:52,laud:946,nt:"conta SPC 2025–26"},
+ {n:"Encantado",u:1,v:"enviado",bir:"SPC",neg:34,laud:349,nt:"conta SCPC 2024–26"},
  /* Serasa — log de consumo da conta: prova consulta + volume, mas NÃO traz o resultado de restrição */
  {n:"Capão da Canoa",u:1,v:"consumo",bir:"Serasa",laud:5066},
  {n:"Lajeado",u:1,v:"consumo",bir:"Serasa",laud:5030},
  {n:"Dourados",u:1,v:"consumo",bir:"Serasa",laud:4647},
  {n:"Tramandaí",u:1,v:"consumo",bir:"Serasa",laud:4095},
- {n:"Nova Andradina",u:1,v:"imagem",bir:"Serasa",cob:84,laud:79,nt:"laudo salvo como IMAGEM (print Serasa), sem descrição · censo set–nov/26: 79 de 94 fechados · % neg a levantar (OCR/estruturado)"},
+ {n:"Nova Andradina",u:1,v:"imagem",bir:"Serasa",cob:84,neg:45,laud:79,nt:"laudo salvo como IMAGEM (print Serasa) · lido imagem a imagem (14/11): 25 neg / 31 limpos / 23 só-score → 45% na base legível de 56 · 79 de 94 fechados"},
  {n:"São Bernardo do Campo",u:1,v:"consumo",bir:"Serasa",laud:2687},
  {n:"Petrolina",u:1,v:"consumo",bir:"Serasa",laud:2659},
  {n:"Vacaria",u:1,v:"consumo",bir:"Serasa",laud:2487},
@@ -764,18 +764,18 @@ var SCORE=[
  {n:"Viamão",u:1,v:"consumo",bir:"Serasa",laud:2088},
  {n:"Serafina Corrêa",u:1,v:"consumo",bir:"Serasa",laud:1593},
  /* sem relatório ainda */
- {n:"Tubarão",u:0,v:"aberto"},
- {n:"Veranópolis",u:0,v:"aberto"},
+ {n:"Tubarão",u:0,v:"checar",nt:"'Não' provisório — pdf.js não lê laudo-imagem; reconferir como Nova Andradina"},
+ {n:"Veranópolis",u:0,v:"checar",nt:"'Não' provisório — pdf.js não lê laudo-imagem; reconferir como Nova Andradina"},
  {n:"Indaial",u:0,v:"amostra"},
  {n:"Alvorada",u:0,v:"amostra"},
  /* fora do Giga */
- {n:"Sorria Mais Caçador",u:1,v:"aberto",bir:"SPC",neg:39,laud:8704,ext:1,nt:"fora do Giga · conta SPC"},
- {n:"Hospital do Dente (Campos Novos)",u:1,v:"aberto",bir:"SPC",neg:34,laud:1824,ext:1,nt:"fora do Giga · conta SPC"},
+ {n:"Sorria Mais Caçador",u:1,v:"enviado",bir:"SPC",neg:39,laud:8704,ext:1,nt:"fora do Giga · conta SPC"},
+ {n:"Hospital do Dente (Campos Novos)",u:1,v:"enviado",bir:"SPC",neg:34,laud:1824,ext:1,nt:"fora do Giga · conta SPC"},
  {n:"União de Indaial",u:0,v:"externa",ext:1}
 ];
 function scoreDraw(){
   var box=document.getElementById("scoreBox"); if(!box)return;
-  var vlab={nome:"por nome (SERASA)",aberto:"conteúdo aberto",imagem:"laudo em imagem (print)",consumo:"log de consumo (conta)",amostra:"amostra s/ laudo",externa:"fora do nosso Giga"};
+  var vlab={nome:"laudo no sistema (por nome)",aberto:"arquivo nos documentos do sistema",imagem:"arquivo em imagem no prontuário (lido)",enviado:"relatório enviado (traz resultado)",consumo:"relatório de consumo enviado (sem resultado)",checar:"a reconferir por imagem",amostra:"amostra s/ laudo",externa:"fora do nosso Giga"};
   var S=SCORE.slice().sort(function(a,b){
     if(a.u!==b.u)return b.u-a.u;
     if(a.u){var na=(a.neg==null?-1:a.neg),nb=(b.neg==null?-1:b.neg);if(na!==nb)return nb-na;return a.n.localeCompare(b.n);}
@@ -797,7 +797,7 @@ function scoreDraw(){
   var th='font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:#fff;padding:8px';
   box.innerHTML=
     '<span class="eyebrow" style="display:block;margin-bottom:6px">Score de crédito (Serasa / CREDNET) no prontuário · varredura por unidade</span>'
-   +'<p style="font-size:13px;color:var(--ink-2);margin:0 0 14px;line-height:1.55">Duas leituras combinadas: <b>(1)</b> laudo <b>aberto no prontuário</b> do Giga (censo jan–nov/26, 12 praças) e <b>(2)</b> o <b>relatório de consumo da própria conta do birô</b> (Serasa/SPC/SCPC), que a rede exportou por unidade. O relatório do <b>SPC/SCPC traz o resultado</b> (restrito / nada consta) → dá <b>% negativado</b> real sobre a base consultada; o da <b>Serasa é só o log de consumo</b> — prova a consulta e o volume de CPFs, mas <b>não traz o resultado</b>. Fontes: <b>Serasa/CREDNET</b>, <b>SPC MixMais</b>, <b>SCPC/CDL</b> e <b>Boa Vista/Acerta</b>.</p>'
+   +'<p style="font-size:13px;color:var(--ink-2);margin:0 0 14px;line-height:1.55">Duas leituras combinadas: <b>(1)</b> laudo <b>aberto no prontuário</b> do Giga (censo jan–nov/26, 12 praças) e <b>(2)</b> o <b>relatório de consumo da própria conta do birô</b> (Serasa/SPC/SCPC), que a rede exportou por unidade. O relatório do <b>SPC/SCPC traz o resultado</b> (restrito / nada consta) → dá <b>% negativado</b> real sobre a base consultada; o da <b>Serasa é só o relatório de consumo</b> — prova a consulta e o volume de CPFs, mas <b>não traz o resultado</b>. Fontes: <b>Serasa/CREDNET</b>, <b>SPC MixMais</b>, <b>SCPC/CDL</b> e <b>Boa Vista/Acerta</b>.</p>'
    +'<div style="display:flex;gap:12px;flex-wrap:wrap;margin:0 0 16px">'
    +card("Consultam crédito",usam+" / "+SCORE.length,"praças · Serasa, SPC/SCPC e Boa Vista","var(--ou)")
    +card("Negativados · base SPC","35%","15.849 de 45.242 consultas · 10 unidades","#E0796B")
@@ -806,7 +806,7 @@ function scoreDraw(){
    +'<div class="tblwrap"><table style="width:100%;border-collapse:collapse"><thead><tr>'
    +'<th style="'+th+';text-align:left">Praça</th><th style="'+th+';text-align:center">Consulta crédito</th><th style="'+th+';text-align:center">Fonte</th><th style="'+th+';text-align:left">Verificação</th><th style="'+th+';text-align:right">Cobertura</th><th style="'+th+';text-align:right">% Negativados</th>'
    +'</tr></thead><tbody>'+rows+'</tbody></table></div>'
-   +'<p class="note" style="margin-top:14px;line-height:1.7"><b>Como ler.</b> <b>Cobertura</b> = % dos fechados com laudo legível no prontuário (só nas 12 de censo Giga). Nas unidades de <b>relatório da conta</b> a cobertura% exige cruzar a base de consultas com os fechados no Giga — por ora a coluna <b>laudos</b> (sob o nome) mostra o <b>nº de CPFs consultados</b> na conta, não um %. <b>% Negativados</b> = pacientes com restrição; nas SPC/SCPC é a taxa real sobre a base consultada (restrito÷total). <b>Serasa de consumo = "a levantar"</b>: o log não traz o resultado. <b>Base SPC somada:</b> 45.242 consultas, 35% negativados — São Francisco do Sul (52%), São Joaquim (42%), Passos/Sorria (39%) no topo. <b>Padrão:</b> SPC/SCPC (30–80%) negativa bem mais que Serasa de laudo (21–49%). CG2 = base 2026; histórico mai/25–out/26 dá 48% em 685 laudos. <b>Sorria Mais Caçador e Hospital do Dente (Campos Novos)</b> seguem fora do Giga, mas já com relatório SPC; <b>União de Indaial</b> ainda sem relatório.</p>';
+   +'<p class="note" style="margin-top:14px;line-height:1.7"><b>Como ler.</b> <b>Cobertura</b> = % dos fechados com laudo legível no prontuário (só nas 12 de censo Giga). Nas unidades de <b>relatório da conta</b> a cobertura% exige cruzar a base de consultas com os fechados no Giga — por ora a coluna <b>laudos</b> (sob o nome) mostra o <b>nº de CPFs consultados</b> na conta, não um %. <b>% Negativados</b> = pacientes com restrição; nas SPC/SCPC é a taxa real sobre a base consultada (restrito÷total). <b>Serasa de consumo = "a levantar"</b>: o log não traz o resultado. <b>Base SPC somada:</b> 45.242 consultas, 35% negativados — São Francisco do Sul (52%), São Joaquim (42%), Passos/Sorria (39%) no topo. <b>Padrão:</b> SPC/SCPC (30–80%) negativa bem mais que Serasa de laudo (21–49%). CG2 = base 2026; histórico mai/25–out/26 dá 48% em 685 laudos. <b>Sorria Mais Caçador e Hospital do Dente (Campos Novos)</b> seguem fora do Giga, mas já com relatório SPC; <b>União de Indaial</b> ainda sem relatório. <b>Atenção:</b> um "Não usa" é provisório quando a praça salva o laudo como <b>imagem</b> (print) — a varredura de texto/PDF não lê isso. Foi o caso de <b>Nova Andradina</b> (dava "Não", na verdade usa Serasa e anexa o print: 84% dos fechados, lido imagem a imagem = 45% negativados na base legível). Por isso <b>Tubarão</b> e <b>Veranópolis</b> ficam "a reconferir por imagem", e a cobertura baixa de <b>Tapejara</b> (laudo em imagem) está subestimada.</p>';
 }
 document.querySelectorAll("#tabs button").forEach(b=>b.onclick=()=>{
   document.querySelectorAll("#tabs button").forEach(x=>x.classList.remove("on"));b.classList.add("on");
