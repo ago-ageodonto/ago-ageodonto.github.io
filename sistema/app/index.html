@@ -110,6 +110,8 @@ function setNav(key){var b=document.querySelector('.nav[data-nav="'+key+'"]');if
 window.setNav=setNav;
 // hook chamado pela tela Rede/Visão Geral quando clica numa unidade
 window.openDiretor=function(id){frame.src=withCB("dashboard.html?diretor="+encodeURIComponent(id));document.querySelectorAll(".nav").forEach(function(b){b.classList.remove("on")});document.getElementById("h-ic").textContent="👤";document.getElementById("h-ttl").textContent="Dashboard do Diretor";document.getElementById("h-bc").textContent="Acompanhamento · unidade selecionada";};
+// hook chamado pelos cards de Ferramentas pra abrir o dossiê de um fornecedor específico
+window.openDossie=function(nome){var u="reunioes_dossies.html#i="+encodeURIComponent(nome);frame.src=withCB(u.split("#")[0])+"#i="+encodeURIComponent(nome);document.querySelectorAll(".nav").forEach(function(b){b.classList.toggle("on",b.dataset.nav==="dossies")});document.getElementById("h-ic").textContent="📒";document.getElementById("h-ttl").textContent="Reuniões e Dossiês";document.getElementById("h-bc").textContent="Acompanhamento · "+nome;document.getElementById("h-open").href=withCB("reunioes_dossies.html")+"#i="+encodeURIComponent(nome);body.classList.remove("menu");};
 // mobile menu
 var hamb=document.getElementById("hamb"),scrim=document.getElementById("scrim");
 if(hamb)hamb.onclick=function(){body.classList.toggle("menu")};

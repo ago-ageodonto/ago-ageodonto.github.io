@@ -60,6 +60,7 @@ var TOOLS=[
    {v:"R$ 59,4 mil",l:"Investimento"},
    {v:"25.399",l:"Visualizações Google",wide:true}
   ],
+  dossie:"Impulse Maps",
   macro:"https://claude.ai/artifact/Y9VTk9AmBeho65a2EZ9hCD",
   plat:"https://dash.impulsemaps.com.br/dashboard/rede"
  },
@@ -72,6 +73,7 @@ var TOOLS=[
    {v:"30%",c:"a",l:"Comparec. (piso)"},
    {v:"374",l:"Agendamentos"}
   ],
+  dossie:"Captação IA",
   macro:"https://claude.ai/artifact/WJdWF9MAkfsQAGBNMLmugV",
   plat:"https://crm.digiodonto.tech/"
  },
@@ -85,7 +87,7 @@ var TOOLS=[
    {v:"janela",l:"por profissional (troca/viagem)"}
   ],
   pend:"<b>2 pendências:</b> Simone — usuário teste do Giga + SLA (venceu 09/11) · Alexandre — custos de IA/hardware.",
-  dossie:"dossies",
+  dossie:"Getter",
   macro:"https://claude.ai/artifact/Y6SWKuGwdZ7Cjke96Ra5N8",
   plats:[{l:"Dourados ↗",u:"https://nexus-ai-oralunic-dourados.getter.ai/"},{l:"Carlos Barbosa ↗",u:"https://nexus-ai-oralunic-carlos-barbosa.getter.ai/"}]
  },
@@ -97,6 +99,7 @@ var TOOLS=[
    {v:"R$ 900",l:"setup (uma vez)"},
    {v:"3 regras",l:"aval · reaval · relac.",wide:true}
   ],
+  dossie:"Ovix Pro",
   plat:"https://app.ouvixpro.ai/dashboard/oralunic/rede"
  }
 ];
@@ -118,6 +121,6 @@ function card(t){
   +'</div>';
 }
 document.getElementById("grid").innerHTML=TOOLS.map(card).join('');
-function abrirDossie(key){ if(window.parent&&window.parent!==window&&window.parent.setNav)window.parent.setNav(key); else location.href="fornecedores.html"; }
+function abrirDossie(nome){ if(window.parent&&window.parent!==window&&window.parent.openDossie)window.parent.openDossie(nome); else location.href="reunioes_dossies.html#i="+encodeURIComponent(nome); }
 </script>
 </body></html>

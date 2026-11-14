@@ -81,6 +81,24 @@ textarea{min-height:90px;resize:vertical;line-height:1.5}
 .btn{border:1px solid transparent;border-radius:8px;padding:9px 16px;font:800 12.5px var(--sans);cursor:pointer;background:var(--grad);color:#241a06}
 .btn.ghost{background:transparent;color:var(--ink2);border-color:var(--ln2)}
 .msg{font-size:12px;margin-left:9px}.ok{color:var(--vd)}.err{color:var(--vm)}
+/* item actions + edição + datas */
+.item{position:relative}
+.itemacts{display:flex;flex-direction:column;gap:5px;flex:0 0 auto;align-items:flex-end}
+.edit{font-size:11px;font-weight:700;color:var(--ink2);background:transparent;border:1px solid var(--ln2);border-radius:7px;padding:5px 9px;cursor:pointer;white-space:nowrap}
+.edit:hover{background:var(--pn2);color:var(--ink)}
+.reopen{font-size:11px;font-weight:700;color:var(--am);background:color-mix(in srgb,var(--am) 12%,transparent);border:1px solid color-mix(in srgb,var(--am) 32%,transparent);border-radius:7px;padding:5px 9px;cursor:pointer;white-space:nowrap}
+.reopen:hover{background:color-mix(in srgb,var(--am) 22%,transparent)}
+.item .meta .reg{color:var(--ink3)}
+.item .meta .okmark{color:var(--vd);font-weight:700}
+.item.done{opacity:.82;border-left:3px solid var(--vd)}
+.item.done .tx{text-decoration:none}
+.editbox{margin-top:9px}
+.editbox:empty{margin-top:0}
+.editbox textarea{min-height:52px;margin-bottom:7px}
+.efg{display:flex;gap:7px;flex-wrap:wrap;align-items:center;margin-bottom:7px}
+.efg input{flex:1;min-width:120px}
+.btn.mini{padding:7px 13px;font-size:12px}
+.btn.mini.ghost{background:transparent;color:var(--ink2);border:1px solid var(--ln2)}
 </style></head>
 <body>
 <div class="top">
@@ -128,8 +146,10 @@ function carregar(){
     if(!TEM_TABELA){w.className="warn on";w.innerHTML="⚠️ Falta criar a tabela <b>dossie_itens</b> no Supabase (o Claude te passou o SQL — copiar, colar e rodar). As reuniões já aparecem; pendências/decisões/indicadores começam a funcionar depois disso.";}
     else{w.className="warn";}
     buildRail();
+    var h=(location.hash||"").match(/i=([^&]+)/); if(h){try{abrir(decodeURIComponent(h[1]));}catch(e){}}
   });
 }
+window.addEventListener('hashchange',function(){var h=(location.hash||"").match(/i=([^&]+)/); if(h){try{abrir(decodeURIComponent(h[1]));}catch(e){}}});
 
 function interlocutores(){
   var map={};
@@ -168,11 +188,27 @@ function renderDossie(){
   var pendOk=it.filter(function(x){return x.categoria==="pendencia"&&x.status==="resolvida";});
   var dec=it.filter(function(x){return x.categoria==="decisao";});
   var ind=it.filter(function(x){return x.categoria==="indicador";});
+  // ordenação por data
+  var byPrazo=function(a,b){var pa=a.prazo||"9999",pb=b.prazo||"9999";return pa<pb?-1:pa>pb?1:((a.criado_em||"")<(b.criado_em||"")?-1:1);};
+  var byRecDesc=function(a,b){return (a.criado_em||"")<(b.criado_em||"")?1:-1;};
+  pend.sort(byPrazo); pendOk.sort(function(a,b){return (a.resolvido_em||"")<(b.resolvido_em||"")?1:-1;});
+  dec.sort(byRecDesc); ind.sort(byRecDesc);
   function itemHtml(x,cls){
-    var late=(x.prazo&&x.prazo<hoje())?' <span class="late">⚠ venceu '+fmtData(x.prazo)+'</span>':(x.prazo?' · <b>prazo</b> '+fmtData(x.prazo):'');
-    var meta=(x.dono?'<b>'+esc(x.dono)+'</b>':'')+(x.dono&&x.prazo?' ':'')+late;
-    return '<div class="item '+cls+'"><div class="tx">'+esc(x.texto)+(meta?'<div class="meta">'+meta+'</div>':'')+'</div>'
-      +(cls==="pend"?'<button class="resolve" data-id="'+x.id+'">✓ resolver</button>':'')+'</div>';
+    var resolved=(x.categoria==="pendencia"&&x.status==="resolvida");
+    var parts=[];
+    if(x.dono) parts.push('<b>'+esc(x.dono)+'</b>');
+    if(x.prazo){ parts.push((!resolved&&x.prazo<hoje())?'<span class="late">⚠ venceu '+fmtData(x.prazo)+'</span>':'<b>prazo</b> '+fmtData(x.prazo)); }
+    if(x.criado_em) parts.push('<span class="reg">registrado '+fmtData(x.criado_em)+'</span>');
+    if(resolved) parts.push('<span class="okmark">✓ resolvido '+fmtData(x.resolvido_em)+'</span>');
+    var meta=parts.join(' · ');
+    var acts='';
+    if(x.categoria==="pendencia"){ acts+= resolved
+      ? '<button class="reopen" data-id="'+x.id+'">↺ reabrir</button>'
+      : '<button class="resolve" data-id="'+x.id+'">✓ resolver</button>'; }
+    acts+='<button class="edit" data-id="'+x.id+'">✎ editar</button>';
+    return '<div class="item '+cls+(resolved?' done':'')+'"><div class="tx">'+esc(x.texto)
+      +(meta?'<div class="meta">'+meta+'</div>':'')+'<div class="editbox" id="eb'+x.id+'"></div></div>'
+      +'<div class="itemacts">'+acts+'</div></div>';
   }
   var H='<div class="dhd"><button class="bk" id="bk">‹ lista</button><div class="dic">'+tipoIc(SEL_TIPO)+'</div>'
    +'<div class="dt"><h2>'+esc(nome)+'</h2><div class="dsub">'+tipoL(SEL_TIPO)+'</div></div>'
@@ -193,6 +229,8 @@ function renderDossie(){
 
   H+='<div class="sec"><div class="st">🔴 Pendências abertas <span class="c">'+pend.length+'</span></div>'
    +(pend.length?pend.map(function(x){return itemHtml(x,"pend");}).join(''):'<div class="empty">Nada em aberto. 👏</div>')+'</div>';
+  if(pendOk.length)H+='<div class="sec"><div class="st">✔️ Resolvidas <span class="c">'+pendOk.length+'</span></div>'
+   +pendOk.map(function(x){return itemHtml(x,"pend");}).join('')+'</div>';
   H+='<div class="sec"><div class="st">✅ Decisões <span class="c">'+dec.length+'</span></div>'
    +(dec.length?dec.map(function(x){return itemHtml(x,"dec");}).join(''):'<div class="empty">—</div>')+'</div>';
   H+='<div class="sec"><div class="st">📊 Indicadores combinados <span class="c">'+ind.length+'</span></div>'
@@ -204,7 +242,6 @@ function renderDossie(){
     return '<div class="mtg"><div class="mh"><span class="ma">'+esc(m.assunto||"Reunião")+'</span><span class="md">'+fmtData(m.data)+'</span></div>'+tr+'</div>';
   }).join('');
   else H+='<div class="empty">Sem reuniões registradas.</div>';
-  if(pendOk.length)H+='<div style="margin-top:10px"><div class="st" style="font-size:12px;color:var(--ink3)">Pendências resolvidas</div>'+pendOk.map(function(x){return '<div class="item" style="opacity:.6"><div class="tx done">'+esc(x.texto)+'</div></div>';}).join('')+'</div>';
   H+='</div>';
 
   D.innerHTML=H;
@@ -215,6 +252,8 @@ function renderDossie(){
   D.querySelectorAll('[data-close]').forEach(function(b){b.onclick=function(){document.getElementById(b.getAttribute('data-close')).classList.remove('on');};});
   D.querySelectorAll('.verbtn').forEach(function(b){b.onclick=function(){var d=document.getElementById('dtr'+b.getAttribute('data-tr'));d.classList.toggle('on');b.textContent=d.classList.contains('on')?'ocultar ▴':'ver transcrição ▾';};});
   D.querySelectorAll('.resolve').forEach(function(b){b.onclick=function(){resolver(b.getAttribute('data-id'));};});
+  D.querySelectorAll('.reopen').forEach(function(b){b.onclick=function(){reabrir(b.getAttribute('data-id'));};});
+  D.querySelectorAll('.edit').forEach(function(b){b.onclick=function(){editarItem(b.getAttribute('data-id'));};});
   document.getElementById("i-save").onclick=salvarItem;
   document.getElementById("m-save").onclick=salvarMtg;
 }
@@ -241,6 +280,36 @@ function resolver(id){
     var it=ITENS.find(function(x){return x.id==id;}); if(it){it.status="resolvida";it.resolvido_em=new Date().toISOString();}
     renderDossie();buildRail();
   }).catch(function(e){alert("Erro ao resolver: "+e.message);});
+}
+function reabrir(id){
+  api("dossie_itens?id=eq."+id,{method:"PATCH",headers:{Prefer:"return=minimal"},body:{status:"aberta",resolvido_em:null}}).then(function(){
+    var it=ITENS.find(function(x){return x.id==id;}); if(it){it.status="aberta";it.resolvido_em=null;}
+    renderDossie();buildRail();
+  }).catch(function(e){alert("Erro ao reabrir: "+e.message);});
+}
+function editarItem(id){
+  var x=ITENS.find(function(i){return i.id==id;}); if(!x)return;
+  var eb=document.getElementById('eb'+id); if(!eb)return;
+  if(eb.innerHTML){eb.innerHTML='';return;}
+  var dz=x.criado_em?(''+x.criado_em).slice(0,10):'';
+  var pz=x.prazo?(''+x.prazo).slice(0,10):'';
+  eb.innerHTML='<textarea id="et'+id+'">'+esc(x.texto)+'</textarea>'
+   +'<div class="efg"><input id="ed'+id+'" placeholder="dono" value="'+esc(x.dono||'')+'">'
+   +'<label style="margin:0;align-self:center">prazo</label><input id="ep'+id+'" type="date" value="'+pz+'">'
+   +'<label style="margin:0;align-self:center">registro</label><input id="ec'+id+'" type="date" value="'+dz+'"></div>'
+   +'<div class="efg"><button class="btn mini" onclick="salvarEdicao(\''+id+'\')">Salvar</button>'
+   +'<button class="btn mini ghost" onclick="document.getElementById(\'eb'+id+'\').innerHTML=\'\'">Cancelar</button>'
+   +'<span class="msg" id="em'+id+'"></span></div>';
+}
+function salvarEdicao(id){
+  var texto=document.getElementById('et'+id).value.trim();
+  if(!texto){return flash('em'+id,'Texto vazio.',false);}
+  var body={texto:texto,dono:document.getElementById('ed'+id).value.trim()||null,prazo:document.getElementById('ep'+id).value||null};
+  var c=document.getElementById('ec'+id).value; if(c)body.criado_em=c;
+  api("dossie_itens?id=eq."+id,{method:"PATCH",headers:{Prefer:"return=minimal"},body:body}).then(function(){
+    var x=ITENS.find(function(i){return i.id==id;}); if(x){x.texto=texto;x.dono=body.dono;x.prazo=body.prazo;if(c)x.criado_em=c;}
+    renderDossie();buildRail();
+  }).catch(function(e){flash('em'+id,'Erro: '+e.message,false);});
 }
 function flash(id,m,ok){var e=document.getElementById(id);if(!e)return;e.textContent=m;e.className="msg "+(ok?"ok":"err");setTimeout(function(){e.textContent="";},4000);}
 
