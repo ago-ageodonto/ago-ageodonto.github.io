@@ -736,7 +736,7 @@ var SCORE=[
  {n:"Campo Grande",u:1,v:"nome",bir:"Serasa",cob:41,neg:49,laud:228},
  {n:"Campo Grande II",u:1,v:"nome",bir:"Serasa",cob:93,neg:42,laud:411,nt:"2026 (base cheia: 48%)"},
  {n:"Três Lagoas",u:1,v:"nome",bir:"Serasa",cob:38,neg:38,laud:164},
- {n:"Tapejara",u:1,v:"aberto",bir:"Serasa",cob:4,neg:32,laud:22,nt:"laudo em imagem · cobertura subestimada"},
+ {n:"Tapejara",u:1,v:"imagem",bir:"Serasa",cob:61,neg:32,laud:386,nt:"USA Serasa — censo 2026: 285 laudo-imagem + 101 PDF de 628 fechados (~61% têm doc) · a 'cobertura 4%' era só o legível por texto · %neg 32% = amostra antiga de 22 PDFs, a refinar lendo as imagens"},
  {n:"Naviraí",u:1,v:"aberto",bir:"Boa Vista",cob:90,neg:27,laud:357,nt:"salvo como 'cpf'/'SCORE'"},
  {n:"Montenegro",u:1,v:"nome",bir:"Serasa",cob:84,neg:25,laud:362},
  {n:"Teutônia",u:1,v:"nome",bir:"Serasa",cob:71,neg:22,laud:170},
@@ -764,8 +764,8 @@ var SCORE=[
  {n:"Viamão",u:1,v:"consumo",bir:"Serasa",laud:2088},
  {n:"Serafina Corrêa",u:1,v:"consumo",bir:"Serasa",laud:1593},
  /* sem relatório ainda */
- {n:"Tubarão",u:0,v:"checar",nt:"'Não' provisório — pdf.js não lê laudo-imagem; reconferir como Nova Andradina"},
- {n:"Veranópolis",u:0,v:"checar",nt:"'Não' provisório — pdf.js não lê laudo-imagem; reconferir como Nova Andradina"},
+ {n:"Tubarão",u:1,v:"imagem",bir:"SPC",cob:27,neg:13,laud:91,nt:"USA SPC (MIX+Protesto) — laudo em IMAGEM no prontuário; falso-negativo corrigido 14/11 · 91 laudos id./339 fechados 2026 (27%) · restrição ~13% (estratif.: codificados C/NC 25% + 'SPC' s/ código 6%)"},
+ {n:"Veranópolis",u:0,v:"conferido",nt:"conferido doc a doc (368 fechados 2026): sem laudo de crédito — só radiografia/CNH/ficha. Não anexa."},
  {n:"Indaial",u:0,v:"amostra"},
  {n:"Alvorada",u:0,v:"amostra"},
  /* fora do Giga */
@@ -775,7 +775,7 @@ var SCORE=[
 ];
 function scoreDraw(){
   var box=document.getElementById("scoreBox"); if(!box)return;
-  var vlab={nome:"laudo no sistema (por nome)",aberto:"arquivo nos documentos do sistema",imagem:"arquivo em imagem no prontuário (lido)",enviado:"relatório enviado (traz resultado)",consumo:"relatório de consumo enviado (sem resultado)",checar:"a reconferir por imagem",amostra:"amostra s/ laudo",externa:"fora do nosso Giga"};
+  var vlab={nome:"laudo no sistema (por nome)",aberto:"arquivo nos documentos do sistema",imagem:"arquivo em imagem no prontuário (lido)",enviado:"relatório enviado (traz resultado)",consumo:"relatório de consumo enviado (sem resultado)",checar:"a reconferir por imagem",conferido:"conferido doc a doc (sem laudo)",amostra:"amostra s/ laudo",externa:"fora do nosso Giga"};
   var S=SCORE.slice().sort(function(a,b){
     if(a.u!==b.u)return b.u-a.u;
     if(a.u){var na=(a.neg==null?-1:a.neg),nb=(b.neg==null?-1:b.neg);if(na!==nb)return nb-na;return a.n.localeCompare(b.n);}
@@ -806,7 +806,7 @@ function scoreDraw(){
    +'<div class="tblwrap"><table style="width:100%;border-collapse:collapse"><thead><tr>'
    +'<th style="'+th+';text-align:left">Praça</th><th style="'+th+';text-align:center">Consulta crédito</th><th style="'+th+';text-align:center">Fonte</th><th style="'+th+';text-align:left">Verificação</th><th style="'+th+';text-align:right">Cobertura</th><th style="'+th+';text-align:right">% Negativados</th>'
    +'</tr></thead><tbody>'+rows+'</tbody></table></div>'
-   +'<p class="note" style="margin-top:14px;line-height:1.7"><b>Como ler.</b> <b>Cobertura</b> = % dos fechados com laudo legível no prontuário (só nas 12 de censo Giga). Nas unidades de <b>relatório da conta</b> a cobertura% exige cruzar a base de consultas com os fechados no Giga — por ora a coluna <b>laudos</b> (sob o nome) mostra o <b>nº de CPFs consultados</b> na conta, não um %. <b>% Negativados</b> = pacientes com restrição; nas SPC/SCPC é a taxa real sobre a base consultada (restrito÷total). <b>Serasa de consumo = "a levantar"</b>: o log não traz o resultado. <b>Base SPC somada:</b> 45.242 consultas, 35% negativados — São Francisco do Sul (52%), São Joaquim (42%), Passos/Sorria (39%) no topo. <b>Padrão:</b> SPC/SCPC (30–80%) negativa bem mais que Serasa de laudo (21–49%). CG2 = base 2026; histórico mai/25–out/26 dá 48% em 685 laudos. <b>Sorria Mais Caçador e Hospital do Dente (Campos Novos)</b> seguem fora do Giga, mas já com relatório SPC; <b>União de Indaial</b> ainda sem relatório. <b>Atenção:</b> um "Não usa" é provisório quando a praça salva o laudo como <b>imagem</b> (print) — a varredura de texto/PDF não lê isso. Foi o caso de <b>Nova Andradina</b> (dava "Não", na verdade usa Serasa e anexa o print: 84% dos fechados, lido imagem a imagem = 45% negativados na base legível). Por isso <b>Tubarão</b> e <b>Veranópolis</b> ficam "a reconferir por imagem", e a cobertura baixa de <b>Tapejara</b> (laudo em imagem) está subestimada.</p>';
+   +'<p class="note" style="margin-top:14px;line-height:1.7"><b>Como ler.</b> <b>Cobertura</b> = % dos fechados com laudo legível no prontuário (só nas 12 de censo Giga). Nas unidades de <b>relatório da conta</b> a cobertura% exige cruzar a base de consultas com os fechados no Giga — por ora a coluna <b>laudos</b> (sob o nome) mostra o <b>nº de CPFs consultados</b> na conta, não um %. <b>% Negativados</b> = pacientes com restrição; nas SPC/SCPC é a taxa real sobre a base consultada (restrito÷total). <b>Serasa de consumo = "a levantar"</b>: o log não traz o resultado. <b>Base SPC somada:</b> 45.242 consultas, 35% negativados — São Francisco do Sul (52%), São Joaquim (42%), Passos/Sorria (39%) no topo. <b>Padrão:</b> SPC/SCPC (30–80%) negativa bem mais que Serasa de laudo (21–49%). CG2 = base 2026; histórico mai/25–out/26 dá 48% em 685 laudos. <b>Sorria Mais Caçador e Hospital do Dente (Campos Novos)</b> seguem fora do Giga, mas já com relatório SPC; <b>União de Indaial</b> ainda sem relatório. <b>Atenção:</b> um "Não usa" é provisório quando a praça salva o laudo como <b>imagem</b> (print) — a varredura de texto/PDF não lê isso. Foi o caso de <b>Nova Andradina</b> (dava "Não", na verdade usa Serasa e anexa o print: 84% dos fechados, lido imagem a imagem = 45% negativados na base legível). <b>Reconferido abrindo as imagens (14/11):</b> <b>Tubarão USA SPC</b> (laudo-imagem, falso-negativo — 91 laudos/339 fechados, ~13% restrição); <b>Veranópolis</b> realmente não anexa laudo (só radiografia/CNH); <b>Tapejara</b> tem ~61% dos fechados com laudo-imagem/PDF (a "4%" era só o legível por texto).</p>';
 }
 document.querySelectorAll("#tabs button").forEach(b=>b.onclick=()=>{
   document.querySelectorAll("#tabs button").forEach(x=>x.classList.remove("on"));b.classList.add("on");
