@@ -755,7 +755,7 @@ var SCORE=[
  {n:"Lajeado",u:1,v:"consumo",bir:"Serasa",laud:5030},
  {n:"Dourados",u:1,v:"consumo",bir:"Serasa",laud:4647},
  {n:"Tramandaí",u:1,v:"consumo",bir:"Serasa",laud:4095},
- {n:"Nova Andradina",u:1,v:"consumo",bir:"Serasa",laud:3490},
+ {n:"Nova Andradina",u:1,v:"imagem",bir:"Serasa",cob:84,laud:79,nt:"laudo salvo como IMAGEM (print Serasa), sem descrição · censo set–nov/26: 79 de 94 fechados · % neg a levantar (OCR/estruturado)"},
  {n:"São Bernardo do Campo",u:1,v:"consumo",bir:"Serasa",laud:2687},
  {n:"Petrolina",u:1,v:"consumo",bir:"Serasa",laud:2659},
  {n:"Vacaria",u:1,v:"consumo",bir:"Serasa",laud:2487},
@@ -775,7 +775,7 @@ var SCORE=[
 ];
 function scoreDraw(){
   var box=document.getElementById("scoreBox"); if(!box)return;
-  var vlab={nome:"por nome (SERASA)",aberto:"conteúdo aberto",consumo:"log de consumo (conta)",amostra:"amostra s/ laudo",externa:"fora do nosso Giga"};
+  var vlab={nome:"por nome (SERASA)",aberto:"conteúdo aberto",imagem:"laudo em imagem (print)",consumo:"log de consumo (conta)",amostra:"amostra s/ laudo",externa:"fora do nosso Giga"};
   var S=SCORE.slice().sort(function(a,b){
     if(a.u!==b.u)return b.u-a.u;
     if(a.u){var na=(a.neg==null?-1:a.neg),nb=(b.neg==null?-1:b.neg);if(na!==nb)return nb-na;return a.n.localeCompare(b.n);}
